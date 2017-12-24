@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:id="@+id/register_layout"
+        >
+
+        <TextView
+            android:layout_marginBottom="@dimen/_5sdp"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/register"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="@dimen/_20sdp"
+            />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_40sdp"
+            android:hint="@string/name"
+            android:padding="@dimen/_10sdp"
+            android:background="@drawable/edt_code_shape"
+            android:layout_margin="@dimen/_20sdp"
+            android:inputType="textPersonName"
+            android:id="@+id/pharmacyName"
+            />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_40sdp"
+            android:hint="@string/phone"
+            android:padding="@dimen/_10sdp"
+            android:layout_marginRight="@dimen/_20sdp"
+            android:layout_marginLeft="@dimen/_20sdp"
+            android:background="@drawable/edt_code_shape"
+            android:inputType="phone"
+            android:id="@+id/email_register"
+            />
+
+        <EditText
+            android:layout_marginTop="@dimen/_20sdp"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_40sdp"
+            android:hint="@string/password_hint"
+            android:padding="@dimen/_10sdp"
+            android:layout_marginRight="@dimen/_20sdp"
+            android:layout_marginLeft="@dimen/_20sdp"
+            android:background="@drawable/edt_code_shape"
+            android:inputType="textWebPassword"
+            android:id="@+id/password_register"
+            />
+
+        <EditText
+            android:layout_marginTop="@dimen/_20sdp"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_40sdp"
+            android:hint="@string/address"
+            android:padding="@dimen/_10sdp"
+            android:layout_marginRight="@dimen/_20sdp"
+            android:layout_marginLeft="@dimen/_20sdp"
+            android:background="@drawable/edt_code_shape"
+            android:inputType="textLongMessage"
+            android:id="@+id/pharmacyLocation"
+            />
+
+        <Button
+            android:layout_marginRight="@dimen/_25sdp"
+            android:layout_marginLeft="@dimen/_25sdp"
+            android:layout_marginTop="@dimen/_30sdp"
+            android:layout_width="match_parent"
+            android:textAllCaps="false"
+            android:background="@drawable/but_submit"
+            android:textColor="@color/gray"
+            android:text="@string/singup"
+            android:id="@+id/but_register"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:layout_gravity="center"
+            android:id="@+id/txt_login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/_15sdp"
+            android:textColor="@color/colorPrimaryDark"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:text="@string/login"
+            />
+
+        <ProgressBar
+            android:visibility="gone"
+            android:layout_marginTop="@dimen/_15sdp"
+            android:id="@+id/register_progressBar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            android:indeterminateTintMode="src_atop"
+            android:indeterminateTint="@color/colorPrimaryDark"/>
+    </LinearLayout>
+
+</ScrollView>
