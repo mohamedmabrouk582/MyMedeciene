@@ -21,7 +21,7 @@ public class DrugHolder extends RecyclerView.ViewHolder{
     private Activity activity;
     public  View view;
     public ImageView imageView;
-    private TextView drugName,drugPrice,drugQuantity,drugType,phName,phPhone,phLocation;
+    public TextView drugName,drugPrice,drugQuantity,drugType,phName,phPhone,phLocation;
 
     public DrugHolder(View itemView,Activity activity) {
         super(itemView);

@@ -70,7 +70,9 @@ public class HomeActivity extends AppCompatActivity
     private Menu menu;
     private SearchView mSearchView;
     private MenuItem editProfile,myDrugs,addDrugs,logout,search;
-    private String[] permissions={Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE};
+    private String[] permissions={Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.ACCESS_NETWORK_STATE,
+            Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_LOCATION_EXTRA_COMMANDS};
     private DatabaseReference mDatabaseReference;
 
 
@@ -128,6 +130,7 @@ public class HomeActivity extends AppCompatActivity
        login.setOnClickListener(this);
        register.setOnClickListener(this);
        phIMG.setOnClickListener(this);
+       phLocation.setOnClickListener(this);
        if (mPharmacy!=null){
            isPharmacy(true);
 
@@ -300,6 +303,9 @@ public class HomeActivity extends AppCompatActivity
     @Override
     public void onClick(View view) {
         switch (view.getId()){
+            case R.id.pharmacy_location:
+                MapsActivity.start(this,mPharmacy.getPhLocation());
+                break;
             case R.id.pharmacy_img:
                 drawer.closeDrawers();
 

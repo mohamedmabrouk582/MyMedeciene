@@ -12,7 +12,7 @@
     <string name="phone">Pharmacy Phone</string>
     <string name="address">Pharmacy Address</string>
     <string name="save">Save</string>
-    <string name="email_hint" >Your Email</string>
+    <string name="email_hint">Your Email</string>
     <string name="password_hint">Your Password</string>
     <string name="singup">Sign Up</string>
     <string name="drug_name">Drug Name</string>
@@ -26,4 +26,5 @@
         <item>sharab</item>
         <item>7bwob</item>
     </string-array>
+    <string name="title_activity_maps">Map</string>
 </resources>

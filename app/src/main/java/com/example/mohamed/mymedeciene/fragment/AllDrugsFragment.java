@@ -1,6 +1,7 @@
 package com.example.mohamed.mymedeciene.fragment;
 
 import android.animation.Animator;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -19,6 +20,7 @@ import android.widget.TextView;
 
 import com.example.mohamed.mymedeciene.Holder.DrugHolder;
 import com.example.mohamed.mymedeciene.R;
+import com.example.mohamed.mymedeciene.activity.MapsActivity;
 import com.example.mohamed.mymedeciene.appliction.DataManager;
 import com.example.mohamed.mymedeciene.appliction.MyApp;
 import com.example.mohamed.mymedeciene.data.Drug;
@@ -63,6 +65,7 @@ public class AllDrugsFragment extends Fragment implements AllDrugsView{
     private ZoomIMG zoomIMG;
     private String querys;
     private TextView errorView;
+    private ProgressDialog mProgressDialog;
 
     public static AllDrugsFragment newFragment(String query){
         Bundle bundle=new Bundle();
@@ -82,6 +85,9 @@ public class AllDrugsFragment extends Fragment implements AllDrugsView{
         iniRecyl();
         iniSwipe();
         showDrugs();
+        mProgressDialog=new ProgressDialog(getActivity());
+        mProgressDialog.setCancelable(false);
+        mProgressDialog.setMessage("wait for Open map ......");
         return view;
     }
 
@@ -192,7 +198,16 @@ public class AllDrugsFragment extends Fragment implements AllDrugsView{
                 mPhmacyReference.child(model.getPhKey()).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        holder.bindData(model,dataSnapshot.getValue(Pharmacy.class));
+                        final Pharmacy value = dataSnapshot.getValue(Pharmacy.class);
+                        holder.bindData(model,value);
+                        holder.phLocation.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                mProgressDialog.show();
+                                MapsActivity.start(getActivity(),value.getPhLocation());
+                                mProgressDialog.dismiss();
+                            }
+                        });
                     }
 
                     @Override
@@ -200,6 +215,7 @@ public class AllDrugsFragment extends Fragment implements AllDrugsView{
 
                     }
                 });
+
                 holder.imageView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
