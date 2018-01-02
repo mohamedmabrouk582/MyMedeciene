@@ -1,6 +1,12 @@
 package com.example.mohamed.mymedeciene.fragment;
 
 import android.animation.Animator;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.RectF;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -9,6 +15,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +30,7 @@ import com.example.mohamed.mymedeciene.appliction.DataManager;
 import com.example.mohamed.mymedeciene.appliction.MyApp;
 import com.example.mohamed.mymedeciene.data.Drug;
 import com.example.mohamed.mymedeciene.presenter.myDrugs.DrugsViewPresenter;
+import com.example.mohamed.mymedeciene.utils.AddListener;
 import com.example.mohamed.mymedeciene.utils.ZoomIMG;
 import com.example.mohamed.mymedeciene.view.DrugsView;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -29,8 +38,12 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by mohamed mabrouk
@@ -56,6 +69,9 @@ public class DrugsFragment extends Fragment implements View.OnClickListener,Drug
     private int mShortAnimationDuration;
     private ZoomIMG zoomIMG;
     private TextView errorView;
+    private List<String> drugsId=new ArrayList<>();
+    private List<Drug> mDrugs=new ArrayList<>();
+    private Paint p = new Paint();
 
 
     public static DrugsFragment newFragment(){
@@ -122,6 +138,7 @@ public class DrugsFragment extends Fragment implements View.OnClickListener,Drug
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+
                 showDrugs();
                 adapter.startListening();
             }
@@ -129,8 +146,19 @@ public class DrugsFragment extends Fragment implements View.OnClickListener,Drug
     }
 
     @Override
-    public void onClick(View view) {
-       presenter.addNewDrugs();
+    public void onClick(final View view) {
+       presenter.addNewDrugs(new AddListener() {
+           @Override
+           public void onSuccess(String success) {
+               presenter.showSnakBar(view,"Drug added Successfully");
+           }
+
+           @Override
+           public void OnError(String error) {
+               presenter.showSnakBar(view,error);
+
+           }
+       });
        actionMenu.collapse();
     }
 
@@ -179,7 +207,10 @@ public class DrugsFragment extends Fragment implements View.OnClickListener,Drug
             @Override
             protected void onBindViewHolder(@NonNull final DrugHolder holder, int position, @NonNull final Drug model) {
                 errorView.setVisibility(View.GONE);
-
+                DataSnapshot snapshot= (DataSnapshot) options.getSnapshots().getSnapshot(position);
+                drugsId.add(snapshot.getKey());
+                mDrugs.add(model);
+                Log.d("dddd", mDrugs.size() + "");
                 holder.bindData(model,dataManager.getPharmacy());
                  holder.imageView.setOnClickListener(new View.OnClickListener() {
                      @Override
@@ -195,8 +226,99 @@ public class DrugsFragment extends Fragment implements View.OnClickListener,Drug
         };
         adapter.notifyDataSetChanged();
         mRecyclerView.setAdapter(adapter);
+        initSwipe();
     }
 
+    private void initSwipe(){
+        ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
 
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                int position = viewHolder.getAdapterPosition();
+
+                if (direction == ItemTouchHelper.LEFT){
+                   removeItem(position);
+                }else {
+                    Log.d("len", mDrugs.size() + "");
+                    editDrug(mDrugs.get(position),drugsId.get(position));
+                }
+            }
+
+            @Override
+            public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+
+                Bitmap icon;
+                if(actionState == ItemTouchHelper.ACTION_STATE_SWIPE){
+
+                    View itemView = viewHolder.itemView;
+                    float height = (float) itemView.getBottom() - (float) itemView.getTop();
+                    float width = height / 3;
+
+                    if(dX > 0){
+                        p.setColor(Color.parseColor("#388E3C"));
+                        RectF background = new RectF((float) itemView.getLeft(), (float) itemView.getTop(), dX,(float) itemView.getBottom());
+                        c.drawRect(background,p);
+                        icon = BitmapFactory.decodeResource(getResources(),android.R.drawable.ic_menu_edit);
+                        RectF icon_dest = new RectF((float) itemView.getLeft() + width ,(float) itemView.getTop() + width,(float) itemView.getLeft()+ 2*width,(float)itemView.getBottom() - width);
+                        c.drawBitmap(icon,null,icon_dest,p);
+                    } else {
+                        p.setColor(Color.parseColor("#D32F2F"));
+                        RectF background = new RectF((float) itemView.getRight() + dX, (float) itemView.getTop(),(float) itemView.getRight(), (float) itemView.getBottom());
+                        c.drawRect(background,p);
+                        icon = BitmapFactory.decodeResource(getResources(), android.R.drawable.ic_menu_delete);
+                        RectF icon_dest = new RectF((float) itemView.getRight() - 2*width ,(float) itemView.getTop() + width,(float) itemView.getRight() - width,(float)itemView.getBottom() - width);
+                        c.drawBitmap(icon,null,icon_dest,p);
+                    }
+                }
+                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+            }
+        };
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
+        itemTouchHelper.attachToRecyclerView(mRecyclerView);
+
+    }
+
+    private void editDrug(Drug drug,String id){
+        mDrugs.clear();
+        drugsId.clear();
+        adapter.notifyDataSetChanged();
+        presenter.editDrug(drug,id, new AddListener() {
+            @Override
+            public void onSuccess(String success) {
+                mDrugs.clear();
+                drugsId.clear();
+                adapter.notifyDataSetChanged();
+                presenter.showSnakBar(view,"Drud Updated Successfully ");
+            }
+
+            @Override
+            public void OnError(String error) {
+             presenter.showSnakBar(view,error);
+            }
+        });
+    }
+
+    private void removeItem(final int position){
+        presenter.deleteDrug(drugsId.get(position), new AddListener() {
+            @Override
+            public void onSuccess(String success) {
+                drugsId.remove(position);
+                mDrugs.remove(position);
+                adapter.notifyItemRemoved(position);
+                adapter.notifyItemChanged(position,drugsId.size());
+
+            }
+
+            @Override
+            public void OnError(String error) {
+              presenter.showSnakBar(view,error);
+            }
+        });
+    }
 
 }

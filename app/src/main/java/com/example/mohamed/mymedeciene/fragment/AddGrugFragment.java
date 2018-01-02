@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
@@ -28,6 +29,7 @@ import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.example.mohamed.mymedeciene.R;
 import com.example.mohamed.mymedeciene.activity.HomeActivity;
+import com.example.mohamed.mymedeciene.data.Drug;
 import com.example.mohamed.mymedeciene.data.Pharmacy;
 import com.example.mohamed.mymedeciene.presenter.addDrug.AddDrugViewPresenter;
 import com.example.mohamed.mymedeciene.utils.AddListener;
@@ -46,6 +48,8 @@ import java.util.List;
  */
 
 public class AddGrugFragment extends DialogFragment implements AddDrugView,View.OnClickListener{
+    private static final String DRUG = "drug";
+    private static final String DRUGID = "drugid";
     private View view;
     private EditText name,price;
     private Spinner type,quantitySpinner;
@@ -56,12 +60,17 @@ public class AddGrugFragment extends DialogFragment implements AddDrugView,View.
     private AddDrugViewPresenter presenter;
     private static AddListener listener;
     private Uri mUri;
+    private Drug mDrug;
+    private String id;
 
-
-    public static AddGrugFragment newFragment(AddListener listeners){
+    public static AddGrugFragment newFragment(Drug drug,String id,AddListener listeners){
         listener=listeners;
-
-        return new AddGrugFragment();
+        Bundle bundle=new Bundle();
+        bundle.putParcelable(DRUG,drug);
+        bundle.putSerializable(DRUGID,id);
+        AddGrugFragment fragment=new AddGrugFragment();
+        fragment.setArguments(bundle);
+        return fragment;
     }
 
     @NonNull
@@ -87,6 +96,8 @@ public class AddGrugFragment extends DialogFragment implements AddDrugView,View.
         view= LayoutInflater.from(getActivity()).inflate(R.layout.add_drug,null);
     }
     private void init(){
+        mDrug=getArguments().getParcelable(DRUG);
+        id=getArguments().getString(DRUGID);
         presenter=new AddDrugViewPresenter(getActivity(),view);
         presenter.attachView(this);
         quantitySpinner=view.findViewById(R.id.sp_drug_quantity);
@@ -101,7 +112,7 @@ public class AddGrugFragment extends DialogFragment implements AddDrugView,View.
         add.setOnClickListener(this);
         drugIMG.setOnClickListener(this);
         setDATATOsPINNER();
-
+        if (mDrug!=null) setData(mDrug);
     }
 
     @Override
@@ -133,17 +144,11 @@ public class AddGrugFragment extends DialogFragment implements AddDrugView,View.
                     YoYo.with(Techniques.Shake).playOn(name);
                     presenter.showSnakBar(view,"Drug price not be Empty ");
                 }else{
-                   presenter.addDrug(dName, dPrice, dType, quantitySpinner.getSelectedItem().toString(), new AddListener() {
-                       @Override
-                       public void onSuccess(String success) {
-                           dialog.dismiss();
-                       }
-
-                       @Override
-                       public void OnError(String error) {
-
-                       }
-                   });
+                    if (mDrug==null) {
+                        presenter.addDrug(dName, dPrice, dType, quantitySpinner.getSelectedItem().toString(),listener);
+                    }else {
+                        presenter.editDrug(id,mDrug.getImg(), dName, dPrice, dType, quantitySpinner.getSelectedItem().toString(),listener);
+                    }
                 }
                 break;
             case R.id.ib_drug_img:
@@ -183,5 +188,39 @@ public class AddGrugFragment extends DialogFragment implements AddDrugView,View.
                 Exception error = result.getError();
             }
         }
+    }
+
+    private void setData(Drug drug){
+        Log.d("img", drug.getImg() + "");
+        if (!TextUtils.isEmpty(drug.getImg())){
+            Glide.with(getActivity()).load(Uri.parse(drug.getImg())).into(drugIMG);
+        }
+        name.setText(drug.getName());
+        price.setText(drug.getPrice());
+        quantitySpinner.setSelection(Integer.parseInt(drug.getQuantity())-1);
+        type.setSelection(getTypePosition(drug.getType()));
+    }
+
+    private int getTypePosition(String type) {
+
+        switch (type){
+            case "Injections":
+                return 0;
+            case "Capsules":
+                return 1;
+            case "Liquid":
+                return 2;
+            case "Tablet":
+                return 3;
+            case "Drops":
+                return 4;
+            case "Inhalers":
+                return 5;
+            case "Suppositories":
+                return 6;
+            default:
+                return 0;
+        }
+
     }
 }

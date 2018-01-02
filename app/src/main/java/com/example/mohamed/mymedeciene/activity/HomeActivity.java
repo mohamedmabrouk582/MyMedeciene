@@ -71,7 +71,8 @@ public class HomeActivity extends AppCompatActivity
     private SearchView mSearchView;
     private MenuItem editProfile,myDrugs,addDrugs,logout,search;
     private String[] permissions={Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.ACCESS_NETWORK_STATE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.ACCESS_NETWORK_STATE
+            ,Manifest.permission.CALL_PHONE,
             Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_LOCATION_EXTRA_COMMANDS};
     private DatabaseReference mDatabaseReference;
 

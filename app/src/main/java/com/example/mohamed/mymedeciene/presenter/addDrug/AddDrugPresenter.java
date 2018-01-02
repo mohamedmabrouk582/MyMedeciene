@@ -17,4 +17,5 @@ import com.example.mohamed.mymedeciene.view.AddDrugView;
 public interface AddDrugPresenter<v extends AddDrugView> extends MainPresnter<v> {
     void addDrugIMG(Uri img, ImageButton imageButton);
     void addDrug(String name, String price, String type,String Quantity,AddListener listener);
+    void editDrug(String drugId,String img,String name, String price, String type,String Quantity,AddListener listener);
 }

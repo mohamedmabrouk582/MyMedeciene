@@ -131,7 +131,7 @@ public class HomeViewPresenter<v extends HomeView> extends BasePresenter<v> impl
     @Override
     public void addDrug( AddListener listener) {
         FragmentManager fragmentManager=activity.getFragmentManager();
-        AddGrugFragment fragment=AddGrugFragment.newFragment(listener);
+        AddGrugFragment fragment=AddGrugFragment.newFragment(null,null,listener);
         fragment.show(fragmentManager,"");
     }
 

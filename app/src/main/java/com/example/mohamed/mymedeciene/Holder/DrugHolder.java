@@ -3,6 +3,7 @@ package com.example.mohamed.mymedeciene.Holder;
 import android.app.Activity;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -22,6 +23,7 @@ public class DrugHolder extends RecyclerView.ViewHolder{
     public  View view;
     public ImageView imageView;
     public TextView drugName,drugPrice,drugQuantity,drugType,phName,phPhone,phLocation;
+
 
     public DrugHolder(View itemView,Activity activity) {
         super(itemView);

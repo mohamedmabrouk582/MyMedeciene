@@ -118,23 +118,43 @@ public class AddDrugViewPresenter<v extends AddDrugView> extends BasePresenter<v
           }
 
         DatabaseReference push = FirebaseDatabase.getInstance().getReference().push();
+        updateChildren(push.getKey(),map,listener);
+    }
+
+    private void updateChildren(String key,Map map,final AddListener listener){
         Map drugs=new HashMap();
-          drugs.put(mAuth.getUid()+"/"+push.getKey(),map);
-          drugs.put("AllDrugs/"+push.getKey(),map);
+        drugs.put(mAuth.getUid()+"/"+key,map);
+        drugs.put("AllDrugs/"+key,map);
 
 
 
-         mDatabaseReference.updateChildren(drugs, new DatabaseReference.CompletionListener() {
-             @Override
-             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-              if (databaseError==null){
-                  listener.onSuccess("add Drug Done");
-              }    else {
-                  listener.OnError(databaseError.getMessage());
-              }
-             }
-         });
+        mDatabaseReference.updateChildren(drugs, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                if (databaseError==null){
+                    getView().close();
+                    listener.onSuccess("add Drug Done");
+                }    else {
+                    getView().close();
+                    listener.OnError(databaseError.getMessage());
+                }
+            }
+        });
+    }
 
+    @Override
+    public void editDrug(String drugId,String img, String name, String price, String type, String Quantity, AddListener listener) {
+        map.put("name",name);
+        map.put("type",type);
+        map.put("price",price);
+        map.put("quantity",Quantity);
+        map.put("phKey",mAuth.getUid());
+        map.put("img",img);
+        if (url!=null){
+            map.put("img",url);
+        }
+
+        updateChildren(drugId,map,listener);
     }
 
 

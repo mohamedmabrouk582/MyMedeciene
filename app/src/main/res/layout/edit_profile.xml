@@ -86,6 +86,6 @@
         android:id="@+id/close"
         android:layout_width="@dimen/_40sdp"
         android:layout_height="@dimen/_40sdp"
-        android:background="@drawable/ic_edt"
+        android:background="@drawable/ic_close"
         />
 </FrameLayout>

@@ -97,7 +97,7 @@
                  android:id="@+id/ib_drug_img"
                  android:layout_width="match_parent"
                  android:layout_height="@dimen/_120sdp"
-                 android:background="@drawable/logo"
+                 android:background="@drawable/download"
                  />
              <ProgressBar
                  android:visibility="gone"
@@ -145,7 +145,7 @@
         android:id="@+id/close_drug"
         android:layout_width="@dimen/_40sdp"
         android:layout_height="@dimen/_40sdp"
-        android:background="@drawable/ic_edt"
+        android:background="@drawable/ic_close"
         />
     </FrameLayout>
 </ScrollView>

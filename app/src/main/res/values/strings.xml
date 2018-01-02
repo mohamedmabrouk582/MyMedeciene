@@ -21,10 +21,13 @@
     <string name="home">Home</string>
     <string name="noItemFound">Not Find Any Drugs</string>
     <string-array name="drug_type">
-        <item>7okan</item>
-        <item>leboc</item>
-        <item>sharab</item>
-        <item>7bwob</item>
+        <item>Injections</item>
+        <item>Capsules</item>
+        <item>Liquid</item>
+        <item>Tablet</item>
+        <item>Drops</item>
+        <item>Inhalers</item>
+        <item>Suppositories</item>
     </string-array>
     <string name="title_activity_maps">Map</string>
 </resources>

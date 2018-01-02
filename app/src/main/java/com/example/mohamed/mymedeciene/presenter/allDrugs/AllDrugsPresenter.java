@@ -11,5 +11,5 @@ import com.example.mohamed.mymedeciene.view.AllDrugsView;
  */
 
 public interface AllDrugsPresenter<v extends AllDrugsView> extends MainPresnter<v> {
-    void clickDrugs(Drug drug);
+    void call(String phone);
 }
