@@ -1,7 +1,10 @@
 package com.example.mohamed.mymedeciene.mapRoute;
 
+import android.app.Activity;
 import android.util.Log;
 
+import com.example.mohamed.mymedeciene.activity.HomeActivity;
+import com.example.mohamed.mymedeciene.activity.MapsActivity;
 import com.example.mohamed.mymedeciene.mapRoute.api.ClientApi;
 import com.example.mohamed.mymedeciene.mapRoute.api.MapApi;
 import com.example.mohamed.mymedeciene.mapRoute.data.Location;
@@ -26,23 +29,52 @@ import io.reactivex.schedulers.Schedulers;
  */
 
 public class MakeRequest {
-    private String from ;
-    private String to;
+//    private String from ;
+//    private String to;
     private MapApi mapApi;
+    private Activity activity;
 
-    public MakeRequest(String from, String to) {
-        this.from = from;
-        this.to = to;
+    public MakeRequest(Activity activity) {
+//        this.from = from;
+//        this.to = to;
+        this.activity=activity;
         mapApi= ClientApi.getRetrofit().create(MapApi.class);
 
     }
 
 
-    public  void makeRequest(Observer<RouteRepons> routeReponsObserver){
-        Observable<RouteRepons> routeReponsObservable = mapApi.getRouteReponsObservable(from, to);
+//    public  void makeRequest(Observer<RouteRepons> routeReponsObserver){
+//        Observable<RouteRepons> routeReponsObservable = mapApi.getRouteReponsObservable(from, to);
+//        routeReponsObservable.subscribeOn(Schedulers.io()).
+//                observeOn(AndroidSchedulers.mainThread())
+//                .subscribeWith(routeReponsObserver);
+//    }
+
+    public void OpenMap( final String to){
+        Observable<RouteRepons> routeReponsObservable = mapApi.getRouteReponsObservable(HomeActivity.myCurrentLocation, to);
         routeReponsObservable.subscribeOn(Schedulers.io()).
                 observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(routeReponsObserver);
+                .subscribeWith(new Observer<RouteRepons>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(RouteRepons routeRepons) {
+                        MapsActivity.start(activity,to,getLatLangs(routeRepons.getRoutes()));
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
     }
 
 

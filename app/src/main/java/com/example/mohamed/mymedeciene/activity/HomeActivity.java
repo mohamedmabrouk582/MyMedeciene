@@ -45,6 +45,7 @@ import com.example.mohamed.mymedeciene.appliction.MyApp;
 import com.example.mohamed.mymedeciene.data.Pharmacy;
 import com.example.mohamed.mymedeciene.fragment.AllDrugsFragment;
 import com.example.mohamed.mymedeciene.fragment.DrugsFragment;
+import com.example.mohamed.mymedeciene.mapRoute.MakeRequest;
 import com.example.mohamed.mymedeciene.presenter.Home.HomePresenter;
 import com.example.mohamed.mymedeciene.presenter.Home.HomeViewPresenter;
 import com.example.mohamed.mymedeciene.utils.AddListener;
@@ -82,6 +83,7 @@ public class HomeActivity extends AppCompatActivity
             ,Manifest.permission.CALL_PHONE,
             Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_LOCATION_EXTRA_COMMANDS};
     private DatabaseReference mDatabaseReference;
+    private MakeRequest makeRequest;
 
 
     public static void newIntentPharmacy(Context context,Pharmacy pharmacy){
@@ -100,6 +102,7 @@ public class HomeActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         Toolbar toolbar =  findViewById(R.id.toolbar);
+        makeRequest=new MakeRequest(this);
         setSupportActionBar(toolbar);
         LocationManager locationManager= (LocationManager) getSystemService(Context.LOCATION_SERVICE);
        // locationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER,this, Looper.getMainLooper());
@@ -314,7 +317,8 @@ public class HomeActivity extends AppCompatActivity
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.pharmacy_location:
-                MapsActivity.start(this,mPharmacy.getLatLang(),mPharmacy.getPhLocation());
+                //MapsActivity.start(this,mPharmacy.getLatLang(),mPharmacy.getPhLocation());
+                makeRequest.OpenMap(mPharmacy.getLatLang());
                 break;
             case R.id.pharmacy_img:
                 drawer.closeDrawers();

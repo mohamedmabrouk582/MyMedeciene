@@ -55,11 +55,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private DataManager dataManager;
     private ImageView normal,hybrid,terrain,satellite;
     private MarkerOptions fromMarkerOptions,toMarkerOptions;
+    private static List<LatLng> mLatLngs;
 
-    public static void start(Context context,String address,String location){
+    public static void start(Context context,String address,List<LatLng> latLngs){
         Intent intent=new Intent(context,MapsActivity.class);
         intent.putExtra(ADDRESS,address);
-        intent.putExtra(LOCATIONS,location);
+        mLatLngs=latLngs;
+        //intent.putExtra(LOCATIONS,location);
         context.startActivity(intent);
     }
 
@@ -86,41 +88,41 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         toMarkerOptions=new MarkerOptions();
         fromMarkerOptions=new MarkerOptions();
         mMap.setMyLocationEnabled(true);
-
+         drawRout(mLatLngs);
         // new  MapParser.MapParserBuilder(dataManager.getPharmacy().getLatLang(),myAddress).build();
         // Add a marker in Sydney and move the camera
 
           //  RouteRequest(dataManager.getPharmacy().getLatLang(),myAddress);
-        RouteRequest(myCurrentLocation,myAddress);
+       // RouteRequest(myCurrentLocation,myAddress);
 
 
 
     }
 
-    private void RouteRequest(String from,String to){
-        final MakeRequest makeRequest=new MakeRequest(from,myAddress);
-        makeRequest.makeRequest(new Observer<RouteRepons>() {
-            @Override
-            public void onSubscribe(Disposable d) {
-
-            }
-
-            @Override
-            public void onNext(RouteRepons routeRepons) {
-                drawRout(makeRequest.getLatLangs(routeRepons.getRoutes()));
-            }
-
-            @Override
-            public void onError(Throwable e) {
-
-            }
-
-            @Override
-            public void onComplete() {
-
-            }
-        });
-    }
+//    private void RouteRequest(String from,String to){
+//        final MakeRequest makeRequest=new MakeRequest(from,myAddress);
+//        makeRequest.makeRequest(new Observer<RouteRepons>() {
+//            @Override
+//            public void onSubscribe(Disposable d) {
+//
+//            }
+//
+//            @Override
+//            public void onNext(RouteRepons routeRepons) {
+//                drawRout(makeRequest.getLatLangs(routeRepons.getRoutes()));
+//            }
+//
+//            @Override
+//            public void onError(Throwable e) {
+//
+//            }
+//
+//            @Override
+//            public void onComplete() {
+//
+//            }
+//        });
+//    }
 
     private void drawRout(List<LatLng> latLngs) {
         String[] dest = myAddress.split(",");

@@ -32,6 +32,7 @@ import com.example.mohamed.mymedeciene.appliction.DataManager;
 import com.example.mohamed.mymedeciene.appliction.MyApp;
 import com.example.mohamed.mymedeciene.data.Drug;
 import com.example.mohamed.mymedeciene.data.Pharmacy;
+import com.example.mohamed.mymedeciene.mapRoute.MakeRequest;
 import com.example.mohamed.mymedeciene.presenter.allDrugs.AllDrugsViewPresenter;
 import com.example.mohamed.mymedeciene.presenter.myDrugs.DrugsViewPresenter;
 import com.example.mohamed.mymedeciene.utils.ZoomIMG;
@@ -79,6 +80,7 @@ public class AllDrugsFragment extends Fragment implements AllDrugsView{
     private Paint p = new Paint();
     private List<String> phones=new ArrayList<>();
     private List<String> locations=new ArrayList<>();
+    private MakeRequest makeRequest;
 
 
     public static AllDrugsFragment newFragment(String query){
@@ -99,6 +101,7 @@ public class AllDrugsFragment extends Fragment implements AllDrugsView{
         iniRecyl();
         iniSwipe();
         showDrugs();
+        makeRequest=new MakeRequest(getActivity());
         mProgressDialog=new ProgressDialog(getActivity());
         mProgressDialog.setCancelable(false);
         mProgressDialog.setMessage("wait for Open map ......");
@@ -219,7 +222,8 @@ public class AllDrugsFragment extends Fragment implements AllDrugsView{
                             @Override
                             public void onClick(View v) {
                                 mProgressDialog.show();
-                                MapsActivity.start(getActivity(),value.getLatLang(),value.getPhLocation());
+                                makeRequest.OpenMap(value.getLatLang());
+                            //    MapsActivity.start(getActivity(),value.getLatLang(),value.getPhLocation());
                                 mProgressDialog.dismiss();
                             }
                         });
@@ -271,7 +275,9 @@ public class AllDrugsFragment extends Fragment implements AllDrugsView{
 
                             presenter.call(pharmacy.getPhPhone());
                         }else {
-                            MapsActivity.start(getActivity(),pharmacy.getLatLang(),pharmacy.getPhLocation());
+                            makeRequest.OpenMap(pharmacy.getLatLang());
+
+                            //   MapsActivity.start(getActivity(),pharmacy.getLatLang(),pharmacy.getPhLocation());
                         }
                     }
 
