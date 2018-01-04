@@ -34,11 +34,15 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.List;
+import java.util.Locale;
 
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
+
+import static com.example.mohamed.mymedeciene.activity.HomeActivity.myCurrentLocation;
 
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback ,View.OnClickListener{
@@ -51,6 +55,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private DataManager dataManager;
     private ImageView normal,hybrid,terrain,satellite;
     private MarkerOptions fromMarkerOptions,toMarkerOptions;
+
     public static void start(Context context,String address,String location){
         Intent intent=new Intent(context,MapsActivity.class);
         intent.putExtra(ADDRESS,address);
@@ -67,6 +72,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         dataManager=((MyApp) getApplication()).getData();
         mLayout=findViewById(R.id.mylayout);
         myAddress=getIntent().getStringExtra(ADDRESS);
+
         myLocation=getIntent().getStringExtra(LOCATIONS);
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -79,11 +85,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
         toMarkerOptions=new MarkerOptions();
         fromMarkerOptions=new MarkerOptions();
-       // new  MapParser.MapParserBuilder(dataManager.getPharmacy().getLatLang(),myAddress).build();
-        // Add a marker in Sydney and move the camera
         mMap.setMyLocationEnabled(true);
-        final MakeRequest makeRequest=new MakeRequest(dataManager.getPharmacy().getLatLang(),myAddress);
 
+        // new  MapParser.MapParserBuilder(dataManager.getPharmacy().getLatLang(),myAddress).build();
+        // Add a marker in Sydney and move the camera
+
+          //  RouteRequest(dataManager.getPharmacy().getLatLang(),myAddress);
+        RouteRequest(myCurrentLocation,myAddress);
+
+
+
+    }
+
+    private void RouteRequest(String from,String to){
+        final MakeRequest makeRequest=new MakeRequest(from,myAddress);
         makeRequest.makeRequest(new Observer<RouteRepons>() {
             @Override
             public void onSubscribe(Disposable d) {
@@ -105,14 +120,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             }
         });
-
-
-
     }
 
     private void drawRout(List<LatLng> latLngs) {
         String[] dest = myAddress.split(",");
-        String[] source = dataManager.getPharmacy().getLatLang().split(",");
+        String[] source = myCurrentLocation.split(",");
         LatLng to = new LatLng(Double.parseDouble(dest[0]), Double.parseDouble(dest[1]));
         LatLng from = new LatLng(Double.parseDouble(source[0]), Double.parseDouble(source[1]));
             if (latLngs.size() > 0) {
@@ -126,8 +138,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 toMarkerOptions.draggable(true);
                 fromMarkerOptions.position(from);
                 fromMarkerOptions.draggable(true);
-                mMap.addMarker(toMarkerOptions.title(myLocation));
-                mMap.addMarker(fromMarkerOptions.title(dataManager.getPharmacy().getPhLocation()));
+                mMap.addMarker(toMarkerOptions.title(address(to)));
+                mMap.addMarker(fromMarkerOptions.title(address(from)));
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(to, 15f));
                 mMap.animateCamera(CameraUpdateFactory.zoomTo(15), 2000, null);
 
@@ -178,5 +190,27 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
                 break;
         }
+    }
+
+    private String address(LatLng latLng){
+        String addres = null;
+        try {
+
+
+            Geocoder geocoder;
+            List<Address> addresses;
+            geocoder = new Geocoder(this, Locale.getDefault());
+
+            addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+
+            String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+            String city = addresses.get(0).getLocality();
+            String state = addresses.get(0).getAdminArea();
+            String country = addresses.get(0).getCountryName();
+            String postalCode = addresses.get(0).getPostalCode();
+            String knownName = addresses.get(0).getFeatureName();
+            addres=address;
+        }catch (Exception e){}
+        return addres;
     }
 }

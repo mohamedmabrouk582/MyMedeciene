@@ -6,9 +6,13 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Looper;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -33,6 +37,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.mohamed.mymedeciene.R;
@@ -46,6 +51,7 @@ import com.example.mohamed.mymedeciene.utils.AddListener;
 import com.example.mohamed.mymedeciene.utils.QueryListener;
 import com.example.mohamed.mymedeciene.utils.ZoomIMG;
 import com.example.mohamed.mymedeciene.view.HomeView;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.database.DatabaseReference;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
@@ -53,7 +59,7 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class HomeActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener,HomeView,View.OnClickListener {
+        implements NavigationView.OnNavigationItemSelectedListener,HomeView,View.OnClickListener,LocationListener {
     private static final String PHARMACY = "pharmacy";
     private static final int PERMISSION = 100;
     private CircleImageView phIMG;
@@ -69,6 +75,7 @@ public class HomeActivity extends AppCompatActivity
     private ZoomIMG zoomIMG;
     private Menu menu;
     private SearchView mSearchView;
+    public static volatile String myCurrentLocation=null;
     private MenuItem editProfile,myDrugs,addDrugs,logout,search;
     private String[] permissions={Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.ACCESS_NETWORK_STATE
@@ -94,7 +101,9 @@ public class HomeActivity extends AppCompatActivity
         setContentView(R.layout.activity_home);
         Toolbar toolbar =  findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        LocationManager locationManager= (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+       // locationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER,this, Looper.getMainLooper());
+      locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,5000,50,this);
          drawer =  findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -387,5 +396,25 @@ public class HomeActivity extends AppCompatActivity
     }
 
 
+    @Override
+    public void onLocationChanged(Location location) {
+        LatLng latLng=new LatLng(location.getLatitude(),location.getLongitude());
+        myCurrentLocation=latLng.toString().replace("(","").replace(")","").replace("lat/lng:","");
+        Toast.makeText(this, myCurrentLocation, Toast.LENGTH_SHORT).show();
+    }
 
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
+    }
 }
