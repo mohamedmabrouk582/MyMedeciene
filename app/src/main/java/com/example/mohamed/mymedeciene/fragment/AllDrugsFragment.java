@@ -219,7 +219,7 @@ public class AllDrugsFragment extends Fragment implements AllDrugsView{
                             @Override
                             public void onClick(View v) {
                                 mProgressDialog.show();
-                                MapsActivity.start(getActivity(),value.getPhLocation());
+                                MapsActivity.start(getActivity(),value.getLatLang(),value.getPhLocation());
                                 mProgressDialog.dismiss();
                             }
                         });
@@ -271,7 +271,7 @@ public class AllDrugsFragment extends Fragment implements AllDrugsView{
 
                             presenter.call(pharmacy.getPhPhone());
                         }else {
-                            MapsActivity.start(getActivity(),pharmacy.getPhLocation());
+                            MapsActivity.start(getActivity(),pharmacy.getLatLang(),pharmacy.getPhLocation());
                         }
                     }
 

@@ -11,7 +11,7 @@ import com.example.mohamed.mymedeciene.view.EditProfileView;
 
 public interface EditProfilePresenter<v extends EditProfileView> extends MainPresnter<v>{
     interface editListner{
-        void onSucess();
+        void onSuccess(String latLang);
         void onError(String error);
     }
     void save(String phName,String phPhone,String phLocation,editListner listner);

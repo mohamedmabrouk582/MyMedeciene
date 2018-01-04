@@ -126,11 +126,12 @@ public class EditProfileFragment extends DialogFragment implements EditProfileVi
                 }else{
                    presenter.save(name, phone, location, new EditProfilePresenter.editListner() {
                        @Override
-                       public void onSucess() {
+                       public void onSuccess(String latLang) {
                            dialog.dismiss();
                            dataManager.setPhLocation(location);
                            dataManager.setPhName(name);
                            dataManager.setPhPhone(phone);
+                           dataManager.setLatLang(latLang);
                            listener.onSuccess(dataManager.getPharmacy());
 
                            Log.d("dd", dataManager.getPharmacy().getPhName() + "");

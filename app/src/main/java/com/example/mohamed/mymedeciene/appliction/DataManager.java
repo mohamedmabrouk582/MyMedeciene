@@ -30,8 +30,12 @@ public class DataManager {
         myShared.putPhLocation(location);
     }
 
-    public void setPharmacy(String name,String phone, String img,String location){
-        myShared.putPharmacy(name,phone,img,location);
+    public void setPharmacy(String name,String phone, String img,String location,String latLang){
+        myShared.putPharmacy(name,phone,img,location,latLang);
+    }
+
+    public void setLatLang(String latLang){
+        myShared.putLatLang(latLang);
     }
 
     public void clear(){

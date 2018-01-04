@@ -50,7 +50,7 @@ public class LoginViewPresenter<v extends LoginView> extends BasePresenter<v> im
                       @Override
                       public void onDataChange(DataSnapshot dataSnapshot) {
                           Pharmacy pharmacy=dataSnapshot.getValue(Pharmacy.class);
-                          dataManager.setPharmacy(pharmacy.getPhName(),pharmacy.getPhPhone(),pharmacy.getPhImgURL(),pharmacy.getPhLocation());
+                          dataManager.setPharmacy(pharmacy.getPhName(),pharmacy.getPhPhone(),pharmacy.getPhImgURL(),pharmacy.getPhLocation(),pharmacy.getLatLang());
                           HomeActivity.newIntentPharmacy(activity,pharmacy);
                           Log.d("ph", pharmacy.toString() + "");
                           activity.finish();

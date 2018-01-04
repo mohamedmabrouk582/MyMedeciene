@@ -15,6 +15,7 @@ public class Pharmacy implements Parcelable {
     private String phPhone;
     private String phImgURL;
     private String phLocation;
+    private String latLang;
 
     @Override
     public String toString() {
@@ -26,13 +27,21 @@ public class Pharmacy implements Parcelable {
                 '}';
     }
 
-    public Pharmacy(String phName, String phPhone, String phImgURL, String phLocation) {
+    public Pharmacy(String phName, String phPhone, String phImgURL, String phLocation, String latLang) {
         this.phName = phName;
         this.phPhone = phPhone;
         this.phImgURL = phImgURL;
         this.phLocation = phLocation;
+        this.latLang = latLang;
     }
 
+    public String getLatLang() {
+        return latLang;
+    }
+
+    public void setLatLang(String latLang) {
+        this.latLang = latLang;
+    }
 
     public Pharmacy() {
     }
@@ -81,6 +90,7 @@ public class Pharmacy implements Parcelable {
         dest.writeString(this.phPhone);
         dest.writeString(this.phImgURL);
         dest.writeString(this.phLocation);
+        dest.writeString(this.latLang);
     }
 
     protected Pharmacy(Parcel in) {
@@ -88,6 +98,7 @@ public class Pharmacy implements Parcelable {
         this.phPhone = in.readString();
         this.phImgURL = in.readString();
         this.phLocation = in.readString();
+        this.latLang = in.readString();
     }
 
     public static final Creator<Pharmacy> CREATOR = new Creator<Pharmacy>() {

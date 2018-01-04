@@ -305,7 +305,7 @@ public class HomeActivity extends AppCompatActivity
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.pharmacy_location:
-                MapsActivity.start(this,mPharmacy.getPhLocation());
+                MapsActivity.start(this,mPharmacy.getLatLang(),mPharmacy.getPhLocation());
                 break;
             case R.id.pharmacy_img:
                 drawer.closeDrawers();

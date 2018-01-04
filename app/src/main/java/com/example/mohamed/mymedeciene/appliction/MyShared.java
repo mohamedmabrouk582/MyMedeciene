@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.location.Location;
 
 import com.example.mohamed.mymedeciene.data.Pharmacy;
-import com.google.gson.Gson;
 
 /**
  * Created by mohamed mabrouk
@@ -18,6 +17,7 @@ public class MyShared {
     private static final String PHONE = "PHPHONE";
     private static final String IMG = "PHIMG";
     private static final String LOCATION ="LOCATION" ;
+    private static final String LATLANG ="LATLANG" ;
     private SharedPreferences mSharedPreferences;
 private SharedPreferences.Editor editor;
 public MyShared(Context context){
@@ -45,16 +45,22 @@ public void putPhLocation(String location){
     editor.putString(LOCATION,location).apply();
 }
 
+public  void putLatLang(String latLang){
+    editor.remove(LATLANG);
+    latLang=latLang.replace("(","");
+    latLang=latLang.replace(")","");
+    editor.putString(LATLANG,latLang).apply();
+}
 
-public void putPharmacy(String name,String phone,String img,String location){
+
+public void putPharmacy(String name,String phone,String img,String location,String latLang){
     clear();
     editor.putString(NAME,name);
     editor.putString(PHONE,phone);
     editor.putString(IMG,img);
     editor.putString(LOCATION,location);
+    editor.putString(LATLANG,latLang);
     editor.apply();
-
-
 }
 
 public void clear(){
@@ -66,13 +72,14 @@ public Pharmacy getPharmacy(){
     String phone;
     String img;
     String location;
-
+    String latLang;
     name=mSharedPreferences.getString(NAME,"null");
     phone=mSharedPreferences.getString(PHONE,"null");
     img=mSharedPreferences.getString(IMG,"null");
     location= mSharedPreferences.getString(LOCATION, null);
+    latLang=mSharedPreferences.getString(LATLANG,null);
 
-    return new Pharmacy(name,phone,img,location);
+    return new Pharmacy(name,phone,img,location,latLang);
 }
 
 
