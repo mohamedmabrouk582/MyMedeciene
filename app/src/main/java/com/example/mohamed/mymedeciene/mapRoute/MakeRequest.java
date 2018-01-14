@@ -1,26 +1,36 @@
 package com.example.mohamed.mymedeciene.mapRoute;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.widget.Toast;
 
+import com.example.mohamed.mymedeciene.R;
 import com.example.mohamed.mymedeciene.activity.HomeActivity;
 import com.example.mohamed.mymedeciene.activity.MapsActivity;
-import com.example.mohamed.mymedeciene.mapRoute.api.ClientApi;
-import com.example.mohamed.mymedeciene.mapRoute.api.MapApi;
 import com.example.mohamed.mymedeciene.mapRoute.data.Location;
 import com.example.mohamed.mymedeciene.mapRoute.data.Route;
 import com.example.mohamed.mymedeciene.mapRoute.data.RouteRepons;
 import com.example.mohamed.mymedeciene.mapRoute.data.Steps;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.gson.Gson;
+import com.txusballesteros.bubbles.BubbleLayout;
+import com.txusballesteros.bubbles.BubblesManager;
+import com.txusballesteros.bubbles.OnInitializedCallback;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.Observable;
-import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by mohamed mabrouk
@@ -29,55 +39,27 @@ import io.reactivex.schedulers.Schedulers;
  */
 
 public class MakeRequest {
-//    private String from ;
-//    private String to;
-    private MapApi mapApi;
+    private String to;
     private Activity activity;
+    private ProgressDialog mProgressDialog;
+    private BubblesManager bubblesManager;
 
     public MakeRequest(Activity activity) {
-//        this.from = from;
-//        this.to = to;
         this.activity=activity;
-        mapApi= ClientApi.getRetrofit().create(MapApi.class);
+        mProgressDialog=new ProgressDialog(activity);
+        mProgressDialog.setMessage("Map loading .......");
+        initializeBubblesManager();
 
     }
 
-
-//    public  void makeRequest(Observer<RouteRepons> routeReponsObserver){
-//        Observable<RouteRepons> routeReponsObservable = mapApi.getRouteReponsObservable(from, to);
-//        routeReponsObservable.subscribeOn(Schedulers.io()).
-//                observeOn(AndroidSchedulers.mainThread())
-//                .subscribeWith(routeReponsObserver);
-//    }
-
-    public void OpenMap( final String to){
-        Observable<RouteRepons> routeReponsObservable = mapApi.getRouteReponsObservable(HomeActivity.myCurrentLocation, to);
-        routeReponsObservable.subscribeOn(Schedulers.io()).
-                observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new Observer<RouteRepons>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onNext(RouteRepons routeRepons) {
-                        MapsActivity.start(activity,to,getLatLangs(routeRepons.getRoutes()));
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
+    public void go(String to){
+        this.to=to;
+       MapRoute mapRoute=new MapRoute();
+       List<String> list=new ArrayList<>();
+       list.add(HomeActivity.myCurrentLocation);
+       list.add(to);
+       mapRoute.execute(list);
     }
-
-
 
     public List<LatLng> getLatLangs(List<Route> routes){
         List<LatLng> routList=new ArrayList<>();
@@ -136,4 +118,122 @@ public class MakeRequest {
         }
         return poly;
     }
+
+
+    public class MapRoute extends AsyncTask<List<String>,Void,List<Route>>{
+        @Override
+        protected void onPreExecute() {
+            mProgressDialog.show();
+        }
+
+        @Override
+        protected List<Route> doInBackground(List<String>[] lists) {
+            List<String> fromTo=lists[0];
+          String  url = Uri
+                    .parse("http://maps.google.com/maps/api/directions/json")
+                    .buildUpon()
+                    .appendQueryParameter("origin",fromTo.get(0))
+                    .appendQueryParameter("destination",fromTo.get(1))
+                    .appendQueryParameter("method","GET")
+                    .build().buildUpon().toString();
+
+
+            return  getRoute(url);
+        }
+
+        @Override
+        protected void onPostExecute(List<Route> routes) {
+            MapsActivity.start(activity,to,getLatLangs(routes));
+            mProgressDialog.dismiss();
+        }
+
+        private List<Route> getRoute(String url){
+            List<Route> routes=new ArrayList<>();
+            try {
+                String json=getUrlString(url);
+                Gson gson=new Gson();
+                RouteRepons route=gson.fromJson(json,RouteRepons.class);
+                routes=route.getRoutes();
+                Log.d("asynresp", routes.size() + "");
+            }catch (Exception  e){
+
+            }
+
+            return routes;
+        }
+
+        public String getUrlString(String urlSepc) throws IOException {
+            return new String(getUrlBytes(urlSepc));
+        }
+
+        public byte[] getUrlBytes(String urlSpec) throws IOException {
+            URL url = new URL(urlSpec);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            try {
+                ByteArrayOutputStream out = new ByteArrayOutputStream();
+                InputStream in = connection.getInputStream();
+                if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
+                    throw new IOException(connection.getResponseMessage() +
+                            ": with " +
+                            urlSpec);
+                }
+                int bytesRead = 0;
+                byte[] buffer = new byte[1024];
+                while ((bytesRead = in.read(buffer)) > 0) {
+                    out.write(buffer, 0, bytesRead);
+                }
+
+                in.close();
+                return out.toByteArray();
+            } catch (Exception e) {
+                return null;
+
+            } finally {
+                connection.disconnect();
+            }
+
+        }
+
+
+    }
+
+    @SuppressLint("NewApi")
+    public void addNewBubble() {
+        final BubbleLayout bubbleView = (BubbleLayout) LayoutInflater.from(activity).inflate(R.layout.bubble_layout, null);
+        bubbleView.setOnBubbleRemoveListener(new BubbleLayout.OnBubbleRemoveListener() {
+            @Override
+            public void onBubbleRemoved(BubbleLayout bubble) { }
+        });
+        bubbleView.setOnBubbleClickListener(new BubbleLayout.OnBubbleClickListener() {
+
+            @Override
+            public void onBubbleClick(BubbleLayout bubble) {
+                Intent i = activity.getPackageManager()
+                        .getLaunchIntentForPackage(
+                                activity.getPackageName());
+                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                activity.startActivity(i);
+                bubbleView.cancelDragAndDrop();
+
+            }
+        });
+        bubbleView.setShouldStickToWall(true);
+        bubblesManager.addBubble(bubbleView, 60, 20);
+    }
+
+
+
+    public void initializeBubblesManager() {
+        bubblesManager = new BubblesManager.Builder(activity)
+                .setTrashLayout(R.layout.bubble_trash)
+                .setInitializationCallback(new OnInitializedCallback() {
+                    @Override
+                    public void onInitialized() {
+
+                    }
+                })
+                .build();
+        bubblesManager.initialize();
+    }
+
 }

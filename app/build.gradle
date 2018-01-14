@@ -49,10 +49,13 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth:11.6.2'
     implementation 'com.google.firebase:firebase-storage:11.6.2'
     implementation 'com.getbase:floatingactionbutton:1.10.1'
-    implementation 'com.squareup.retrofit2:retrofit:2.3.0'
     implementation 'com.google.code.gson:gson:2.8.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
-    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'
+    implementation 'com.txusballesteros:bubbles:1.2.1'
+
+    // for save instance
+    implementation 'com.evernote:android-state:1.1.6'
+    annotationProcessor 'com.evernote:android-state-processor:1.1.6'
 
 
 

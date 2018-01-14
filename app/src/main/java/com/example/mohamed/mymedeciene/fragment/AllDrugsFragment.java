@@ -1,15 +1,19 @@
 package com.example.mohamed.mymedeciene.fragment;
 
 import android.animation.Animator;
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -24,7 +28,10 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.evernote.android.state.State;
+import com.evernote.android.state.StateSaver;
 import com.example.mohamed.mymedeciene.Holder.DrugHolder;
 import com.example.mohamed.mymedeciene.R;
 import com.example.mohamed.mymedeciene.activity.MapsActivity;
@@ -32,9 +39,11 @@ import com.example.mohamed.mymedeciene.appliction.DataManager;
 import com.example.mohamed.mymedeciene.appliction.MyApp;
 import com.example.mohamed.mymedeciene.data.Drug;
 import com.example.mohamed.mymedeciene.data.Pharmacy;
+import com.example.mohamed.mymedeciene.data.dataBase.DBoperations;
 import com.example.mohamed.mymedeciene.mapRoute.MakeRequest;
 import com.example.mohamed.mymedeciene.presenter.allDrugs.AllDrugsViewPresenter;
 import com.example.mohamed.mymedeciene.presenter.myDrugs.DrugsViewPresenter;
+import com.example.mohamed.mymedeciene.utils.NetworkChangeReceiver;
 import com.example.mohamed.mymedeciene.utils.ZoomIMG;
 import com.example.mohamed.mymedeciene.view.AllDrugsView;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -51,13 +60,15 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.mohamed.mymedeciene.activity.HomeActivity.myCurrentLocation;
+
 /**
  * Created by mohamed mabrouk
  * 0201152644726
  * on 24/12/2017.  time :22:08
  */
 
-public class AllDrugsFragment extends Fragment implements AllDrugsView{
+public class AllDrugsFragment extends Fragment implements AllDrugsView, NetworkChangeReceiver.ConnectivityReceiverListener {
     private static final String QUERY = "query";
     private RecyclerView mRecyclerView;
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -78,9 +89,10 @@ public class AllDrugsFragment extends Fragment implements AllDrugsView{
     private TextView errorView;
     private ProgressDialog mProgressDialog;
     private Paint p = new Paint();
-    private List<String> phones=new ArrayList<>();
-    private List<String> locations=new ArrayList<>();
     private MakeRequest makeRequest;
+
+    private final String KEY_RECYCLER_STATE = "recycler_state";
+    private static Bundle mBundleRecyclerViewState;
 
 
     public static AllDrugsFragment newFragment(String query){
@@ -141,9 +153,9 @@ public class AllDrugsFragment extends Fragment implements AllDrugsView{
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                query = mDatabaseReference.child("Drugs").child("AllDrugs").limitToFirst(10);
+                query = mDatabaseReference.child("Drugs").child("AllDrugs").orderByChild("name").limitToFirst(10);
                 options=new FirebaseRecyclerOptions.Builder<Drug>().setQuery(query,Drug.class).build();
-
+                DBoperations.getInstance(getActivity()).deleteAll();
                 showDrugs();
                 adapter.startListening();
             }
@@ -153,6 +165,8 @@ public class AllDrugsFragment extends Fragment implements AllDrugsView{
     public void searchDrugs(String drugName) {
 
     }
+
+
 
     @Override
     public void onStart() {
@@ -217,13 +231,23 @@ public class AllDrugsFragment extends Fragment implements AllDrugsView{
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         final Pharmacy value = dataSnapshot.getValue(Pharmacy.class);
+                        DBoperations.getInstance(getActivity()).insertDrug(model);
                         holder.bindData(model,value);
                         holder.phLocation.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 mProgressDialog.show();
-                                makeRequest.OpenMap(value.getLatLang());
-                            //    MapsActivity.start(getActivity(),value.getLatLang(),value.getPhLocation());
+                                makeRequest.addNewBubble();
+
+                                try {
+                                    final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://maps.google.com/maps?" +
+                                            "saddr="+myCurrentLocation+"&daddr="+value.getLatLang()+"&sensor=false&units=metric&mode=driving"));
+                                    intent.setClassName("com.google.android.apps.maps","com.google.android.maps.MapsActivity");
+                                    startActivity(intent);
+                                }catch (Exception e){
+                                    makeRequest.go(value.getLatLang());
+
+                                }
                                 mProgressDialog.dismiss();
                             }
                         });
@@ -275,9 +299,17 @@ public class AllDrugsFragment extends Fragment implements AllDrugsView{
 
                             presenter.call(pharmacy.getPhPhone());
                         }else {
-                            makeRequest.OpenMap(pharmacy.getLatLang());
+                            makeRequest.addNewBubble();
+                            try {
+                                final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://maps.google.com/maps?" +
+                                        "saddr="+myCurrentLocation+"&daddr="+pharmacy.getLatLang()+"&sensor=false&units=metric&mode=driving"));
+                                intent.setClassName("com.google.android.apps.maps","com.google.android.maps.MapsActivity");
+                                startActivity(intent);
+                            }catch (Exception e){
+                                makeRequest.go(pharmacy.getLatLang());
 
-                            //   MapsActivity.start(getActivity(),pharmacy.getLatLang(),pharmacy.getPhLocation());
+
+                            }
                         }
                     }
 
@@ -324,5 +356,36 @@ public class AllDrugsFragment extends Fragment implements AllDrugsView{
         itemTouchHelper.attachToRecyclerView(mRecyclerView);
 
     }
+
+    @Override
+    public void onPause()
+    {
+        super.onPause();
+
+        // save RecyclerView state
+        mBundleRecyclerViewState = new Bundle();
+        Parcelable listState = mRecyclerView.getLayoutManager().onSaveInstanceState();
+        mBundleRecyclerViewState.putParcelable(KEY_RECYCLER_STATE, listState);
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        MyApp.setConnectivityListener(this);
+
+        if (mBundleRecyclerViewState != null) {
+            Parcelable listState = mBundleRecyclerViewState.getParcelable(KEY_RECYCLER_STATE);
+            mRecyclerView.getLayoutManager().onRestoreInstanceState(listState);
+        }
+    }
+
+    @Override
+    public void onNetworkConnectionChanged(boolean isConnected) {
+        showDrugs();
+        adapter.startListening();
+        presenter.showSnakBar(view,isConnected?"connected":"not connect");
+    }
+
 
 }

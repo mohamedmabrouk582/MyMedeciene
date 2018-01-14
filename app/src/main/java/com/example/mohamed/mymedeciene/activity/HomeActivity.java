@@ -3,6 +3,7 @@ package com.example.mohamed.mymedeciene.activity;
 import android.Manifest;
 import android.animation.Animator;
 import android.annotation.SuppressLint;
+import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -13,9 +14,11 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
+import android.provider.Settings;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
@@ -42,7 +45,9 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.mohamed.mymedeciene.R;
 import com.example.mohamed.mymedeciene.appliction.MyApp;
+import com.example.mohamed.mymedeciene.data.Drug;
 import com.example.mohamed.mymedeciene.data.Pharmacy;
+import com.example.mohamed.mymedeciene.data.dataBase.DBoperations;
 import com.example.mohamed.mymedeciene.fragment.AllDrugsFragment;
 import com.example.mohamed.mymedeciene.fragment.DrugsFragment;
 import com.example.mohamed.mymedeciene.mapRoute.MakeRequest;
@@ -60,12 +65,12 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class HomeActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener,HomeView,View.OnClickListener,LocationListener {
+        implements NavigationView.OnNavigationItemSelectedListener, HomeView, View.OnClickListener, LocationListener {
     private static final String PHARMACY = "pharmacy";
     private static final int PERMISSION = 100;
     private CircleImageView phIMG;
-    private ImageView edt_img,img_preview;
-    private TextView phName,phPhone,phLocation,login,register;
+    private ImageView edt_img, img_preview;
+    private TextView phName, phPhone, phLocation, login, register;
     private Pharmacy mPharmacy;
     private LinearLayout login_register;
     private HomeViewPresenter presenter;
@@ -76,24 +81,24 @@ public class HomeActivity extends AppCompatActivity
     private ZoomIMG zoomIMG;
     private Menu menu;
     private SearchView mSearchView;
-    public static volatile String myCurrentLocation=null;
-    private MenuItem editProfile,myDrugs,addDrugs,logout,search;
-    private String[] permissions={Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.ACCESS_NETWORK_STATE
-            ,Manifest.permission.CALL_PHONE,
-            Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_LOCATION_EXTRA_COMMANDS};
+    public static volatile String myCurrentLocation = null;
+    private MenuItem editProfile, myDrugs, addDrugs, logout, search;
+    private String[] permissions = {Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_NETWORK_STATE
+            , Manifest.permission.CALL_PHONE,
+            Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_LOCATION_EXTRA_COMMANDS};
     private DatabaseReference mDatabaseReference;
     private MakeRequest makeRequest;
 
 
-    public static void newIntentPharmacy(Context context,Pharmacy pharmacy){
-        Intent intent=new Intent(context,HomeActivity.class);
-        intent.putExtra(PHARMACY,pharmacy);
-         context.startActivity(intent);
+    public static void newIntentPharmacy(Context context, Pharmacy pharmacy) {
+        Intent intent = new Intent(context, HomeActivity.class);
+        intent.putExtra(PHARMACY, pharmacy);
+        context.startActivity(intent);
     }
 
-    public static  void newIntentUser(Context context){
-        context.startActivity(new Intent(context,HomeActivity.class));
+    public static void newIntentUser(Context context) {
+        context.startActivity(new Intent(context, HomeActivity.class));
     }
 
     @SuppressLint("ResourceType")
@@ -101,13 +106,12 @@ public class HomeActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        Toolbar toolbar =  findViewById(R.id.toolbar);
-        makeRequest=new MakeRequest(this);
+        overLayPermission();
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        makeRequest = new MakeRequest(this);
         setSupportActionBar(toolbar);
-        LocationManager locationManager= (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-       // locationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER,this, Looper.getMainLooper());
-      locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,5000,50,this);
-         drawer =  findViewById(R.id.drawer_layout);
+
+        drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -115,14 +119,44 @@ public class HomeActivity extends AppCompatActivity
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkPermissions();
         }
-        NavigationView navigationView =  findViewById(R.id.nav_view);
+        location();
+        NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        menu=navigationView.getMenu();
-        Log.d("menu", menu.size()+ "");
+        menu = navigationView.getMenu();
+        Log.d("menu", menu.size() + "");
         initView(navigationView.getHeaderView(0));
-        presenter=new HomeViewPresenter(this,navigationView.getHeaderView(0));
+        presenter = new HomeViewPresenter(this, navigationView.getHeaderView(0));
         presenter.attachView(this);
         setFragment(AllDrugsFragment.newFragment(null));
+    }
+
+    private void location() {
+        // locationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER,this, Looper.getMainLooper());
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                requestPermissions(new String[]{ Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION},100);
+            }
+        }
+            LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 50, this);
+
+
+
+    }
+
+    private void overLayPermission(){
+        if(Build.VERSION.SDK_INT >= 23) {
+            if (!Settings.canDrawOverlays(this)) {
+                Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                        Uri.parse("package:" + getPackageName()));
+                startActivityForResult(intent, 1234);
+            }
+        }
+        else
+        {
+            Intent intent = new Intent(this, Service.class);
+            startService(intent);
+        }
     }
 
     @SuppressLint("WrongViewCast")
@@ -144,6 +178,8 @@ public class HomeActivity extends AppCompatActivity
        register.setOnClickListener(this);
        phIMG.setOnClickListener(this);
        phLocation.setOnClickListener(this);
+
+
        if (mPharmacy!=null){
            isPharmacy(true);
 
@@ -251,6 +287,7 @@ public class HomeActivity extends AppCompatActivity
           //  invalidateOptionsMenu();
 
         } else if (id == R.id.nav_logout) {
+            Toast.makeText(this, DBoperations.getInstance(this).getDrugs().size()+"", Toast.LENGTH_SHORT).show();
             if (mPharmacy!=null) {
                presenter.logout();
             }else {
@@ -318,7 +355,16 @@ public class HomeActivity extends AppCompatActivity
         switch (view.getId()){
             case R.id.pharmacy_location:
                 //MapsActivity.start(this,mPharmacy.getLatLang(),mPharmacy.getPhLocation());
-                makeRequest.OpenMap(mPharmacy.getLatLang());
+                try {
+                     makeRequest.addNewBubble();
+                    final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://maps.google.com/maps?" +
+                            "saddr="+myCurrentLocation+"&daddr="+mPharmacy.getLatLang()+"&sensor=false&units=metric&mode=driving"));
+                    intent.setClassName("com.google.android.apps.maps","com.google.android.maps.MapsActivity");
+                    startActivity(intent);
+                }catch (Exception e){
+                    makeRequest.go(mPharmacy.getLatLang());
+
+                }
                 break;
             case R.id.pharmacy_img:
                 drawer.closeDrawers();
@@ -340,7 +386,7 @@ public class HomeActivity extends AppCompatActivity
 
                 break;
             case R.id.txt_login:
-                  login();
+                login();
                 break;
             case R.id.txt_register:
                  register();
@@ -362,7 +408,7 @@ public class HomeActivity extends AppCompatActivity
 //                    } else {
 //                        requestPermissions(new String[]{permissions[i]}, PERMISSION);
 //                    }
-                    requestPermissions(new String[]{permissions[i]}, PERMISSION);
+                    requestPermissions(permissions, PERMISSION);
                 }
             }
         }catch (Exception e){}

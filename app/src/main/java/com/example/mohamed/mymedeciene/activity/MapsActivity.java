@@ -19,28 +19,19 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.example.mohamed.mymedeciene.R;
 import com.example.mohamed.mymedeciene.appliction.DataManager;
 import com.example.mohamed.mymedeciene.appliction.MyApp;
-import com.example.mohamed.mymedeciene.mapRoute.MakeRequest;
-import com.example.mohamed.mymedeciene.mapRoute.data.RouteRepons;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.List;
 import java.util.Locale;
-
-import io.reactivex.Observer;
-import io.reactivex.disposables.Disposable;
 
 import static com.example.mohamed.mymedeciene.activity.HomeActivity.myCurrentLocation;
 
@@ -89,40 +80,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         fromMarkerOptions=new MarkerOptions();
         mMap.setMyLocationEnabled(true);
          drawRout(mLatLngs);
-        // new  MapParser.MapParserBuilder(dataManager.getPharmacy().getLatLang(),myAddress).build();
-        // Add a marker in Sydney and move the camera
-
-          //  RouteRequest(dataManager.getPharmacy().getLatLang(),myAddress);
-       // RouteRequest(myCurrentLocation,myAddress);
-
-
-
     }
 
-//    private void RouteRequest(String from,String to){
-//        final MakeRequest makeRequest=new MakeRequest(from,myAddress);
-//        makeRequest.makeRequest(new Observer<RouteRepons>() {
-//            @Override
-//            public void onSubscribe(Disposable d) {
-//
-//            }
-//
-//            @Override
-//            public void onNext(RouteRepons routeRepons) {
-//                drawRout(makeRequest.getLatLangs(routeRepons.getRoutes()));
-//            }
-//
-//            @Override
-//            public void onError(Throwable e) {
-//
-//            }
-//
-//            @Override
-//            public void onComplete() {
-//
-//            }
-//        });
-//    }
 
     private void drawRout(List<LatLng> latLngs) {
         String[] dest = myAddress.split(",");

@@ -2,6 +2,7 @@ package com.example.mohamed.mymedeciene.appliction;
 
 import android.app.Application;
 
+import com.example.mohamed.mymedeciene.utils.NetworkChangeReceiver;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -43,5 +44,8 @@ public class MyApp extends Application {
     }
     public static DataManager getData(){
         return dataManager;
+    }
+    public static void setConnectivityListener(NetworkChangeReceiver.ConnectivityReceiverListener listener) {
+        NetworkChangeReceiver.connectivityReceiverListener = listener;
     }
 }

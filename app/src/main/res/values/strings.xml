@@ -20,6 +20,13 @@
     <string name="add">Add</string>
     <string name="home">Home</string>
     <string name="noItemFound">Not Find Any Drugs</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="configure">Configure</string>
+    <string name="add_widget">Add widget</string>
+    <string name="checkDrug">This Drug has Already Added Before </string>
+    <string name="decline">Decline</string>
+    <string name="update">Update</string>
     <string-array name="drug_type">
         <item>Injections</item>
         <item>Capsules</item>
@@ -29,5 +36,5 @@
         <item>Inhalers</item>
         <item>Suppositories</item>
     </string-array>
-    <string name="title_activity_maps">Map</string>
+
 </resources>

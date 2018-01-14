@@ -9,6 +9,7 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -31,6 +32,7 @@ import com.example.mohamed.mymedeciene.appliction.MyApp;
 import com.example.mohamed.mymedeciene.data.Drug;
 import com.example.mohamed.mymedeciene.presenter.myDrugs.DrugsViewPresenter;
 import com.example.mohamed.mymedeciene.utils.AddListener;
+import com.example.mohamed.mymedeciene.utils.NetworkChangeReceiver;
 import com.example.mohamed.mymedeciene.utils.ZoomIMG;
 import com.example.mohamed.mymedeciene.view.DrugsView;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -51,7 +53,7 @@ import java.util.List;
  * on 23/12/2017.  time :23:52
  */
 
-public class DrugsFragment extends Fragment implements View.OnClickListener,DrugsView{
+public class DrugsFragment extends Fragment implements View.OnClickListener,DrugsView, NetworkChangeReceiver.ConnectivityReceiverListener {
     private FloatingActionsMenu actionMenu;
     private RecyclerView mRecyclerView;
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -73,7 +75,8 @@ public class DrugsFragment extends Fragment implements View.OnClickListener,Drug
     private List<Drug> mDrugs=new ArrayList<>();
     private Paint p = new Paint();
 
-
+    private final String KEY_RECYCLER_STATE = "recycler_state";
+    private static Bundle mBundleRecyclerViewState;
     public static DrugsFragment newFragment(){
 
         return new DrugsFragment();
@@ -319,6 +322,34 @@ public class DrugsFragment extends Fragment implements View.OnClickListener,Drug
               presenter.showSnakBar(view,error);
             }
         });
+    }
+
+    @Override
+    public void onPause()
+    {
+        super.onPause();
+
+        // save RecyclerView state
+        mBundleRecyclerViewState = new Bundle();
+        Parcelable listState = mRecyclerView.getLayoutManager().onSaveInstanceState();
+        mBundleRecyclerViewState.putParcelable(KEY_RECYCLER_STATE, listState);
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        MyApp.setConnectivityListener(this);
+
+        if (mBundleRecyclerViewState != null) {
+            Parcelable listState = mBundleRecyclerViewState.getParcelable(KEY_RECYCLER_STATE);
+            mRecyclerView.getLayoutManager().onRestoreInstanceState(listState);
+        }
+    }
+
+    @Override
+    public void onNetworkConnectionChanged(boolean isConnected) {
+        presenter.showSnakBar(view,isConnected?"connected":"not connect");
     }
 
 }

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -29,10 +30,12 @@ import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.example.mohamed.mymedeciene.R;
 import com.example.mohamed.mymedeciene.activity.HomeActivity;
+import com.example.mohamed.mymedeciene.appliction.MyApp;
 import com.example.mohamed.mymedeciene.data.Drug;
 import com.example.mohamed.mymedeciene.data.Pharmacy;
 import com.example.mohamed.mymedeciene.presenter.addDrug.AddDrugViewPresenter;
 import com.example.mohamed.mymedeciene.utils.AddListener;
+import com.example.mohamed.mymedeciene.utils.NetworkChangeReceiver;
 import com.example.mohamed.mymedeciene.utils.QueryListener;
 import com.example.mohamed.mymedeciene.view.AddDrugView;
 import com.theartofdev.edmodo.cropper.CropImage;
@@ -47,7 +50,7 @@ import java.util.List;
  * on 19/12/2017.  time :10:27
  */
 
-public class AddGrugFragment extends DialogFragment implements AddDrugView,View.OnClickListener{
+public class AddGrugFragment extends DialogFragment implements AddDrugView,View.OnClickListener,NetworkChangeReceiver.ConnectivityReceiverListener{
     private static final String DRUG = "drug";
     private static final String DRUGID = "drugid";
     private View view;
@@ -62,6 +65,7 @@ public class AddGrugFragment extends DialogFragment implements AddDrugView,View.
     private Uri mUri;
     private Drug mDrug;
     private String id;
+    private ProgressDialog mProgressDialog;
 
     public static AddGrugFragment newFragment(Drug drug,String id,AddListener listeners){
         listener=listeners;
@@ -78,7 +82,8 @@ public class AddGrugFragment extends DialogFragment implements AddDrugView,View.
     public Dialog onCreateDialog(Bundle savedInstanceState) {
          initView();
          builder=new AlertDialog.Builder(getActivity()).setView(view);
-
+         mProgressDialog=new ProgressDialog(getActivity());
+         mProgressDialog.setMessage("Adding Drug ......");
          dialog=builder.create();
          dialog.setCanceledOnTouchOutside(false);
          dialog.show();
@@ -118,6 +123,7 @@ public class AddGrugFragment extends DialogFragment implements AddDrugView,View.
     @Override
     public void close() {
     dialog.dismiss();
+    mProgressDialog.dismiss();
     }
 
     @Override
@@ -133,6 +139,7 @@ public class AddGrugFragment extends DialogFragment implements AddDrugView,View.
                 close();
                 break;
             case R.id.add:
+                mProgressDialog.show();
                 String dName=name.getText().toString();
                 String dPrice=price.getText().toString();
                 String dType=type.getSelectedItem().toString();
@@ -222,5 +229,16 @@ public class AddGrugFragment extends DialogFragment implements AddDrugView,View.
                 return 0;
         }
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MyApp.setConnectivityListener(this);
+    }
+
+    @Override
+    public void onNetworkConnectionChanged(boolean isConnected) {
+        presenter.showSnakBar(view,isConnected?"connected":"not  Internet connect");
     }
 }
