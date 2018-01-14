@@ -1,6 +1,7 @@
 package com.example.mohamed.mymedeciene.fragment;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -27,94 +28,98 @@ import com.example.mohamed.mymedeciene.view.LoginView;
  * on 18/12/2017.  time :23:00
  */
 
-public class LoginFragment extends Fragment implements LoginView,View.OnClickListener{
+@SuppressWarnings("unchecked")
+public class LoginFragment extends Fragment implements LoginView, View.OnClickListener {
     private View view;
-    private EditText email,password;
-    private Button login;
-    private TextView register;
+    private EditText email, password;
     private LoginViewPresenter presenter;
     private ProgressBar progressBar;
 
 
-    public static LoginFragment newFragment(){
+    public static LoginFragment newFragment() {
         return new LoginFragment();
     }
+
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view=inflater.inflate(R.layout.login_fragment,container,false);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        view = inflater.inflate(R.layout.login_fragment, container, false);
         init();
         return view;
     }
-    private void init(){
-        presenter=new LoginViewPresenter(getActivity());
+
+    @SuppressWarnings("unchecked")
+    private void init() {
+        presenter = new LoginViewPresenter(getActivity());
+        //noinspection unchecked
         presenter.attachView(this);
-        email=view.findViewById(R.id.email);
-        password=view.findViewById(R.id.password);
-        login=view.findViewById(R.id.but_login);
-        register=view.findViewById(R.id.create_account);
-        progressBar=view.findViewById(R.id.login_progressBar);
+        email = view.findViewById(R.id.email);
+        password = view.findViewById(R.id.password);
+        Button login = view.findViewById(R.id.but_login);
+        TextView register = view.findViewById(R.id.create_account);
+        progressBar = view.findViewById(R.id.login_progressBar);
         login.setOnClickListener(this);
         register.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.but_login:
                 showProgress();
 
                 login();
                 break;
             case R.id.create_account:
-               createAccount();
+                createAccount();
                 break;
         }
     }
 
     @Override
     public void login() {
-       String em=email.getText().toString();
-       String pass=password.getText().toString();
+        String em = email.getText().toString();
+        String pass = password.getText().toString();
 
-       if (!utils.isValidMobile(em) ){
-           YoYo.with(Techniques.Shake).playOn(email);
-           presenter.showSnakBar(view,"your phone not Valid");
-       }else if (TextUtils.isEmpty(pass)  || pass.length() <6){
-           YoYo.with(Techniques.Shake).playOn(password);
-           presenter.showSnakBar(view,"your password  must be more than 6 chars");
-       }else {
-           presenter.login(em, pass, new AddListener() {
-               @Override
-               public void onSuccess(String success) {
-                   hideProgress();
+        if (!utils.isValidMobile(em)) {
+            YoYo.with(Techniques.Shake).playOn(email);
+            presenter.showSnakBar(view, getString(R.string.phone_invalid));
+        } else if (TextUtils.isEmpty(pass) || pass.length() < 6) {
+            YoYo.with(Techniques.Shake).playOn(password);
+            presenter.showSnakBar(view, getString(R.string.password_invalid));
+        } else {
+            presenter.login(em, pass, new AddListener() {
+                @Override
+                public void onSuccess(String success) {
+                    hideProgress();
 
-                   presenter.showSnakBar(view,success);
-               }
+                    presenter.showSnakBar(view, success);
+                }
 
-               @Override
-               public void OnError(String error) {
-                   hideProgress();
-                   presenter.showSnakBar(view,error);
+                @Override
+                public void OnError(String error) {
+                    hideProgress();
+                    presenter.showSnakBar(view, error);
 
-               }
-           });
-       }
+                }
+            });
+        }
     }
 
     @Override
     public void createAccount() {
         RegisterActivity.start(getActivity());
+        //noinspection ConstantConditions
         getActivity().finish();
     }
 
     @Override
     public void showProgress() {
-      progressBar.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideProgress() {
-     progressBar.setVisibility(View.GONE);
+        progressBar.setVisibility(View.GONE);
     }
 }

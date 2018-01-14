@@ -15,18 +15,19 @@ import com.example.mohamed.mymedeciene.R;
  */
 
 public abstract class SingleFragmentActivity extends AppCompatActivity {
-     public abstract Fragment CreateFragment();
+    protected abstract Fragment CreateFragment();
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_container);
 
-        FragmentManager fragmentManager=getSupportFragmentManager();
-        Fragment fragment=fragmentManager.findFragmentById(R.id.Fragment_Container);
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        Fragment fragment = fragmentManager.findFragmentById(R.id.Fragment_Container);
 
-        if (fragment == null){
-            fragment=CreateFragment();
-            fragmentManager.beginTransaction().add(R.id.Fragment_Container,fragment).commit();
+        if (fragment == null) {
+            fragment = CreateFragment();
+            fragmentManager.beginTransaction().add(R.id.Fragment_Container, fragment).commit();
         }
 
     }

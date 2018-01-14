@@ -1,46 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<LinearLayout xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content">
+
     <TextView
         android:textColor="#ffff"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Map Type"
         android:layout_margin="@dimen/_10sdp"
-        />
+        tools:ignore="HardcodedText" />
 
     <LinearLayout
-        android:layout_marginRight="@dimen/_5sdp"
-        android:layout_marginLeft="@dimen/_5sdp"
+        android:layout_marginEnd="@dimen/_5sdp"
+        android:layout_marginStart="@dimen/_5sdp"
         android:layout_marginBottom="@dimen/_10sdp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center"
-        >
+        android:gravity="center">
+
         <ImageView
             android:layout_width="@dimen/_80sdp"
             android:layout_height="@dimen/_80sdp"
             android:src="@drawable/normal"
             android:id="@+id/normal"
-            />
+            tools:ignore="ContentDescription" />
+
         <ImageView
             android:id="@+id/hybrid"
             android:src="@drawable/hybrid"
             android:layout_width="@dimen/_80sdp"
-            android:layout_height="@dimen/_80sdp" />
+            android:layout_height="@dimen/_80sdp"
+            tools:ignore="ContentDescription" />
+
         <ImageView
             android:id="@+id/satellite"
             android:src="@drawable/satellite"
             android:layout_width="@dimen/_80sdp"
-            android:layout_height="@dimen/_80sdp"  />
+            android:layout_height="@dimen/_80sdp"
+            tools:ignore="ContentDescription" />
+
         <ImageView
             android:id="@+id/terrain"
             android:src="@drawable/terrain"
             android:layout_width="@dimen/_80sdp"
-            android:layout_height="@dimen/_80sdp" />
+            android:layout_height="@dimen/_80sdp"
+            tools:ignore="ContentDescription" />
     </LinearLayout>
 
 </LinearLayout>

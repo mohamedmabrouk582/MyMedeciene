@@ -31,73 +31,72 @@ import java.util.Map;
  * on 18/12/2017.  time :23:40
  */
 
+@SuppressWarnings({"StatementWithEmptyBody", "AccessStaticViaInstance"})
 public class RegisterViewPresenter<v extends RegisterView> extends BasePresenter<v> implements RegisterPresenter<v> {
-     private Activity  activity;
-     private FirebaseAuth mAuth;
-     private DatabaseReference mDatabaseReference;
-     private DataManager dataManager;
+    private final Activity activity;
+    private final FirebaseAuth mAuth;
+    private final DatabaseReference mDatabaseReference;
+    private final DataManager dataManager;
 
-     public RegisterViewPresenter(Activity activity){
-         this.activity=activity;
-         mAuth= MyApp.getmAuth();
-         dataManager =((MyApp) activity.getApplication()).getData();
-         mDatabaseReference=MyApp.getmDatabaseReference().child("Pharmacy");
+    public RegisterViewPresenter(Activity activity) {
+        this.activity = activity;
+        mAuth = MyApp.getmAuth();
+        dataManager = ((MyApp) activity.getApplication()).getData();
+        mDatabaseReference = MyApp.getmDatabaseReference().child("Pharmacy");
 
-     }
+    }
 
 
     @Override
     public void register(final String userName, final String email, String password, final String location, final AddListener listener) {
-     mAuth.createUserWithEmailAndPassword(email+ "@gmail.com",password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-         @Override
-         public void onComplete(@NonNull Task<AuthResult> task) {
-           if (task.isSuccessful()){
-               Map<String,String> map=new HashMap<>();
-                final String latLang=getLatLang(location);
-               map.put("phName",userName);
-               map.put("phPhone",email);
-               map.put("phLocation",location);
-               map.put("phImgURL","null");
-               map.put("latLang",latLang);
-               mDatabaseReference.child(mAuth.getCurrentUser().getUid()).setValue(map).addOnSuccessListener(new OnSuccessListener<Void>() {
-                   @Override
-                   public void onSuccess(Void aVoid) {
-                       dataManager.clear();
-                       dataManager.setPharmacy(userName,email,"null",location,latLang);
-                       listener.onSuccess("done");
-                   }
-               });
-           }   else {
-              listener.OnError(task.getException().getMessage());
-           }
-          }
-     });
+        mAuth.createUserWithEmailAndPassword(email + "@gmail.com", password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful()) {
+                    Map<String, String> map = new HashMap<>();
+                    final String latLang = getLatLang(location);
+                    map.put("phName", userName);
+                    map.put("phPhone", email);
+                    map.put("phLocation", location);
+                    map.put("phImgURL", "null");
+                    map.put("latLang", latLang);
+                    //noinspection ConstantConditions
+                    mDatabaseReference.child(mAuth.getCurrentUser().getUid()).setValue(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            dataManager.clear();
+                            dataManager.setPharmacy(userName, email, "null", location, latLang);
+                            listener.onSuccess("done");
+                        }
+                    });
+                } else {
+                    //noinspection ConstantConditions
+                    listener.OnError(task.getException().getMessage());
+                }
+            }
+        });
     }
 
-    private String getLatLang(String location){
-        if(!Geocoder.isPresent()){
-            Log.w("zebia", "Geocoder implementation not present !");
-        }
+    private String getLatLang(String location) {
+
         Geocoder geoCoder = new Geocoder(activity, Locale.getDefault());
 
         try {
             List<Address> addresses = geoCoder.getFromLocationName(location, 5);
             int tentatives = 0;
-            while (addresses.size()==0 && (tentatives < 10)) {
-                addresses = geoCoder.getFromLocationName("<address goes here>", 1);
-                tentatives ++;
+            while (addresses.size() == 0 && (tentatives < 10)) {
+                addresses = geoCoder.getFromLocationName(location, 1);
+                tentatives++;
             }
 
 
-            if(addresses.size() > 0){
-                Log.d("zebia", "reverse Geocoding : locationName " + location + "Latitude " + addresses.get(0).getLatitude() );
-                return new LatLng(addresses.get(0).getLatitude(), addresses.get(0).getLongitude()).toString().replace("(","").replace(")","").replace("lat/lng:","");
-            }else{
+            if (addresses.size() > 0) {
+                return new LatLng(addresses.get(0).getLatitude(), addresses.get(0).getLongitude()).toString().replace("(", "").replace(")", "").replace("lat/lng:", "");
+            } else {
                 //use http api
             }
 
         } catch (IOException e) {
-            // Log.d(Geocoding.class.getName(), "not possible finding LatLng for Address : " + locationName);
         }
         return null;
     }

@@ -23,21 +23,22 @@ import com.example.mohamed.mymedeciene.R;
 
 public class ZoomIMG {
     private Animator mCurrentAnimator;
+
     public void zoomImageFromThumb(Activity activity, final View thumbView, String imageResId, Animator CurrentAnimator, final ImageView img_preview
-    , View zoomContainer, final int mShortAnimationDuration
-    ){
-        mCurrentAnimator=CurrentAnimator;
+            , View zoomContainer, final int mShortAnimationDuration
+    ) {
+        mCurrentAnimator = CurrentAnimator;
 
         if (mCurrentAnimator != null) {
             mCurrentAnimator.cancel();
         }
 
-        if (imageResId!=null) {
+        if (imageResId != null) {
             Glide.with(activity).load(Uri.parse(imageResId))
-                  //  .error(R.drawable.logo)
+                    //  .error(R.drawable.logo)
                     .into(img_preview);
-        }else {
-             img_preview.setImageResource(R.drawable.logo);
+        } else {
+            img_preview.setImageResource(R.drawable.logo);
 
         }
         final Rect startBounds = new Rect();
@@ -115,7 +116,7 @@ public class ZoomIMG {
                         .ofFloat(img_preview, View.X, startBounds.left))
                         .with(ObjectAnimator
                                 .ofFloat(img_preview,
-                                        View.Y,startBounds.top))
+                                        View.Y, startBounds.top))
                         .with(ObjectAnimator
                                 .ofFloat(img_preview,
                                         View.SCALE_X, startScaleFinal))

@@ -9,10 +9,13 @@ import com.example.mohamed.mymedeciene.view.EditProfileView;
  * on 18/12/2017.  time :21:49
  */
 
-public interface EditProfilePresenter<v extends EditProfileView> extends MainPresnter<v>{
-    interface editListner{
+@SuppressWarnings("unused")
+public interface EditProfilePresenter<v extends EditProfileView> extends MainPresnter<v> {
+    interface editListner {
         void onSuccess(String latLang);
+
         void onError(String error);
     }
-    void save(String phName,String phPhone,String phLocation,editListner listner);
+
+    void save(String phName, String phPhone, String phLocation, editListner listner);
 }

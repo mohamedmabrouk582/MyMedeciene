@@ -14,7 +14,7 @@ public class AddDrugCheckViewPresenter<v extends AddDrugCheckView> extends BaseP
 
     @Override
     public void update(CheckListener listener) {
-      listener.onSuccess();
-      getView().decline();
+        listener.onSuccess();
+        getView().decline();
     }
 }

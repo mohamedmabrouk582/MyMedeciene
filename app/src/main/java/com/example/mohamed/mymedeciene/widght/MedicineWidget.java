@@ -11,20 +11,22 @@ import android.util.Log;
 import android.widget.RemoteViews;
 
 import com.example.mohamed.mymedeciene.R;
-import com.example.mohamed.mymedeciene.activity.HomeActivity;
 import com.example.mohamed.mymedeciene.activity.SplashActivity;
 
 /**
  * Implementation of App Widget functionality.
  */
+@SuppressWarnings("unused")
 public class MedicineWidget extends AppWidgetProvider {
-    public static String ACTION_TOAST="toast";
+    private static final String ACTION_TOAST = "toast";
+
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.d("action", intent.getAction() + "");
 
+        //noinspection ConstantConditions
         if (intent.getAction().equals(ACTION_TOAST)) {
-            Intent intent1=new Intent(context, SplashActivity.class);
+            Intent intent1 = new Intent(context, SplashActivity.class);
             context.startActivity(intent1);
         }
         super.onReceive(context, intent);
@@ -51,7 +53,7 @@ public class MedicineWidget extends AppWidgetProvider {
 
         Intent intent1 = new Intent(context, SplashActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent1, 0);
-        mView.setOnClickPendingIntent(R.id.main_layout,pendingIntent);
+        mView.setOnClickPendingIntent(R.id.main_layout, pendingIntent);
 
         Intent intent = new Intent(context, WidgetService.class);
         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId);

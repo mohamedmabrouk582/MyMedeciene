@@ -25,26 +25,28 @@ public class MyApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        dataManager =new DataManager(new MyShared(this));
-        mDatabaseReference= FirebaseDatabase.getInstance().getReference();
-        mAuth=FirebaseAuth.getInstance();
-        mStorageReference= FirebaseStorage.getInstance().getReference();
+        dataManager = new DataManager(new MyShared(this));
+        mDatabaseReference = FirebaseDatabase.getInstance().getReference();
+        mAuth = FirebaseAuth.getInstance();
+        mStorageReference = FirebaseStorage.getInstance().getReference();
     }
 
-    public static DatabaseReference getmDatabaseReference(){
+    public static DatabaseReference getmDatabaseReference() {
         return mDatabaseReference;
     }
 
-    public static FirebaseAuth getmAuth(){
+    public static FirebaseAuth getmAuth() {
         return mAuth;
     }
 
-    public static StorageReference getmStorageReference(){
+    public static StorageReference getmStorageReference() {
         return mStorageReference;
     }
-    public static DataManager getData(){
+
+    public static DataManager getData() {
         return dataManager;
     }
+
     public static void setConnectivityListener(NetworkChangeReceiver.ConnectivityReceiverListener listener) {
         NetworkChangeReceiver.connectivityReceiverListener = listener;
     }

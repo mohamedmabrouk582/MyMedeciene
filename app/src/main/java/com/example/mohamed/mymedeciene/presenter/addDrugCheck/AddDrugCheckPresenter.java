@@ -10,6 +10,7 @@ import com.example.mohamed.mymedeciene.view.AddDrugCheckView;
  * on 13/01/2018.  time :23:58
  */
 
-public interface AddDrugCheckPresenter<v extends AddDrugCheckView> extends MainPresnter<v> {
+@SuppressWarnings("unused")
+interface AddDrugCheckPresenter<v extends AddDrugCheckView> extends MainPresnter<v> {
     void update(CheckListener listener);
 }

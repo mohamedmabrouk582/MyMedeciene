@@ -11,8 +11,11 @@ import com.example.mohamed.mymedeciene.view.DrugsView;
  * on 23/12/2017.  time :23:42
  */
 
-public interface DrugsPresenter<v extends DrugsView> extends MainPresnter<v> {
+@SuppressWarnings("unused")
+interface DrugsPresenter<v extends DrugsView> extends MainPresnter<v> {
     void addNewDrugs(AddListener listener);
-    void deleteDrug(String drugId , AddListener listener);
-    void editDrug(Drug drug,String id,AddListener listener);
+
+    void deleteDrug(String drugId, AddListener listener);
+
+    void editDrug(Drug drug, String id, AddListener listener);
 }

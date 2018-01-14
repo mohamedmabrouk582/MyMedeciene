@@ -8,9 +8,13 @@ import android.support.v4.app.Fragment;
  * on 18/12/2017.  time :18:42
  */
 
+@SuppressWarnings("unused")
 public interface HomeView extends MainView {
     void isPharmacy(boolean b);
+
     void login();
+
     void register();
+
     void setFragment(Fragment fragment);
 }

@@ -10,7 +10,6 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
@@ -29,17 +28,13 @@ import com.bumptech.glide.Glide;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.example.mohamed.mymedeciene.R;
-import com.example.mohamed.mymedeciene.activity.HomeActivity;
 import com.example.mohamed.mymedeciene.appliction.MyApp;
 import com.example.mohamed.mymedeciene.data.Drug;
-import com.example.mohamed.mymedeciene.data.Pharmacy;
 import com.example.mohamed.mymedeciene.presenter.addDrug.AddDrugViewPresenter;
 import com.example.mohamed.mymedeciene.utils.AddListener;
 import com.example.mohamed.mymedeciene.utils.NetworkChangeReceiver;
-import com.example.mohamed.mymedeciene.utils.QueryListener;
 import com.example.mohamed.mymedeciene.view.AddDrugView;
 import com.theartofdev.edmodo.cropper.CropImage;
-import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,14 +45,15 @@ import java.util.List;
  * on 19/12/2017.  time :10:27
  */
 
-public class AddGrugFragment extends DialogFragment implements AddDrugView,View.OnClickListener,NetworkChangeReceiver.ConnectivityReceiverListener{
+@SuppressWarnings("ALL")
+public class AddGrugFragment extends DialogFragment implements AddDrugView, View.OnClickListener, NetworkChangeReceiver.ConnectivityReceiverListener {
     private static final String DRUG = "drug";
     private static final String DRUGID = "drugid";
     private View view;
-    private EditText name,price;
-    private Spinner type,quantitySpinner;
+    private EditText name, price;
+    private Spinner type, quantitySpinner;
     private ImageButton drugIMG;
-    private Button close,add;
+    private Button close, add;
     private AlertDialog.Builder builder;
     private AlertDialog dialog;
     private AddDrugViewPresenter presenter;
@@ -67,12 +63,12 @@ public class AddGrugFragment extends DialogFragment implements AddDrugView,View.
     private String id;
     private ProgressDialog mProgressDialog;
 
-    public static AddGrugFragment newFragment(Drug drug,String id,AddListener listeners){
-        listener=listeners;
-        Bundle bundle=new Bundle();
-        bundle.putParcelable(DRUG,drug);
-        bundle.putSerializable(DRUGID,id);
-        AddGrugFragment fragment=new AddGrugFragment();
+    public static AddGrugFragment newFragment(Drug drug, String id, AddListener listeners) {
+        listener = listeners;
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(DRUG, drug);
+        bundle.putSerializable(DRUGID, id);
+        AddGrugFragment fragment = new AddGrugFragment();
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -80,81 +76,81 @@ public class AddGrugFragment extends DialogFragment implements AddDrugView,View.
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-         initView();
-         builder=new AlertDialog.Builder(getActivity()).setView(view);
-         mProgressDialog=new ProgressDialog(getActivity());
-         mProgressDialog.setMessage("Adding Drug ......");
-         dialog=builder.create();
-         dialog.setCanceledOnTouchOutside(false);
-         dialog.show();
+        initView();
+        builder = new AlertDialog.Builder(getActivity()).setView(view);
+        mProgressDialog = new ProgressDialog(getActivity());
+        mProgressDialog.setMessage("Adding Drug ......");
+        dialog = builder.create();
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
         return dialog;
     }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         initView();
+        //noinspection ConstantConditions
         getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         init();
         return view;
     }
-    private void initView(){
-        view= LayoutInflater.from(getActivity()).inflate(R.layout.add_drug,null);
+
+    @SuppressLint("InflateParams")
+    private void initView() {
+        view = LayoutInflater.from(getActivity()).inflate(R.layout.add_drug, null);
     }
-    private void init(){
-        mDrug=getArguments().getParcelable(DRUG);
-        id=getArguments().getString(DRUGID);
-        presenter=new AddDrugViewPresenter(getActivity(),view);
+
+    private void init() {
+        mDrug = getArguments().getParcelable(DRUG);
+        id = getArguments().getString(DRUGID);
+        presenter = new AddDrugViewPresenter(getActivity(), view);
         presenter.attachView(this);
-        quantitySpinner=view.findViewById(R.id.sp_drug_quantity);
-        name=view.findViewById(R.id.edt_drug_name);
-        price=view.findViewById(R.id.edt_drug_price);
-        type=view.findViewById(R.id.sp_drug_type);
-        drugIMG=view.findViewById(R.id.ib_drug_img);
-        close=view.findViewById(R.id.close_drug);
-        add=view.findViewById(R.id.add);
+        quantitySpinner = view.findViewById(R.id.sp_drug_quantity);
+        name = view.findViewById(R.id.edt_drug_name);
+        price = view.findViewById(R.id.edt_drug_price);
+        type = view.findViewById(R.id.sp_drug_type);
+        drugIMG = view.findViewById(R.id.ib_drug_img);
+        close = view.findViewById(R.id.close_drug);
+        add = view.findViewById(R.id.add);
 
         close.setOnClickListener(this);
         add.setOnClickListener(this);
         drugIMG.setOnClickListener(this);
         setDATATOsPINNER();
-        if (mDrug!=null) setData(mDrug);
+        if (mDrug != null) setData(mDrug);
     }
 
     @Override
     public void close() {
-    dialog.dismiss();
-    mProgressDialog.dismiss();
-    }
-
-    @Override
-    public void addDrugIMG() {
-
+        dialog.dismiss();
+        mProgressDialog.dismiss();
     }
 
     @SuppressLint("NewApi")
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.close_drug:
                 close();
                 break;
             case R.id.add:
                 mProgressDialog.show();
-                String dName=name.getText().toString();
-                String dPrice=price.getText().toString();
-                String dType=type.getSelectedItem().toString();
+                String dName = name.getText().toString();
+                String dPrice = price.getText().toString();
+                String dType = type.getSelectedItem().toString();
 
-                if (TextUtils.isEmpty(dName)){
+                if (TextUtils.isEmpty(dName)) {
                     YoYo.with(Techniques.Shake).playOn(name);
-                    presenter.showSnakBar(view,"Drug name not be Empty ");
-                }else if (TextUtils.isEmpty(dPrice)){
+                    presenter.showSnakBar(view, getString(R.string.drug_name_empty));
+                } else if (TextUtils.isEmpty(dPrice)) {
                     YoYo.with(Techniques.Shake).playOn(name);
-                    presenter.showSnakBar(view,"Drug price not be Empty ");
-                }else{
-                    if (mDrug==null) {
-                        presenter.addDrug(dName, dPrice, dType, quantitySpinner.getSelectedItem().toString(),listener);
-                    }else {
-                        presenter.editDrug(id,mDrug.getImg(), dName, dPrice, dType, quantitySpinner.getSelectedItem().toString(),listener);
+                    presenter.showSnakBar(view, getString(R.string.drug_price_empty));
+                } else {
+                    if (mDrug == null) {
+                        presenter.addDrug(dName, dPrice, dType, quantitySpinner.getSelectedItem().toString(), listener);
+                    } else {
+                        presenter.editDrug(id, mDrug.getImg(), dName, dPrice, dType, quantitySpinner.getSelectedItem().toString(), listener);
                     }
                 }
                 break;
@@ -165,52 +161,50 @@ public class AddGrugFragment extends DialogFragment implements AddDrugView,View.
         }
     }
 
-    private void setDATATOsPINNER(){
+    private void setDATATOsPINNER() {
         String[] stringArray = getActivity().getResources().getStringArray(R.array.drug_type);
-        List<String> list=new ArrayList<>();
-        List<String> quantity=new ArrayList<>();
-        for (String s:stringArray) {
+        List<String> list = new ArrayList<>();
+        List<String> quantity = new ArrayList<>();
+        for (String s : stringArray) {
             list.add(s);
         }
 
-        for (int i = 0; i <100 ; i++) {
-            quantity.add(String.valueOf((i+1)));
+        for (int i = 0; i < 100; i++) {
+            quantity.add(String.valueOf((i + 1)));
         }
-        ArrayAdapter<String > adapter=new ArrayAdapter<String>(getActivity(),android.R.layout.simple_expandable_list_item_1,list);
-        ArrayAdapter<String > adapterQuantity=new ArrayAdapter<String>(getActivity(),android.R.layout.simple_expandable_list_item_1,quantity);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_expandable_list_item_1, list);
+        ArrayAdapter<String> adapterQuantity = new ArrayAdapter<>(getActivity(), android.R.layout.simple_expandable_list_item_1, quantity);
         type.setAdapter(adapter);
         quantitySpinner.setAdapter(adapterQuantity);
     }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == Activity.RESULT_OK) {
                 Uri resultUri = result.getUri();
-                mUri=resultUri;
-                presenter.addDrugIMG(resultUri,drugIMG);
-                Log.d("eee", mUri + "");
-
+                mUri = resultUri;
+                presenter.addDrugIMG(resultUri, drugIMG);
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Exception error = result.getError();
             }
         }
     }
 
-    private void setData(Drug drug){
-        Log.d("img", drug.getImg() + "");
-        if (!TextUtils.isEmpty(drug.getImg())){
+    private void setData(Drug drug) {
+        if (!TextUtils.isEmpty(drug.getImg())) {
             Glide.with(getActivity()).load(Uri.parse(drug.getImg())).into(drugIMG);
         }
         name.setText(drug.getName());
         price.setText(drug.getPrice());
-        quantitySpinner.setSelection(Integer.parseInt(drug.getQuantity())-1);
+        quantitySpinner.setSelection(Integer.parseInt(drug.getQuantity()) - 1);
         type.setSelection(getTypePosition(drug.getType()));
     }
 
     private int getTypePosition(String type) {
 
-        switch (type){
+        switch (type) {
             case "Injections":
                 return 0;
             case "Capsules":
@@ -239,6 +233,6 @@ public class AddGrugFragment extends DialogFragment implements AddDrugView,View.
 
     @Override
     public void onNetworkConnectionChanged(boolean isConnected) {
-        presenter.showSnakBar(view,isConnected?"connected":"not  Internet connect");
+        presenter.showSnakBar(view, isConnected ? getString(R.string.connected) : getString(R.string.no_connected));
     }
 }

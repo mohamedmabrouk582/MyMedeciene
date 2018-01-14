@@ -19,18 +19,20 @@ import com.google.firebase.auth.FirebaseUser;
  * on 18/12/2017.  time :18:10
  */
 
+@SuppressWarnings({"AccessStaticViaInstance", "unchecked"})
 public class SplashActivity extends AppCompatActivity implements SplashView {
-     private SplashViewPresenter presenter;
-     private FirebaseAuth mAuth;
-     private DataManager dataManager;
+    private SplashViewPresenter presenter;
+    private FirebaseAuth mAuth;
+    private DataManager dataManager;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splash_activity);
-        presenter=new SplashViewPresenter(this);
+        presenter = new SplashViewPresenter(this);
         presenter.attachView(this);
-        mAuth= MyApp.getmAuth();
-        dataManager =((MyApp) getApplication()).getData();
+        mAuth = MyApp.getmAuth();
+        dataManager = ((MyApp) getApplication()).getData();
     }
 
     @Override
@@ -44,14 +46,14 @@ public class SplashActivity extends AppCompatActivity implements SplashView {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                FirebaseUser user=mAuth.getCurrentUser();
-                if (user==null){
+                FirebaseUser user = mAuth.getCurrentUser();
+                if (user == null) {
                     presenter.HomeActivity();
-                }else {
+                } else {
                     presenter.PharmacyActivity(dataManager.getPharmacy());
                 }
                 finish();
             }
-        },500);
+        }, 500);
     }
 }

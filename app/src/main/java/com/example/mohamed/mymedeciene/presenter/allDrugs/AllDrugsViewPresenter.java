@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 
-import com.example.mohamed.mymedeciene.data.Drug;
 import com.example.mohamed.mymedeciene.presenter.base.BasePresenter;
 import com.example.mohamed.mymedeciene.view.AllDrugsView;
 
@@ -15,13 +14,14 @@ import com.example.mohamed.mymedeciene.view.AllDrugsView;
  */
 
 public class AllDrugsViewPresenter<v extends AllDrugsView> extends BasePresenter<v> implements AllDrugsPresenter<v> {
-    private Activity activity;
+    private final Activity activity;
 
-    public AllDrugsViewPresenter(Activity activity){
-        this.activity=activity;
+    public AllDrugsViewPresenter(Activity activity) {
+        this.activity = activity;
     }
+
     @Override
     public void call(String phone) {
-        activity.startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:"+phone)));
+        activity.startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phone)));
     }
 }

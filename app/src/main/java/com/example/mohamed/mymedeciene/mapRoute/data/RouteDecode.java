@@ -10,9 +10,10 @@ import java.util.ArrayList;
  * on 03/01/2018.  time :23:46
  */
 
-public class RouteDecode {
+@SuppressWarnings("unused")
+class RouteDecode {
     public static ArrayList<LatLng> decodePoly(String encoded) {
-        ArrayList<LatLng> poly = new ArrayList<LatLng>();
+        ArrayList<LatLng> poly = new ArrayList<>();
         int index = 0, len = encoded.length();
         int lat = 0, lng = 0;
         while (index < len) {

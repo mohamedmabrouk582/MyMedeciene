@@ -12,7 +12,8 @@ import com.example.mohamed.mymedeciene.data.dataBase.DBshema.TableDrug;
  * on 07/01/2018.  time :00:35
  */
 
-public class DrugWrapper extends CursorWrapper {
+@SuppressWarnings({"unused", "UnnecessaryLocalVariable"})
+class DrugWrapper extends CursorWrapper {
     /**
      * Creates a cursor wrapper.
      *
@@ -22,16 +23,16 @@ public class DrugWrapper extends CursorWrapper {
         super(cursor);
     }
 
-    public Drug getDrug(){
-        String id=getString(getColumnIndex(TableDrug.CLOS.ID));
-        String name=getString(getColumnIndex(TableDrug.CLOS.NAME));
-        String type=getString(getColumnIndex(TableDrug.CLOS.TYPE));
-        String price=getString(getColumnIndex(TableDrug.CLOS.PRICE));
-        String quantity=getString(getColumnIndex(TableDrug.CLOS.QUANTITY));
-        String phId=getString(getColumnIndex(TableDrug.CLOS.PHID));
-        String img=getString(getColumnIndex(TableDrug.CLOS.IMG));
+    public Drug getDrug() {
+        String id = getString(getColumnIndex(TableDrug.CLOS.ID));
+        String name = getString(getColumnIndex(TableDrug.CLOS.NAME));
+        String type = getString(getColumnIndex(TableDrug.CLOS.TYPE));
+        String price = getString(getColumnIndex(TableDrug.CLOS.PRICE));
+        String quantity = getString(getColumnIndex(TableDrug.CLOS.QUANTITY));
+        String phId = getString(getColumnIndex(TableDrug.CLOS.PHID));
+        String img = getString(getColumnIndex(TableDrug.CLOS.IMG));
 
-        Drug drug=new Drug(name,type,price,quantity,img,phId);
+        Drug drug = new Drug(name, type, price, quantity, img, phId);
         return drug;
     }
 }

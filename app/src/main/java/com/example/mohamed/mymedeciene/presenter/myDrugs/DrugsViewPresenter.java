@@ -2,7 +2,6 @@ package com.example.mohamed.mymedeciene.presenter.myDrugs;
 
 import android.app.Activity;
 import android.app.FragmentManager;
-import android.view.View;
 
 import com.example.mohamed.mymedeciene.appliction.MyApp;
 import com.example.mohamed.mymedeciene.data.Drug;
@@ -23,39 +22,43 @@ import java.util.Map;
  * on 23/12/2017.  time :23:44
  */
 
+@SuppressWarnings("unchecked")
 public class DrugsViewPresenter<v extends DrugsView> extends BasePresenter<v> implements DrugsPresenter<v> {
-    private Activity activity;
-    private DatabaseReference mDatabaseReference;
-    private FirebaseAuth mAuth;
+    private final Activity activity;
+    private final DatabaseReference mDatabaseReference;
+    private final FirebaseAuth mAuth;
 
-    public DrugsViewPresenter(Activity activity){
-        this.activity=activity;
-        mAuth= MyApp.getmAuth();
-        mDatabaseReference=MyApp.getmDatabaseReference().child("Drugs");
+    public DrugsViewPresenter(Activity activity) {
+        this.activity = activity;
+        mAuth = MyApp.getmAuth();
+        mDatabaseReference = MyApp.getmDatabaseReference().child("Drugs");
     }
 
     @Override
     public void addNewDrugs(AddListener listener) {
-        FragmentManager fragmentManager=activity.getFragmentManager();
-        AddGrugFragment fragment=AddGrugFragment.newFragment(null,null,listener);
-        fragment.show(fragmentManager,"");
+        FragmentManager fragmentManager = activity.getFragmentManager();
+        AddGrugFragment fragment = AddGrugFragment.newFragment(null, null, listener);
+        fragment.show(fragmentManager, "");
 
     }
 
 
-
+    @SuppressWarnings("unchecked")
     @Override
     public void deleteDrug(String drugId, final AddListener listener) {
-        Map map=new HashMap();
-        map.put("AllDrugs/"+drugId,null);
-        map.put(mAuth.getUid()+"/"+drugId,null);
+        Map map = new HashMap();
+        //noinspection unchecked
+        map.put("AllDrugs/" + drugId, null);
+        //noinspection unchecked
+        map.put(mAuth.getUid() + "/" + drugId, null);
 
+        //noinspection unchecked
         mDatabaseReference.updateChildren(map, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                if (databaseError==null){
+                if (databaseError == null) {
                     listener.onSuccess("");
-                }else {
+                } else {
                     listener.OnError(databaseError.getMessage());
                 }
             }
@@ -63,10 +66,10 @@ public class DrugsViewPresenter<v extends DrugsView> extends BasePresenter<v> im
     }
 
     @Override
-    public void editDrug(Drug drug,String id, AddListener listener) {
-        FragmentManager fragmentManager=activity.getFragmentManager();
-        AddGrugFragment fragment=AddGrugFragment.newFragment(drug,id,listener);
-        fragment.show(fragmentManager,"");
+    public void editDrug(Drug drug, String id, AddListener listener) {
+        FragmentManager fragmentManager = activity.getFragmentManager();
+        AddGrugFragment fragment = AddGrugFragment.newFragment(drug, id, listener);
+        fragment.show(fragmentManager, "");
     }
 
 

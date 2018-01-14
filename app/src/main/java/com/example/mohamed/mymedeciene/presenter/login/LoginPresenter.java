@@ -10,6 +10,7 @@ import com.example.mohamed.mymedeciene.view.LoginView;
  * on 18/12/2017.  time :22:57
  */
 
-public interface LoginPresenter<v extends LoginView> extends MainPresnter<v>{
-    void login(String email , String password, AddListener listener);
+@SuppressWarnings("unused")
+interface LoginPresenter<v extends LoginView> extends MainPresnter<v> {
+    void login(String email, String password, AddListener listener);
 }

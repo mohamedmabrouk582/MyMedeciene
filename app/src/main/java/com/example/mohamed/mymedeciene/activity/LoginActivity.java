@@ -15,11 +15,12 @@ import com.example.mohamed.mymedeciene.utils.SingleFragmentActivity;
 
 public class LoginActivity extends SingleFragmentActivity {
 
-    public static void start(Context context){
-        Intent intent=new Intent(context,LoginActivity.class);
+    public static void start(Context context) {
+        Intent intent = new Intent(context, LoginActivity.class);
 
         context.startActivity(intent);
     }
+
     @Override
     public Fragment CreateFragment() {
         return LoginFragment.newFragment();

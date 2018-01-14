@@ -1,7 +1,5 @@
 package com.example.mohamed.mymedeciene.appliction;
 
-import android.location.Location;
-
 import com.example.mohamed.mymedeciene.data.Pharmacy;
 
 /**
@@ -11,39 +9,42 @@ import com.example.mohamed.mymedeciene.data.Pharmacy;
  */
 
 public class DataManager {
-    private MyShared myShared;
+    private final MyShared myShared;
 
-    public DataManager(MyShared myShared){
-        this.myShared=myShared;
+    public DataManager(MyShared myShared) {
+        this.myShared = myShared;
     }
 
-    public void setPhName(String name){
+    public void setPhName(String name) {
         myShared.putPhName(name);
     }
-    public void setPhPhone(String phone){
+
+    public void setPhPhone(String phone) {
         myShared.putPhPhone(phone);
     }
-    public void setPhIMG(String img){
+
+    public void setPhIMG(String img) {
         myShared.putPhImg(img);
     }
-    public void setPhLocation(String location){
+
+    public void setPhLocation(String location) {
         myShared.putPhLocation(location);
     }
 
-    public void setPharmacy(String name,String phone, String img,String location,String latLang){
-        myShared.putPharmacy(name,phone,img,location,latLang);
+    public void setPharmacy(String name, String phone, String img, String location, String latLang) {
+        myShared.putPharmacy(name, phone, img, location, latLang);
     }
 
-    public void setLatLang(String latLang){
+    public void setLatLang(String latLang) {
         myShared.putLatLang(latLang);
     }
 
-    public void clear(){
+    public void clear() {
         myShared.clear();
     }
 
-    public Pharmacy getPharmacy(){
-      return myShared.getPharmacy();
+    public Pharmacy getPharmacy() {
+        return myShared.getPharmacy();
     }
 
 }

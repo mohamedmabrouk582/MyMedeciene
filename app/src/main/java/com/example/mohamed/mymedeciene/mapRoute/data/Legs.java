@@ -10,6 +10,7 @@ import java.util.List;
  * on 03/01/2018.  time :23:16
  */
 
+@SuppressWarnings("unused")
 public class Legs {
 
     @SerializedName("steps")

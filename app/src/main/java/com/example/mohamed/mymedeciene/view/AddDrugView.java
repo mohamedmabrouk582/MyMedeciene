@@ -8,5 +8,4 @@ package com.example.mohamed.mymedeciene.view;
 
 public interface AddDrugView extends MainView {
     void close();
-    void addDrugIMG();
 }

@@ -8,6 +8,7 @@ import com.google.gson.annotations.SerializedName;
  * on 03/01/2018.  time :23:21
  */
 
+@SuppressWarnings("unused")
 public class Steps {
     @SerializedName("start_location")
     private Location start_location;

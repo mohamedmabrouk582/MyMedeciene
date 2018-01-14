@@ -8,6 +8,7 @@ import com.google.gson.annotations.SerializedName;
  * on 03/01/2018.  time :23:16
  */
 
+@SuppressWarnings("unused")
 public class Location {
     @SerializedName("lat")
     private double lat;

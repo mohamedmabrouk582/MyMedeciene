@@ -10,7 +10,9 @@ import com.example.mohamed.mymedeciene.view.MainView;
  * on 18/12/2017.  time :17:23
  */
 
+@SuppressWarnings("unused")
 public interface MainPresnter<v extends MainView> {
     void attachView(v view);
-    void showSnakBar(View view,String msg);
+
+    void showSnakBar(View view, String msg);
 }

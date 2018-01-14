@@ -15,20 +15,20 @@ import com.example.mohamed.mymedeciene.view.SplashView;
 
 public class SplashViewPresenter<v extends SplashView> extends BasePresenter<v> implements SplashPrenter<v> {
 
-    private Activity activity;
+    private final Activity activity;
 
-    public SplashViewPresenter(Activity activity){
-        this.activity=activity;
+    public SplashViewPresenter(Activity activity) {
+        this.activity = activity;
     }
 
     @Override
     public void PharmacyActivity(Pharmacy pharmacy) {
-        HomeActivity.newIntentPharmacy(activity,pharmacy);
+        HomeActivity.newIntentPharmacy(activity, pharmacy);
     }
 
     @Override
     public void HomeActivity() {
-      HomeActivity.newIntentUser(activity);
-      activity.finish();
+        HomeActivity.newIntentUser(activity);
+        activity.finish();
     }
 }

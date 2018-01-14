@@ -1,41 +1,42 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/main_layout"
-    android:layout_margin="@dimen/widget_margin" >
+    android:layout_margin="@dimen/widget_margin">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#bbDEDFDE"
-        android:orientation="vertical" >
+        android:orientation="vertical"
+        tools:ignore="UselessParent">
 
         <LinearLayout
-            android:id="@+id/widgetLayoutMain"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#aaDEDFDE"
             android:orientation="horizontal"
             android:paddingLeft="5dp"
-            android:paddingRight="5dp" >
+            android:paddingRight="5dp">
 
             <ImageView
-                android:id="@+id/widgetImgLauncher"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:scaleType="centerCrop"
                 android:layout_gravity="center_vertical"
-                android:src="@drawable/logo" />
+                android:src="@drawable/logo"
+                tools:ignore="ContentDescription" />
 
             <LinearLayout
-                android:id="@+id/widgetTopBar"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:orientation="vertical"
                 android:paddingBottom="4dp"
-                android:paddingLeft="8dp"
-                android:paddingTop="4dp" >
+                android:paddingStart="8dp"
+                android:paddingTop="4dp"
+                tools:ignore="RtlHardcoded,RtlSymmetry">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -46,12 +47,12 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/txvWidgetTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="All Drugs"
                     android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="#4B4B4D" />
+                    android:textColor="#4B4B4D"
+                    tools:ignore="HardcodedText" />
             </LinearLayout>
         </LinearLayout>
 
@@ -63,7 +64,6 @@
         <ListView
             android:id="@+id/widgetCollectionList"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
-        </ListView>
+            android:layout_height="wrap_content"></ListView>
     </LinearLayout>
 </FrameLayout>

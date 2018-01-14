@@ -8,5 +8,6 @@ package com.example.mohamed.mymedeciene.utils;
 
 public interface AddListener {
     void onSuccess(String success);
+
     void OnError(String error);
 }

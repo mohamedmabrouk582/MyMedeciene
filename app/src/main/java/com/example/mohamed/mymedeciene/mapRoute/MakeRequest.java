@@ -8,7 +8,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.widget.Toast;
 
 import com.example.mohamed.mymedeciene.R;
 import com.example.mohamed.mymedeciene.activity.HomeActivity;
@@ -38,51 +37,54 @@ import java.util.List;
  * on 04/01/2018.  time :02:17
  */
 
+@SuppressWarnings("unchecked")
 public class MakeRequest {
     private String to;
-    private Activity activity;
-    private ProgressDialog mProgressDialog;
+    private final Activity activity;
+    private final ProgressDialog mProgressDialog;
     private BubblesManager bubblesManager;
 
     public MakeRequest(Activity activity) {
-        this.activity=activity;
-        mProgressDialog=new ProgressDialog(activity);
-        mProgressDialog.setMessage("Map loading .......");
+        this.activity = activity;
+        mProgressDialog = new ProgressDialog(activity);
+        mProgressDialog.setMessage(activity.getString(R.string.mapLoad));
         initializeBubblesManager();
 
     }
 
-    public void go(String to){
-        this.to=to;
-       MapRoute mapRoute=new MapRoute();
-       List<String> list=new ArrayList<>();
-       list.add(HomeActivity.myCurrentLocation);
-       list.add(to);
-       mapRoute.execute(list);
+    @SuppressWarnings("unchecked")
+    public void go(String to) {
+        this.to = to;
+        MapRoute mapRoute = new MapRoute();
+        List<String> list = new ArrayList<>();
+        list.add(HomeActivity.myCurrentLocation);
+        list.add(to);
+        //noinspection unchecked
+        mapRoute.execute(list);
     }
 
-    public List<LatLng> getLatLangs(List<Route> routes){
-        List<LatLng> routList=new ArrayList<>();
+    private List<LatLng> getLatLangs(List<Route> routes) {
+        List<LatLng> routList = new ArrayList<>();
 
-        if (routes.size()>0){
+        if (routes.size() > 0) {
             ArrayList<LatLng> decodelist;
             Route routeA = routes.get(0);
-            if (routeA.getLegs().size()>0){
-                List<Steps> steps=routeA.getLegs().get(0).getSteps();
+            if (routeA.getLegs().size() > 0) {
+                List<Steps> steps = routeA.getLegs().get(0).getSteps();
                 Steps step;
                 Location location;
                 String polyline;
 
-                for (int i = 0; i <steps.size() ; i++) {
-                    step=steps.get(i);
-                    location=step.getStart_location();
-                    routList.add(new LatLng(location.getLat(),location.getLng()));
-                    polyline=step.getPolyline().getPoints();
+                for (int i = 0; i < steps.size(); i++) {
+                    step = steps.get(i);
+                    location = step.getStart_location();
+                    routList.add(new LatLng(location.getLat(), location.getLng()));
+                    polyline = step.getPolyline().getPoints();
                     decodelist = decodePoly(polyline);
 
                     routList.addAll(decodelist);
-                    location=step.getEnd_location();
-                    routList.add(new LatLng(location.getLat(),location.getLng()));
+                    location = step.getEnd_location();
+                    routList.add(new LatLng(location.getLat(), location.getLng()));
                 }
             }
         }
@@ -90,8 +92,8 @@ public class MakeRequest {
         return routList;
     }
 
-    private  ArrayList<LatLng> decodePoly(String encoded) {
-        ArrayList<LatLng> poly = new ArrayList<LatLng>();
+    private ArrayList<LatLng> decodePoly(String encoded) {
+        ArrayList<LatLng> poly = new ArrayList<>();
         int index = 0, len = encoded.length();
         int lat = 0, lng = 0;
         while (index < len) {
@@ -120,7 +122,8 @@ public class MakeRequest {
     }
 
 
-    public class MapRoute extends AsyncTask<List<String>,Void,List<Route>>{
+    @SuppressLint("StaticFieldLeak")
+    public class MapRoute extends AsyncTask<List<String>, Void, List<Route>> {
         @Override
         protected void onPreExecute() {
             mProgressDialog.show();
@@ -128,34 +131,34 @@ public class MakeRequest {
 
         @Override
         protected List<Route> doInBackground(List<String>[] lists) {
-            List<String> fromTo=lists[0];
-          String  url = Uri
+            List<String> fromTo = lists[0];
+            String url = Uri
                     .parse("http://maps.google.com/maps/api/directions/json")
                     .buildUpon()
-                    .appendQueryParameter("origin",fromTo.get(0))
-                    .appendQueryParameter("destination",fromTo.get(1))
-                    .appendQueryParameter("method","GET")
+                    .appendQueryParameter("origin", fromTo.get(0))
+                    .appendQueryParameter("destination", fromTo.get(1))
+                    .appendQueryParameter("method", "GET")
                     .build().buildUpon().toString();
 
 
-            return  getRoute(url);
+            return getRoute(url);
         }
 
         @Override
         protected void onPostExecute(List<Route> routes) {
-            MapsActivity.start(activity,to,getLatLangs(routes));
+            MapsActivity.start(activity, to, getLatLangs(routes));
             mProgressDialog.dismiss();
         }
 
-        private List<Route> getRoute(String url){
-            List<Route> routes=new ArrayList<>();
+        private List<Route> getRoute(String url) {
+            List<Route> routes = new ArrayList<>();
             try {
-                String json=getUrlString(url);
-                Gson gson=new Gson();
-                RouteRepons route=gson.fromJson(json,RouteRepons.class);
-                routes=route.getRoutes();
+                String json = getUrlString(url);
+                Gson gson = new Gson();
+                RouteRepons route = gson.fromJson(json, RouteRepons.class);
+                routes = route.getRoutes();
                 Log.d("asynresp", routes.size() + "");
-            }catch (Exception  e){
+            } catch (Exception ignored) {
 
             }
 
@@ -177,7 +180,7 @@ public class MakeRequest {
                             ": with " +
                             urlSpec);
                 }
-                int bytesRead = 0;
+                int bytesRead;
                 byte[] buffer = new byte[1024];
                 while ((bytesRead = in.read(buffer)) > 0) {
                     out.write(buffer, 0, bytesRead);
@@ -199,10 +202,11 @@ public class MakeRequest {
 
     @SuppressLint("NewApi")
     public void addNewBubble() {
-        final BubbleLayout bubbleView = (BubbleLayout) LayoutInflater.from(activity).inflate(R.layout.bubble_layout, null);
+        @SuppressLint("InflateParams") final BubbleLayout bubbleView = (BubbleLayout) LayoutInflater.from(activity).inflate(R.layout.bubble_layout, null);
         bubbleView.setOnBubbleRemoveListener(new BubbleLayout.OnBubbleRemoveListener() {
             @Override
-            public void onBubbleRemoved(BubbleLayout bubble) { }
+            public void onBubbleRemoved(BubbleLayout bubble) {
+            }
         });
         bubbleView.setOnBubbleClickListener(new BubbleLayout.OnBubbleClickListener() {
 
@@ -211,6 +215,7 @@ public class MakeRequest {
                 Intent i = activity.getPackageManager()
                         .getLaunchIntentForPackage(
                                 activity.getPackageName());
+                //noinspection ConstantConditions
                 i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 activity.startActivity(i);
                 bubbleView.cancelDragAndDrop();
@@ -222,8 +227,7 @@ public class MakeRequest {
     }
 
 
-
-    public void initializeBubblesManager() {
+    private void initializeBubblesManager() {
         bubblesManager = new BubblesManager.Builder(activity)
                 .setTrashLayout(R.layout.bubble_trash)
                 .setInitializationCallback(new OnInitializedCallback() {

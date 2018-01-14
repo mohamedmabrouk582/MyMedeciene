@@ -6,6 +6,7 @@ package com.example.mohamed.mymedeciene.view;
  * on 18/12/2017.  time :17:31
  */
 
+@SuppressWarnings("unused")
 public interface SplashView extends MainView {
-  void selectedActivity();
+    void selectedActivity();
 }

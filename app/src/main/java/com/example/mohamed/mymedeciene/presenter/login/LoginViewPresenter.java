@@ -26,45 +26,48 @@ import com.google.firebase.database.ValueEventListener;
  * on 18/12/2017.  time :22:59
  */
 
+@SuppressWarnings("AccessStaticViaInstance")
 public class LoginViewPresenter<v extends LoginView> extends BasePresenter<v> implements LoginPresenter<v> {
-    private Activity activity;
-    private DataManager dataManager;
-    private DatabaseReference mDatabaseReference;
-    private FirebaseAuth mAuth;
+    private final Activity activity;
+    private final DataManager dataManager;
+    private final DatabaseReference mDatabaseReference;
+    private final FirebaseAuth mAuth;
 
-    public LoginViewPresenter(Activity  activity){
-        this.activity=activity;
-        dataManager=((MyApp) activity.getApplication()).getData();
-        mAuth=MyApp.getmAuth();
-        mDatabaseReference=MyApp.getmDatabaseReference().child("Pharmacy");
+    public LoginViewPresenter(Activity activity) {
+        this.activity = activity;
+        dataManager = ((MyApp) activity.getApplication()).getData();
+        mAuth = MyApp.getmAuth();
+        mDatabaseReference = MyApp.getmDatabaseReference().child("Pharmacy");
     }
 
 
     @Override
     public void login(String email, String password, final AddListener listener) {
-      mAuth.signInWithEmailAndPassword(email+"@gmail.com",password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-          @Override
-          public void onComplete(@NonNull Task<AuthResult> task) {
-              if (task.isSuccessful()){
-                  mDatabaseReference.child(mAuth.getUid()).addValueEventListener(new ValueEventListener() {
-                      @Override
-                      public void onDataChange(DataSnapshot dataSnapshot) {
-                          Pharmacy pharmacy=dataSnapshot.getValue(Pharmacy.class);
-                          dataManager.setPharmacy(pharmacy.getPhName(),pharmacy.getPhPhone(),pharmacy.getPhImgURL(),pharmacy.getPhLocation(),pharmacy.getLatLang());
-                          HomeActivity.newIntentPharmacy(activity,pharmacy);
-                          Log.d("ph", pharmacy.toString() + "");
-                          activity.finish();
-                      }
+        mAuth.signInWithEmailAndPassword(email + "@gmail.com", password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful()) {
+                    //noinspection ConstantConditions
+                    mDatabaseReference.child(mAuth.getUid()).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            Pharmacy pharmacy = dataSnapshot.getValue(Pharmacy.class);
+                            //noinspection ConstantConditions
+                            dataManager.setPharmacy(pharmacy.getPhName(), pharmacy.getPhPhone(), pharmacy.getPhImgURL(), pharmacy.getPhLocation(), pharmacy.getLatLang());
+                            HomeActivity.newIntentPharmacy(activity, pharmacy);
+                            activity.finish();
+                        }
 
-                      @Override
-                      public void onCancelled(DatabaseError databaseError) {
-                       listener.OnError(databaseError.getMessage());
-                      }
-                  });
-              }else {
-                  listener.OnError(task.getException().getMessage());
-              }
-          }
-      });
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            listener.OnError(databaseError.getMessage());
+                        }
+                    });
+                } else {
+                    //noinspection ConstantConditions
+                    listener.OnError(task.getException().getMessage());
+                }
+            }
+        });
     }
 }

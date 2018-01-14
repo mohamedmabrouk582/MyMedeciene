@@ -10,5 +10,6 @@ import com.example.mohamed.mymedeciene.data.Pharmacy;
 
 public interface QueryListener {
     void onSuccess(Pharmacy pharmacy);
+
     void onError(String error);
 }

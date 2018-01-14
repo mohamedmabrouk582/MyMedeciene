@@ -9,7 +9,9 @@ import com.example.mohamed.mymedeciene.view.SplashView;
  * on 18/12/2017.  time :18:02
  */
 
-public interface SplashPrenter<v extends SplashView> {
+@SuppressWarnings("unused")
+interface SplashPrenter<v extends SplashView> {
     void PharmacyActivity(Pharmacy pharmacy);
+
     void HomeActivity();
 }

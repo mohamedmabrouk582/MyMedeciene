@@ -6,9 +6,13 @@ package com.example.mohamed.mymedeciene.view;
  * on 18/12/2017.  time :23:33
  */
 
-public interface RegisterView extends MainView{
-    void register(String userName,String email,String password,String location);
+@SuppressWarnings("unused")
+public interface RegisterView extends MainView {
+    void register(String userName, String email, String password, String location);
+
     void login();
+
     void showProgress();
+
     void hideProgress();
 }

@@ -8,9 +8,10 @@ import com.google.gson.annotations.SerializedName;
  * on 03/01/2018.  time :23:20
  */
 
+@SuppressWarnings("unused")
 public class OverviewPolyLine {
     @SerializedName("points")
-    public String points;
+    private String points;
 
     public String getPoints() {
         return points;

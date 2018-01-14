@@ -9,6 +9,7 @@ import android.os.Parcelable;
  * on 18/12/2017.  time :18:46
  */
 
+@SuppressWarnings("unused")
 public class Drug implements Parcelable {
     private String name;
     private String type;
@@ -16,7 +17,6 @@ public class Drug implements Parcelable {
     private String quantity;
     private String img;
     private String phKey;
-
 
 
     public Drug() {

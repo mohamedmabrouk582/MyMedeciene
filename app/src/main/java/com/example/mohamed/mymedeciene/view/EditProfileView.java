@@ -6,6 +6,7 @@ package com.example.mohamed.mymedeciene.view;
  * on 18/12/2017.  time :21:47
  */
 
+@SuppressWarnings("unused")
 public interface EditProfileView extends MainView {
     void close();
 }

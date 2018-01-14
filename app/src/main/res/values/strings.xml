@@ -5,14 +5,12 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    <string name="action_settings">Settings</string>
     <string name="login">Login</string>
     <string name="register">Register</string>
     <string name="name">Pharmacy  Name</string>
     <string name="phone">Pharmacy Phone</string>
     <string name="address">Pharmacy Address</string>
     <string name="save">Save</string>
-    <string name="email_hint">Your Email</string>
     <string name="password_hint">Your Password</string>
     <string name="singup">Sign Up</string>
     <string name="drug_name">Drug Name</string>
@@ -21,12 +19,30 @@
     <string name="home">Home</string>
     <string name="noItemFound">Not Find Any Drugs</string>
     <string name="title_activity_maps">Map</string>
-    <string name="appwidget_text">EXAMPLE</string>
-    <string name="configure">Configure</string>
-    <string name="add_widget">Add widget</string>
     <string name="checkDrug">This Drug has Already Added Before </string>
-    <string name="decline">Decline</string>
     <string name="update">Update</string>
+    <string name="add_drug_done">add Drug Done</string>
+    <string name="permission_denied_location">Permission location to get your Current Location \n to draw route at Map  </string>
+    <string name="permission_denied_phone">Permission phone to Call Pharmacy   </string>
+    <string name="call_permission">Call Permission Dialog</string>
+    <string name="not_allow">not allow as you are not a Pharmacy .</string>
+    <string name="drug_name_empty">Drug name not be Empty</string>
+    <string name="drug_price_empty">Drug price not be Empty</string>
+    <string name="connected">connected</string>
+    <string name="no_connected">not  Internet connect</string>
+    <string name="wait_dailog">wait for Open map ......</string>
+    <string name="drug_added">Drug added Successfully</string>
+    <string name="drug_update">Drud Updated Successfully</string>
+    <string name="name_empty">name not be Empty</string>
+    <string name="phone_empty">phone not invalid</string>
+    <string name="location_empty">location not be Empty</string>
+    <string name="phone_invalid">your phone not Valid</string>
+    <string name="password_invalid">your password  must be more than 6 chars</string>
+    <string name="ph_name_invalid">pharmacy name not be Empty</string>
+    <string name="ph_phone_invalid">pharmacy phone not valid</string>
+    <string name="ph_pass_invalid"><![CDATA[pharmacy password must be > 6 chars]]></string>
+    <string name="ph_location_invalid">pharmacy location not be Empty</string>
+    <string name="mapLoad">Map loading .......</string>
     <string-array name="drug_type">
         <item>Injections</item>
         <item>Capsules</item>

@@ -1,56 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_marginLeft="@dimen/_5sdp"
-    android:layout_marginRight="@dimen/_5sdp"
+    android:layout_marginStart="@dimen/_5sdp"
+    android:layout_marginEnd="@dimen/_5sdp"
     android:layout_marginTop="@dimen/_5sdp"
     android:layout_marginBottom="@dimen/_7sdp"
     app:cardCornerRadius="@dimen/_5sdp"
     android:elevation="@dimen/_20sdp"
     android:padding="@dimen/_5sdp"
-    >
+    tools:ignore="UnusedAttribute">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        >
+        tools:ignore="ExtraText">
+
         <ImageView
             android:id="@+id/drug_img"
             android:layout_width="@dimen/_100sdp"
             android:layout_height="@dimen/_140sdp"
             android:src="@drawable/logo"
-            />
-        ]<View
-        android:layout_width="1px"
-        android:layout_height="match_parent"
-         android:background="@color/colorPrimaryDark"
-        />
+            tools:ignore="ContentDescription" />
+        ]
+
+        <View
+            android:layout_width="1px"
+            android:layout_height="match_parent"
+            android:background="@color/colorPrimaryDark" />
+
         <LinearLayout
-            android:layout_marginLeft="@dimen/_6sdp"
+            android:layout_marginStart="@dimen/_6sdp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:gravity="center|left"
-            >
+            tools:ignore="RtlHardcoded">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="name : "
-                    />
+                    tools:ignore="HardcodedText" />
+
                 <TextView
-                    android:layout_marginRight="@dimen/_5sdp"
+                    android:layout_marginEnd="@dimen/_5sdp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="name "
                     android:id="@+id/drug_name"
-                    />
+                    tools:ignore="HardcodedText,RtlHardcoded" />
             </LinearLayout>
 
             <LinearLayout
@@ -58,17 +65,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="price : "
-                    />
+                    tools:ignore="HardcodedText" />
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="15.6 "
                     android:id="@+id/drug_price"
-                    />
+                    tools:ignore="HardcodedText" />
             </LinearLayout>
 
             <LinearLayout
@@ -76,31 +85,33 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="quantity : "
-                    />
+                    tools:ignore="HardcodedText" />
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="15.6 "
                     android:id="@+id/drug_quantity"
-                    />
+                    tools:ignore="HardcodedText" />
 
                 <TextView
-                    android:layout_marginLeft="@dimen/_20sdp"
+                    android:layout_marginStart="@dimen/_20sdp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="type : "
-                    />
+                    tools:ignore="HardcodedText,RtlHardcoded" />
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="15.6 "
                     android:id="@+id/drug_type"
-                    />
-
+                    tools:ignore="HardcodedText" />
 
 
             </LinearLayout>
@@ -110,24 +121,27 @@
                 android:layout_width="match_parent"
                 android:layout_height="2px"
                 android:background="@color/colorPrimaryDark"
-                />
+                tools:ignore="PxUsage" />
+
             <LinearLayout
                 android:layout_marginTop="@dimen/_6sdp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Phar name : "
-                    />
+                    tools:ignore="HardcodedText" />
+
                 <TextView
-                    android:layout_marginRight="@dimen/_5sdp"
+                    android:layout_marginEnd="@dimen/_5sdp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="name "
                     android:id="@+id/ph_name"
-                    />
+                    tools:ignore="HardcodedText,RtlHardcoded" />
             </LinearLayout>
 
             <LinearLayout
@@ -135,18 +149,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text=" phone : "
-                    />
+                    tools:ignore="HardcodedText" />
+
                 <TextView
-                    android:layout_marginRight="@dimen/_5sdp"
+                    android:layout_marginEnd="@dimen/_5sdp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="name "
                     android:id="@+id/ph_phone"
-                    />
+                    tools:ignore="HardcodedText,RtlHardcoded" />
             </LinearLayout>
 
             <LinearLayout
@@ -154,11 +170,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text=" location : "
-                    />
+                    tools:ignore="HardcodedText" />
+
                 <TextView
                     android:textColor="@color/colorPrimaryDark"
                     android:layout_width="0dp"
@@ -166,7 +184,7 @@
                     android:layout_height="wrap_content"
                     android:text="name "
                     android:id="@+id/ph_location"
-                    />
+                    tools:ignore="HardcodedText" />
             </LinearLayout>
 
 

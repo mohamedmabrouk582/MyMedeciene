@@ -13,20 +13,15 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Looper;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.MenuInflater;
-import android.view.SubMenu;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -44,16 +39,15 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.mohamed.mymedeciene.R;
-import com.example.mohamed.mymedeciene.appliction.MyApp;
-import com.example.mohamed.mymedeciene.data.Drug;
 import com.example.mohamed.mymedeciene.data.Pharmacy;
 import com.example.mohamed.mymedeciene.data.dataBase.DBoperations;
+import com.example.mohamed.mymedeciene.fragment.AddDrugCheckFragment;
 import com.example.mohamed.mymedeciene.fragment.AllDrugsFragment;
 import com.example.mohamed.mymedeciene.fragment.DrugsFragment;
 import com.example.mohamed.mymedeciene.mapRoute.MakeRequest;
-import com.example.mohamed.mymedeciene.presenter.Home.HomePresenter;
 import com.example.mohamed.mymedeciene.presenter.Home.HomeViewPresenter;
 import com.example.mohamed.mymedeciene.utils.AddListener;
+import com.example.mohamed.mymedeciene.utils.CheckListener;
 import com.example.mohamed.mymedeciene.utils.QueryListener;
 import com.example.mohamed.mymedeciene.utils.ZoomIMG;
 import com.example.mohamed.mymedeciene.view.HomeView;
@@ -64,6 +58,7 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+@SuppressWarnings("ALL")
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, HomeView, View.OnClickListener, LocationListener {
     private static final String PHARMACY = "pharmacy";
@@ -83,7 +78,7 @@ public class HomeActivity extends AppCompatActivity
     private SearchView mSearchView;
     public static volatile String myCurrentLocation = null;
     private MenuItem editProfile, myDrugs, addDrugs, logout, search;
-    private String[] permissions = {Manifest.permission.READ_EXTERNAL_STORAGE,
+    private final String[] permissions = {Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_NETWORK_STATE
             , Manifest.permission.CALL_PHONE,
             Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_LOCATION_EXTRA_COMMANDS};
@@ -131,76 +126,72 @@ public class HomeActivity extends AppCompatActivity
     }
 
     private void location() {
-        // locationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER,this, Looper.getMainLooper());
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                requestPermissions(new String[]{ Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION},100);
+                requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, 100);
             }
-        }
+        }else {
             LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+            //noinspection ConstantConditions
             locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 50, this);
-
-
+        }
 
     }
 
-    private void overLayPermission(){
-        if(Build.VERSION.SDK_INT >= 23) {
+    private void overLayPermission() {
+        if (Build.VERSION.SDK_INT >= 23) {
             if (!Settings.canDrawOverlays(this)) {
                 Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
                         Uri.parse("package:" + getPackageName()));
                 startActivityForResult(intent, 1234);
             }
-        }
-        else
-        {
+        } else {
             Intent intent = new Intent(this, Service.class);
             startService(intent);
         }
     }
 
     @SuppressLint("WrongViewCast")
-    private void initView(View view){
-        zoomIMG=new ZoomIMG();
-        mPharmacy=getIntent().getParcelableExtra(PHARMACY);
-       phIMG=view.findViewById(R.id.pharmacy_img);
-       phName=view.findViewById(R.id.pharmacy_name);
-       phPhone=view.findViewById(R.id.pharmacy_phone);
-       edt_img=view.findViewById(R.id.edit_img);
-       phLocation=view.findViewById(R.id.pharmacy_location);
-       login_register=view.findViewById(R.id.login_register);
-       login=view.findViewById(R.id.txt_login);
-       register=view.findViewById(R.id.txt_register);
-       zoomContainer=findViewById(R.id.zoomContainer);
-       img_preview=findViewById(R.id.img_preview);
-       edt_img.setOnClickListener(this);
-       login.setOnClickListener(this);
-       register.setOnClickListener(this);
-       phIMG.setOnClickListener(this);
-       phLocation.setOnClickListener(this);
+    private void initView(View view) {
+        zoomIMG = new ZoomIMG();
+        mPharmacy = getIntent().getParcelableExtra(PHARMACY);
+        phIMG = view.findViewById(R.id.pharmacy_img);
+        phName = view.findViewById(R.id.pharmacy_name);
+        phPhone = view.findViewById(R.id.pharmacy_phone);
+        edt_img = view.findViewById(R.id.edit_img);
+        phLocation = view.findViewById(R.id.pharmacy_location);
+        login_register = view.findViewById(R.id.login_register);
+        login = view.findViewById(R.id.txt_login);
+        register = view.findViewById(R.id.txt_register);
+        zoomContainer = findViewById(R.id.zoomContainer);
+        img_preview = findViewById(R.id.img_preview);
+        edt_img.setOnClickListener(this);
+        login.setOnClickListener(this);
+        register.setOnClickListener(this);
+        phIMG.setOnClickListener(this);
+        phLocation.setOnClickListener(this);
 
 
-       if (mPharmacy!=null){
-           isPharmacy(true);
+        if (mPharmacy != null) {
+            isPharmacy(true);
 
-           if (mPharmacy.getPhImgURL() != null ){
-               Glide.with(this).load(Uri.parse(mPharmacy.getPhImgURL())).
-                    //   error(R.drawable.logo)
-                       into(phIMG);
-           }
+            if (mPharmacy.getPhImgURL() != null) {
+                Glide.with(this).load(Uri.parse(mPharmacy.getPhImgURL())).
+                                into(phIMG);
+            }
 
-          setData(mPharmacy);
-       }else {
-           isPharmacy(false);
-       }
+            setData(mPharmacy);
+        } else {
+            isPharmacy(false);
+        }
     }
 
-    private void setData(Pharmacy mData){
+    private void setData(Pharmacy mData) {
         try {
             phName.setText(mData.getPhName());
-            phLocation.setText(String.valueOf(mData.getPhLocation().toString()));
+            phLocation.setText(String.valueOf(mData.getPhLocation()));
             phPhone.setText(mData.getPhPhone());
-        }catch (Exception data){
+        } catch (Exception ignored) {
 
         }
 
@@ -209,7 +200,7 @@ public class HomeActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -219,11 +210,10 @@ public class HomeActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.home, menu);
         Log.d("menus", menu.size() + "");
-        search=menu.findItem(R.id.app_bar_search);
-        mSearchView= (SearchView) search.getActionView();
+        search = menu.findItem(R.id.app_bar_search);
+        mSearchView = (SearchView) search.getActionView();
 
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -242,28 +232,20 @@ public class HomeActivity extends AppCompatActivity
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        return super.onOptionsItemSelected(item);
-    }
-
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.nav_addDrug) {
-            // Handle the camera action
             presenter.addDrug(new AddListener() {
                 @Override
                 public void onSuccess(String success) {
-                  presenter.showSnakBar(drawer,success);
+                    presenter.showSnakBar(drawer, success);
                 }
 
                 @Override
                 public void OnError(String error) {
-                 presenter.showSnakBar(drawer,error);
+                    presenter.showSnakBar(drawer, error);
                 }
             });
 
@@ -273,7 +255,7 @@ public class HomeActivity extends AppCompatActivity
                 @Override
                 public void onSuccess(Pharmacy pharmacy) {
                     setData(pharmacy);
-                    mPharmacy=pharmacy;
+                    mPharmacy = pharmacy;
                 }
 
                 @Override
@@ -282,22 +264,20 @@ public class HomeActivity extends AppCompatActivity
                 }
             });
         } else if (id == R.id.nav_drugs) {
-               search.setVisible(false);
-               setFragment(DrugsFragment.newFragment());
-          //  invalidateOptionsMenu();
-
+            search.setVisible(false);
+            setFragment(DrugsFragment.newFragment());
         } else if (id == R.id.nav_logout) {
-            Toast.makeText(this, DBoperations.getInstance(this).getDrugs().size()+"", Toast.LENGTH_SHORT).show();
-            if (mPharmacy!=null) {
-               presenter.logout();
-            }else {
-                presenter.showSnakBar(drawer,"not allow as you are not a Pharmacy . ");
+            Toast.makeText(this, DBoperations.getInstance(this).getDrugs().size() + "", Toast.LENGTH_SHORT).show();
+            if (mPharmacy != null) {
+                presenter.logout();
+            } else {
+                presenter.showSnakBar(drawer, "not allow as you are not a Pharmacy . ");
             }
-        }else if (id==R.id.nav_home){
+        } else if (id == R.id.nav_home) {
             search.setVisible(true);
             setFragment(AllDrugsFragment.newFragment(null));
         }
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
@@ -306,23 +286,23 @@ public class HomeActivity extends AppCompatActivity
     @SuppressLint("ResourceType")
     @Override
     public void isPharmacy(boolean b) {
-        addDrugs=menu.getItem(2);
-        editProfile=menu.getItem(0);
-        myDrugs=menu.getItem(1);
-       logout=menu.getItem(3);
+        addDrugs = menu.getItem(2);
+        editProfile = menu.getItem(0);
+        myDrugs = menu.getItem(1);
+        logout = menu.getItem(3);
         editProfile.setEnabled(b);
         addDrugs.setEnabled(b);
         myDrugs.setEnabled(b);
         logout.setEnabled(b);
-        if (b){
-           //   show all items
+        if (b) {
+            //   show all items
 
             login_register.setVisibility(View.GONE);
             phName.setVisibility(View.VISIBLE);
             phPhone.setVisibility(View.VISIBLE);
             phLocation.setVisibility(View.VISIBLE);
-        }else {
-          // not show show drugs and add drug
+        } else {
+            // not show show drugs and add drug
             login_register.setVisibility(View.VISIBLE);
             phName.setVisibility(View.GONE);
             phPhone.setVisibility(View.GONE);
@@ -334,34 +314,33 @@ public class HomeActivity extends AppCompatActivity
 
     @Override
     public void login() {
-      LoginActivity.start(this);
-      finish();
+        LoginActivity.start(this);
+        finish();
     }
 
     @Override
     public void register() {
-     RegisterActivity.start(this);
-     finish();
+        RegisterActivity.start(this);
+        finish();
     }
 
     @Override
     public void setFragment(Fragment fragment) {
-        FragmentManager fragmentManager=getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.Home_Container,fragment).commit();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.Home_Container, fragment).commit();
     }
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.pharmacy_location:
-                //MapsActivity.start(this,mPharmacy.getLatLang(),mPharmacy.getPhLocation());
                 try {
-                     makeRequest.addNewBubble();
+                    makeRequest.addNewBubble();
                     final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://maps.google.com/maps?" +
-                            "saddr="+myCurrentLocation+"&daddr="+mPharmacy.getLatLang()+"&sensor=false&units=metric&mode=driving"));
-                    intent.setClassName("com.google.android.apps.maps","com.google.android.maps.MapsActivity");
+                            "saddr=" + myCurrentLocation + "&daddr=" + mPharmacy.getLatLang() + "&sensor=false&units=metric&mode=driving"));
+                    intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
                     startActivity(intent);
-                }catch (Exception e){
+                } catch (Exception e) {
                     makeRequest.go(mPharmacy.getLatLang());
 
                 }
@@ -371,17 +350,17 @@ public class HomeActivity extends AppCompatActivity
 
                 mShortAnimationDuration = getResources().getInteger(
                         android.R.integer.config_shortAnimTime);
-                zoomIMG.zoomImageFromThumb(this,phIMG,mPharmacy!=null?mPharmacy.getPhImgURL():null,mCurrentAnimator,img_preview,zoomContainer
-                        ,mShortAnimationDuration
+                zoomIMG.zoomImageFromThumb(this, phIMG, mPharmacy != null ? mPharmacy.getPhImgURL() : null, mCurrentAnimator, img_preview, zoomContainer
+                        , mShortAnimationDuration
                 );
                 break;
             case R.id.edit_img:
-                if (mPharmacy!=null) {
+                if (mPharmacy != null) {
                     CropImage.activity()
                             .setGuidelines(CropImageView.Guidelines.ON)
                             .start(this);
-                }else {
-                 presenter.showSnakBar(drawer,"not allow as you are not a Pharmacy . ");
+                } else {
+                    presenter.showSnakBar(drawer, getString(R.string.not_allow));
                 }
 
                 break;
@@ -389,29 +368,25 @@ public class HomeActivity extends AppCompatActivity
                 login();
                 break;
             case R.id.txt_register:
-                 register();
+                register();
                 break;
         }
     }
 
-    private boolean hasPermission(String permission){
-        return ContextCompat.checkSelfPermission(this,permission) != PackageManager.PERMISSION_GRANTED;
+    private boolean hasPermission(String permission) {
+        return ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
-    private void  checkPermissions(){
+    private void checkPermissions() {
         try {
-            for (int i = 0; i <permissions.length ; i++) {
+            for (int i = 0; i < permissions.length; i++) {
                 if (hasPermission(permissions[i])) {
-//                    if (ActivityCompat.shouldShowRequestPermissionRationale(this,permissions[i])) {
-//
-//                    } else {
-//                        requestPermissions(new String[]{permissions[i]}, PERMISSION);
-//                    }
                     requestPermissions(permissions, PERMISSION);
                 }
             }
-        }catch (Exception e){}
+        } catch (Exception ignored) {
+        }
     }
 
 
@@ -425,31 +400,37 @@ public class HomeActivity extends AppCompatActivity
                 presenter.editIMG(resultUri, new QueryListener() {
                     @Override
                     public void onSuccess(Pharmacy pharmacy) {
-                        mPharmacy=pharmacy;
+                        mPharmacy = pharmacy;
                         Glide.with(HomeActivity.this).load(pharmacy.getPhImgURL())
-                               // .error(R.drawable.logo)
                                 .into(phIMG);
 
                     }
 
                     @Override
                     public void onError(String error) {
-                      presenter.showSnakBar(drawer,error);
+                        presenter.showSnakBar(drawer, error);
                     }
                 });
 
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Exception error = result.getError();
-                presenter.showSnakBar(drawer,error.getMessage());
+                presenter.showSnakBar(drawer, error.getMessage());
             }
         }
     }
 
 
+
+
+
+
+
+
+
     @Override
     public void onLocationChanged(Location location) {
-        LatLng latLng=new LatLng(location.getLatitude(),location.getLongitude());
-        myCurrentLocation=latLng.toString().replace("(","").replace(")","").replace("lat/lng:","");
+        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+        myCurrentLocation = latLng.toString().replace("(", "").replace(")", "").replace("lat/lng:", "");
         Toast.makeText(this, myCurrentLocation, Toast.LENGTH_SHORT).show();
     }
 

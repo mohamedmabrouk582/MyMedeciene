@@ -14,12 +14,13 @@ import com.example.mohamed.mymedeciene.view.MainView;
 public class BasePresenter<v extends MainView> implements MainPresnter<v> {
     private v view;
 
-    public v getView(){
+    protected v getView() {
         return view;
     }
+
     @Override
     public void attachView(v view) {
-        this.view=view;
+        this.view = view;
     }
 
     @Override

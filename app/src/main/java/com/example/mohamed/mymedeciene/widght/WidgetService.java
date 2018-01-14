@@ -12,8 +12,7 @@ import android.widget.RemoteViewsService;
 public class WidgetService extends RemoteViewsService {
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
-        MedicineDataProvider widgetDataProvider=new MedicineDataProvider(getApplicationContext(),intent);
 
-        return widgetDataProvider;
+        return new MedicineDataProvider(getApplicationContext(), intent);
     }
 }

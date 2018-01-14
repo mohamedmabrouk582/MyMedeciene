@@ -1,6 +1,5 @@
 package com.example.mohamed.mymedeciene.data;
 
-import android.location.Location;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -10,6 +9,7 @@ import android.os.Parcelable;
  * on 18/12/2017.  time :18:04
  */
 
+@SuppressWarnings("unused")
 public class Pharmacy implements Parcelable {
     private String phName;
     private String phPhone;
