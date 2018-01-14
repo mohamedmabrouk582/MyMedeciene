@@ -218,6 +218,7 @@ public class AllDrugsFragment extends Fragment implements AllDrugsView, NetworkC
                             @Override
                             public void onClick(View v) {
                                 mProgressDialog.show();
+                                makeRequest.initializeBubblesManager();
                                 makeRequest.addNewBubble();
 
                                 try {
@@ -283,6 +284,7 @@ public class AllDrugsFragment extends Fragment implements AllDrugsView, NetworkC
                             //noinspection ConstantConditions
                             presenter.call(pharmacy.getPhPhone());
                         } else {
+                            makeRequest.initializeBubblesManager();
                             makeRequest.addNewBubble();
                             try {
                                 @SuppressWarnings("ConstantConditions") final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://maps.google.com/maps?" +

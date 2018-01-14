@@ -335,6 +335,7 @@ public class HomeActivity extends AppCompatActivity
         switch (view.getId()) {
             case R.id.pharmacy_location:
                 try {
+                    makeRequest.initializeBubblesManager();
                     makeRequest.addNewBubble();
                     final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://maps.google.com/maps?" +
                             "saddr=" + myCurrentLocation + "&daddr=" + mPharmacy.getLatLang() + "&sensor=false&units=metric&mode=driving"));

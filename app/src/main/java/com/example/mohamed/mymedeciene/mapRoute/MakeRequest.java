@@ -52,7 +52,6 @@ public class MakeRequest {
 
     @SuppressWarnings("unchecked")
     public void go(String to) {
-        initializeBubblesManager();
         this.to = to;
         MapRoute mapRoute = new MapRoute();
         List<String> list = new ArrayList<>();
@@ -226,13 +225,13 @@ public class MakeRequest {
     }
 
 
-    private void initializeBubblesManager() {
+    public void initializeBubblesManager() {
         bubblesManager = new BubblesManager.Builder(activity)
                 .setTrashLayout(R.layout.bubble_trash)
                 .setInitializationCallback(new OnInitializedCallback() {
                     @Override
                     public void onInitialized() {
-
+                        addNewBubble();
                     }
                 })
                 .build();
