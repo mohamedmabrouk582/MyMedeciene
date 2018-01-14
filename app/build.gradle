@@ -4,6 +4,14 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        config {
+            keyAlias 'myMedicine'
+            keyPassword 'Mohammed123'
+            storeFile file('C:/Users/fathy/Desktop/myMedicine/myMedicine.KeyStore.jks')
+            storePassword 'Mohammed123'
+        }
+    }
     compileSdkVersion 26
     defaultConfig {
         applicationId "com.example.mohamed.mymedeciene"
@@ -12,6 +20,7 @@ android {
         targetSdkVersion 26
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -19,11 +28,14 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+        debug {
+            signingConfig signingConfigs.config
+        }
     }
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     //noinspection GradleCompatible
     implementation 'com.android.support:appcompat-v7:26.1.0'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
@@ -33,7 +45,6 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     //noinspection GradleDependency
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:2.2.2'
-
     implementation 'com.android.support:cardview-v7:26.1.0'
     implementation 'com.android.support:recyclerview-v7:26.1.0'
     implementation 'com.android.support:design:26.1.0'
@@ -62,8 +73,6 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
     implementation 'com.txusballesteros:bubbles:1.2.1'
-
-
 }
 
 
