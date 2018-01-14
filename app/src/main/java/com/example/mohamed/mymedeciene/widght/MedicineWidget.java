@@ -22,7 +22,6 @@ public class MedicineWidget extends AppWidgetProvider {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.d("action", intent.getAction() + "");
 
         //noinspection ConstantConditions
         if (intent.getAction().equals(ACTION_TOAST)) {

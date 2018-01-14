@@ -102,6 +102,7 @@ public class AllDrugsFragment extends Fragment implements AllDrugsView, NetworkC
         iniRecyl();
         iniSwipe();
         showDrugs();
+        DBoperations.getInstance(getActivity()).deleteAll();
         makeRequest = new MakeRequest(getActivity());
         mProgressDialog = new ProgressDialog(getActivity());
         mProgressDialog.setCancelable(false);
@@ -357,7 +358,6 @@ public class AllDrugsFragment extends Fragment implements AllDrugsView, NetworkC
     @Override
     public void onResume() {
         super.onResume();
-        DBoperations.getInstance(getActivity()).deleteAll();
         MyApp.setConnectivityListener(this);
 
         if (mBundleRecyclerViewState != null) {
