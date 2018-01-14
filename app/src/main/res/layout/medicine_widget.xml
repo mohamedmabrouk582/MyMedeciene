@@ -17,8 +17,8 @@
             android:layout_height="wrap_content"
             android:background="#aaDEDFDE"
             android:orientation="horizontal"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp">
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp">
 
             <ImageView
                 android:layout_width="32dp"
@@ -26,7 +26,9 @@
                 android:scaleType="centerCrop"
                 android:layout_gravity="center_vertical"
                 android:src="@drawable/logo"
-                tools:ignore="ContentDescription" />
+                android:contentDescription="@string/app_logo"
+
+                />
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -49,10 +51,9 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="All Drugs"
+                    android:text="@string/all_drugs"
                     android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="#4B4B4D"
-                    tools:ignore="HardcodedText" />
+                    android:textColor="#4B4B4D" />
             </LinearLayout>
         </LinearLayout>
 
@@ -64,6 +65,6 @@
         <ListView
             android:id="@+id/widgetCollectionList"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"></ListView>
+            android:layout_height="wrap_content"/>
     </LinearLayout>
 </FrameLayout>

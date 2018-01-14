@@ -17,11 +17,11 @@
 
     <ImageView
         android:onClick="MapType"
-        android:layout_gravity="right|bottom"
+        android:layout_gravity="end|bottom"
         android:layout_margin="@dimen/_10sdp"
         android:layout_width="@dimen/_25sdp"
         android:layout_height="@dimen/_25sdp"
         android:src="@drawable/ic_layers"
-        android:contentDescription="TODO"
-        tools:ignore="ContentDescription,HardcodedText,RtlHardcoded" />
+        android:contentDescription="@string/type"
+        />
 </FrameLayout>

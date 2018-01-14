@@ -25,7 +25,6 @@
     <string name="permission_denied_location">Permission location to get your Current Location \n to draw route at Map  </string>
     <string name="permission_denied_phone">Permission phone to Call Pharmacy   </string>
     <string name="call_permission">Call Permission Dialog</string>
-    <string name="not_allow">not allow as you are not a Pharmacy .</string>
     <string name="drug_name_empty">Drug name not be Empty</string>
     <string name="drug_price_empty">Drug price not be Empty</string>
     <string name="connected">connected</string>
@@ -43,6 +42,27 @@
     <string name="ph_pass_invalid"><![CDATA[pharmacy password must be > 6 chars]]></string>
     <string name="ph_location_invalid">pharmacy location not be Empty</string>
     <string name="mapLoad">Map loading .......</string>
+    <string name="type">to select map type</string>
+    <string name="drug_img">To select drug img</string>
+    <string name="to_delete_bubble">to delete bubble</string>
+    <string name="to_show_all_drug_img">To show all drug img</string>
+    <string name="to_show_drug_img">To show drug img</string>
+    <string name="app_logo">APP LOGO</string>
+    <string name="map_type">map type</string>
+    <string name="not_allow">not allow as you are not a Pharmacy .</string>
+    <string name="name_hint_">name :</string>
+    <string name="price_hint_">price :</string>
+    <string name="quantity_">quantity :</string>
+    <string name="type_">type :</string>
+    <string name="phar_name_">Phar name :</string>
+    <string name="phone_">phone :</string>
+    <string name="location_">location :</string>
+    <string name="names">name :</string>
+    <string name="price_">Price :</string>
+    <string name="type__">Type :</string>
+    <string name="all_drugs">All Drugs</string>
+    <string name="_0">0</string>
+    <string name="_">/</string>
     <string-array name="drug_type">
         <item>Injections</item>
         <item>Capsules</item>

@@ -24,8 +24,9 @@
             android:layout_width="@dimen/_100sdp"
             android:layout_height="@dimen/_140sdp"
             android:src="@drawable/logo"
-            tools:ignore="ContentDescription" />
-        ]
+            android:contentDescription="@string/to_show_drug_img"
+            />
+
 
         <View
             android:layout_width="1px"
@@ -37,8 +38,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:gravity="center|left"
-            tools:ignore="RtlHardcoded">
+            android:gravity="center|start">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -48,16 +48,14 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="name : "
-                    tools:ignore="HardcodedText" />
+                    android:text="@string/name_hint_"/>
 
                 <TextView
                     android:layout_marginEnd="@dimen/_5sdp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="name "
                     android:id="@+id/drug_name"
-                    tools:ignore="HardcodedText,RtlHardcoded" />
+                     />
             </LinearLayout>
 
             <LinearLayout
@@ -69,15 +67,12 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="price : "
-                    tools:ignore="HardcodedText" />
+                    android:text="@string/price_hint_"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="15.6 "
-                    android:id="@+id/drug_price"
-                    tools:ignore="HardcodedText" />
+                    android:id="@+id/drug_price" />
             </LinearLayout>
 
             <LinearLayout
@@ -89,29 +84,24 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="quantity : "
-                    tools:ignore="HardcodedText" />
+                    android:text="@string/quantity_"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="15.6 "
-                    android:id="@+id/drug_quantity"
-                    tools:ignore="HardcodedText" />
+                    android:id="@+id/drug_quantity"/>
 
                 <TextView
                     android:layout_marginStart="@dimen/_20sdp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="type : "
-                    tools:ignore="HardcodedText,RtlHardcoded" />
+                    android:text="@string/type_"
+                     />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="15.6 "
-                    android:id="@+id/drug_type"
-                    tools:ignore="HardcodedText" />
+                    android:id="@+id/drug_type" />
 
 
             </LinearLayout>
@@ -132,16 +122,14 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Phar name : "
-                    tools:ignore="HardcodedText" />
+                    android:text="@string/phar_name_" />
 
                 <TextView
                     android:layout_marginEnd="@dimen/_5sdp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="name "
                     android:id="@+id/ph_name"
-                    tools:ignore="HardcodedText,RtlHardcoded" />
+                     />
             </LinearLayout>
 
             <LinearLayout
@@ -153,16 +141,14 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text=" phone : "
-                    tools:ignore="HardcodedText" />
+                    android:text="@string/phone_"/>
 
                 <TextView
                     android:layout_marginEnd="@dimen/_5sdp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="name "
                     android:id="@+id/ph_phone"
-                    tools:ignore="HardcodedText,RtlHardcoded" />
+                     />
             </LinearLayout>
 
             <LinearLayout
@@ -174,17 +160,14 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text=" location : "
-                    tools:ignore="HardcodedText" />
+                    android:text="@string/location_" />
 
                 <TextView
                     android:textColor="@color/colorPrimaryDark"
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:text="name "
-                    android:id="@+id/ph_location"
-                    tools:ignore="HardcodedText" />
+                    android:id="@+id/ph_location" />
             </LinearLayout>
 
 

@@ -72,8 +72,7 @@
                         android:layout_height="wrap_content"
                         android:id="@+id/sp_drug_quantity"
                         android:padding="@dimen/_10sdp"
-                        android:spinnerMode="dropdown"
-                        tools:ignore="RtlHardcoded" />
+                        android:spinnerMode="dropdown"/>
 
                 </LinearLayout>
 
@@ -91,8 +90,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_120sdp"
                         android:background="@drawable/download"
-                        android:contentDescription="TODO"
-                        tools:ignore="ContentDescription,HardcodedText" />
+                        android:contentDescription="@string/drug_img"
+                        />
 
                     <ProgressBar
                         android:visibility="gone"
@@ -107,8 +106,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:text="0"
-                        tools:ignore="HardcodedText" />
+                        />
                 </FrameLayout>
 
 

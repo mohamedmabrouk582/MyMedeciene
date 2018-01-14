@@ -271,7 +271,7 @@ public class HomeActivity extends AppCompatActivity
             if (mPharmacy != null) {
                 presenter.logout();
             } else {
-                presenter.showSnakBar(drawer, "not allow as you are not a Pharmacy . ");
+                presenter.showSnakBar(drawer, getString(R.string.not_allow));
             }
         } else if (id == R.id.nav_home) {
             search.setVisible(true);

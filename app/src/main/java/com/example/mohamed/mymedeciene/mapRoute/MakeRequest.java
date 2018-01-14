@@ -48,12 +48,11 @@ public class MakeRequest {
         this.activity = activity;
         mProgressDialog = new ProgressDialog(activity);
         mProgressDialog.setMessage(activity.getString(R.string.mapLoad));
-        initializeBubblesManager();
-
     }
 
     @SuppressWarnings("unchecked")
     public void go(String to) {
+        initializeBubblesManager();
         this.to = to;
         MapRoute mapRoute = new MapRoute();
         List<String> list = new ArrayList<>();

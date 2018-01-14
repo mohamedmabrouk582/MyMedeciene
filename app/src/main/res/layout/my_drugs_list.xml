@@ -19,7 +19,7 @@
 
     <com.getbase.floatingactionbutton.FloatingActionsMenu
         android:id="@+id/menu"
-        android:layout_gravity="right|bottom"
+        android:layout_gravity="end|bottom"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="10dp"
@@ -40,6 +40,8 @@
         android:scaleType="centerCrop"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:ignore="ContentDescription" />
+        android:contentDescription="@string/to_show_drug_img"
+
+        />
 
 </FrameLayout>

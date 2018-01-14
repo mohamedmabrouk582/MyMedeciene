@@ -22,8 +22,7 @@
             android:layout_width="@dimen/_150sdp"
             android:layout_height="@dimen/_150sdp"
             android:src="@drawable/logo"
-            android:contentDescription="TODO"
-            tools:ignore="ContentDescription,HardcodedText" />
+            android:contentDescription="@string/app_logo" />
 
         <EditText
             android:layout_width="match_parent"

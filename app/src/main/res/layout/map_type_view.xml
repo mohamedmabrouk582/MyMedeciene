@@ -27,28 +27,33 @@
             android:layout_height="@dimen/_80sdp"
             android:src="@drawable/normal"
             android:id="@+id/normal"
-            tools:ignore="ContentDescription" />
+            android:contentDescription="@string/map_type"
+            />
 
         <ImageView
             android:id="@+id/hybrid"
             android:src="@drawable/hybrid"
             android:layout_width="@dimen/_80sdp"
             android:layout_height="@dimen/_80sdp"
-            tools:ignore="ContentDescription" />
+            android:contentDescription="@string/map_type"
+            />
 
         <ImageView
             android:id="@+id/satellite"
             android:src="@drawable/satellite"
             android:layout_width="@dimen/_80sdp"
             android:layout_height="@dimen/_80sdp"
-            tools:ignore="ContentDescription" />
+            android:contentDescription="@string/map_type"
+
+            />
 
         <ImageView
             android:id="@+id/terrain"
             android:src="@drawable/terrain"
             android:layout_width="@dimen/_80sdp"
             android:layout_height="@dimen/_80sdp"
-            tools:ignore="ContentDescription" />
+            android:contentDescription="@string/map_type"
+            />
     </LinearLayout>
 
 </LinearLayout>
