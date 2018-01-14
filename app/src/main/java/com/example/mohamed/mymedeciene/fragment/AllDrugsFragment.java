@@ -28,13 +28,8 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.evernote.android.state.State;
-import com.evernote.android.state.StateSaver;
 import com.example.mohamed.mymedeciene.Holder.DrugHolder;
 import com.example.mohamed.mymedeciene.R;
-import com.example.mohamed.mymedeciene.activity.MapsActivity;
 import com.example.mohamed.mymedeciene.appliction.DataManager;
 import com.example.mohamed.mymedeciene.appliction.MyApp;
 import com.example.mohamed.mymedeciene.data.Drug;
@@ -42,23 +37,17 @@ import com.example.mohamed.mymedeciene.data.Pharmacy;
 import com.example.mohamed.mymedeciene.data.dataBase.DBoperations;
 import com.example.mohamed.mymedeciene.mapRoute.MakeRequest;
 import com.example.mohamed.mymedeciene.presenter.allDrugs.AllDrugsViewPresenter;
-import com.example.mohamed.mymedeciene.presenter.myDrugs.DrugsViewPresenter;
 import com.example.mohamed.mymedeciene.utils.NetworkChangeReceiver;
 import com.example.mohamed.mymedeciene.utils.ZoomIMG;
 import com.example.mohamed.mymedeciene.view.AllDrugsView;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
-import com.getbase.floatingactionbutton.FloatingActionButton;
-import com.getbase.floatingactionbutton.FloatingActionsMenu;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
-import java.util.List;
 
 import static com.example.mohamed.mymedeciene.activity.HomeActivity.myCurrentLocation;
 
