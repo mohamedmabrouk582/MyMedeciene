@@ -61,8 +61,14 @@
     <string name="price_">Price :</string>
     <string name="type__">Type :</string>
     <string name="all_drugs">All Drugs</string>
-    <string name="_0">0</string>
-    <string name="_">/</string>
+    <string name="zero">0</string>
+    <string name="slash">/</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="my_drugs">My Drugs</string>
+    <string name="add_new_drug_">Add New Drug</string>
+    <string name="log_out_">Log Out</string>
+    <string name="search_">Search</string>
+    <string name="to_edit_pharmacy_img">to edit pharmacy img</string>
     <string-array name="drug_type">
         <item>Injections</item>
         <item>Capsules</item>

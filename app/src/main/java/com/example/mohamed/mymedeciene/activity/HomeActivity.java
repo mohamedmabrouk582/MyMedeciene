@@ -39,6 +39,8 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.mohamed.mymedeciene.R;
+import com.example.mohamed.mymedeciene.appliction.DataManager;
+import com.example.mohamed.mymedeciene.appliction.MyApp;
 import com.example.mohamed.mymedeciene.data.Pharmacy;
 import com.example.mohamed.mymedeciene.data.dataBase.DBoperations;
 import com.example.mohamed.mymedeciene.fragment.AddDrugCheckFragment;
@@ -84,6 +86,7 @@ public class HomeActivity extends AppCompatActivity
             Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_LOCATION_EXTRA_COMMANDS};
     private DatabaseReference mDatabaseReference;
     private MakeRequest makeRequest;
+    private DataManager dataManager;
 
 
     public static void newIntentPharmacy(Context context, Pharmacy pharmacy) {
@@ -120,6 +123,7 @@ public class HomeActivity extends AppCompatActivity
         menu = navigationView.getMenu();
         Log.d("menu", menu.size() + "");
         initView(navigationView.getHeaderView(0));
+        dataManager=((MyApp) getApplication()).getData();
         presenter = new HomeViewPresenter(this, navigationView.getHeaderView(0));
         presenter.attachView(this);
         setFragment(AllDrugsFragment.newFragment(null));
@@ -335,8 +339,10 @@ public class HomeActivity extends AppCompatActivity
         switch (view.getId()) {
             case R.id.pharmacy_location:
                 try {
-                    makeRequest.initializeBubblesManager();
-                    makeRequest.addNewBubble();
+                    if (!dataManager.getIsBubbleShow()) {
+                        makeRequest.initializeBubblesManager();
+                        makeRequest.addNewBubble();
+                    }
                     final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://maps.google.com/maps?" +
                             "saddr=" + myCurrentLocation + "&daddr=" + mPharmacy.getLatLang() + "&sensor=false&units=metric&mode=driving"));
                     intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");

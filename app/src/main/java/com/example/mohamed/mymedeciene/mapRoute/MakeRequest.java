@@ -12,6 +12,8 @@ import android.view.LayoutInflater;
 import com.example.mohamed.mymedeciene.R;
 import com.example.mohamed.mymedeciene.activity.HomeActivity;
 import com.example.mohamed.mymedeciene.activity.MapsActivity;
+import com.example.mohamed.mymedeciene.appliction.DataManager;
+import com.example.mohamed.mymedeciene.appliction.MyApp;
 import com.example.mohamed.mymedeciene.mapRoute.data.Location;
 import com.example.mohamed.mymedeciene.mapRoute.data.Route;
 import com.example.mohamed.mymedeciene.mapRoute.data.RouteRepons;
@@ -40,6 +42,7 @@ import java.util.List;
 @SuppressWarnings("unchecked")
 public class MakeRequest {
     private String to;
+    private DataManager dataManager;
     private final Activity activity;
     private final ProgressDialog mProgressDialog;
     private BubblesManager bubblesManager;
@@ -48,6 +51,7 @@ public class MakeRequest {
         this.activity = activity;
         mProgressDialog = new ProgressDialog(activity);
         mProgressDialog.setMessage(activity.getString(R.string.mapLoad));
+        dataManager= ((MyApp) activity.getApplication()).getData();
     }
 
     @SuppressWarnings("unchecked")
@@ -200,10 +204,13 @@ public class MakeRequest {
 
     @SuppressLint("NewApi")
     public void addNewBubble() {
+
+        dataManager.setIsBubbleShow(true);
         @SuppressLint("InflateParams") final BubbleLayout bubbleView = (BubbleLayout) LayoutInflater.from(activity).inflate(R.layout.bubble_layout, null);
         bubbleView.setOnBubbleRemoveListener(new BubbleLayout.OnBubbleRemoveListener() {
             @Override
             public void onBubbleRemoved(BubbleLayout bubble) {
+                dataManager.setIsBubbleShow(false);
             }
         });
         bubbleView.setOnBubbleClickListener(new BubbleLayout.OnBubbleClickListener() {
@@ -216,10 +223,10 @@ public class MakeRequest {
                 //noinspection ConstantConditions
                 i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 activity.startActivity(i);
-                bubbleView.cancelDragAndDrop();
 
             }
         });
+
         bubbleView.setShouldStickToWall(true);
         bubblesManager.addBubble(bubbleView, 60, 20);
     }

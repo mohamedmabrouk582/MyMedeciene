@@ -6,9 +6,9 @@ apply plugin: 'com.android.application'
 android {
     signingConfigs {
         config {
-            keyAlias 'myMedicine'
+            keyAlias 'mydedicine'
             keyPassword 'Mohammed123'
-            storeFile file('C:/Users/fathy/Desktop/myMedicine/myMedicine.KeyStore.jks')
+            storeFile file("../keystore.jks")
             storePassword 'Mohammed123'
         }
     }
@@ -27,8 +27,6 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-        debug {
             signingConfig signingConfigs.config
         }
     }
