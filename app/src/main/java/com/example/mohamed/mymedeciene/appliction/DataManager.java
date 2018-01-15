@@ -35,12 +35,7 @@ public class DataManager {
         myShared.putPharmacy(name, phone, img, location, latLang);
     }
 
-    public void setIsBubbleShow(Boolean isBubbleShow){
-        myShared.putIsBubbleShow(isBubbleShow);
-    }
-    public boolean getIsBubbleShow(){
-        return myShared.getIsBubbleShow();
-    }
+
 
     public void setLatLang(String latLang) {
         myShared.putLatLang(latLang);
