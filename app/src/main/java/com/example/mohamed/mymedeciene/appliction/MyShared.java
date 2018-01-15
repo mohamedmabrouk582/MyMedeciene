@@ -18,6 +18,7 @@ class MyShared {
     private static final String IMG = "PHIMG";
     private static final String LOCATION = "LOCATION";
     private static final String LATLANG = "LATLANG";
+    private static final String ISBUBBLESHOWN="ISBUBBLESHOWN";
     private final SharedPreferences mSharedPreferences;
     private final SharedPreferences.Editor editor;
 
@@ -32,7 +33,14 @@ class MyShared {
         editor.putString(NAME, name).apply();
     }
 
+    public void putIsBubbleShow(boolean b){
+        editor.remove(ISBUBBLESHOWN);
+        editor.putBoolean(ISBUBBLESHOWN, b).apply();
+    }
 
+    public boolean getIsBubbleShow(){
+       return mSharedPreferences.getBoolean(ISBUBBLESHOWN,false);
+    }
 
     public void putPhPhone(String phone) {
         editor.remove(PHONE);
