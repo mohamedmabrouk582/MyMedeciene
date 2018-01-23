@@ -30,6 +30,7 @@ public class DrugHolder extends RecyclerView.ViewHolder {
     public TextView phLocation;
 
 
+
     public DrugHolder(View itemView, Activity activity) {
         super(itemView);
         view = itemView;

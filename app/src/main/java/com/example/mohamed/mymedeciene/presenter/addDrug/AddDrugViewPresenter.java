@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.mohamed.mymedeciene.R;
+import com.example.mohamed.mymedeciene.appliction.DataManager;
 import com.example.mohamed.mymedeciene.appliction.MyApp;
 import com.example.mohamed.mymedeciene.fragment.AddDrugCheckFragment;
 import com.example.mohamed.mymedeciene.presenter.Home.HomeViewPresenter;
@@ -61,6 +62,7 @@ public class AddDrugViewPresenter<v extends AddDrugView> extends BasePresenter<v
     private String url;
     private boolean found;
     private final Set<String> mSet = new HashSet<>();
+    private DataManager dataManager;
 
     public AddDrugViewPresenter(Activity activity, View container) {
         this.activity = activity;
@@ -70,6 +72,7 @@ public class AddDrugViewPresenter<v extends AddDrugView> extends BasePresenter<v
         mDatabaseReference = MyApp.getmDatabaseReference().child("Drugs");
         loadProgressBar = container.findViewById(R.id.img_load_drug);
         txtLoad = container.findViewById(R.id.txt_progress_drug);
+        dataManager=MyApp.getData();
         allDrugs();
     }
 
@@ -121,6 +124,7 @@ public class AddDrugViewPresenter<v extends AddDrugView> extends BasePresenter<v
         map.put("price", price);
         map.put("quantity", quantity);
         map.put("phKey", mAuth.getUid());
+        map.put("latlang",dataManager.getPharmacy().getLatLang());
         if (url != null) {
             map.put("img", url);
         }

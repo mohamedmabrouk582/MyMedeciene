@@ -50,6 +50,7 @@ import com.example.mohamed.mymedeciene.mapRoute.MakeRequest;
 import com.example.mohamed.mymedeciene.presenter.Home.HomeViewPresenter;
 import com.example.mohamed.mymedeciene.utils.AddListener;
 import com.example.mohamed.mymedeciene.utils.CheckListener;
+import com.example.mohamed.mymedeciene.utils.FloatingViewService;
 import com.example.mohamed.mymedeciene.utils.QueryListener;
 import com.example.mohamed.mymedeciene.utils.ZoomIMG;
 import com.example.mohamed.mymedeciene.view.HomeView;
@@ -87,8 +88,14 @@ public class HomeActivity extends AppCompatActivity
     private DatabaseReference mDatabaseReference;
     private MakeRequest makeRequest;
     private DataManager dataManager;
+    private static SearchQueryListener mQueryListener;
+    public interface SearchQueryListener{
+        void onQuery(String s);
+    }
 
-
+    public static void setQueryListener(SearchQueryListener queryListener){
+        mQueryListener=queryListener;
+    }
     public static void newIntentPharmacy(Context context, Pharmacy pharmacy) {
         Intent intent = new Intent(context, HomeActivity.class);
         intent.putExtra(PHARMACY, pharmacy);
@@ -126,7 +133,7 @@ public class HomeActivity extends AppCompatActivity
         dataManager=((MyApp) getApplication()).getData();
         presenter = new HomeViewPresenter(this, navigationView.getHeaderView(0));
         presenter.attachView(this);
-        setFragment(AllDrugsFragment.newFragment(null));
+        setFragment(AllDrugsFragment.newFragment());
     }
 
     private void location() {
@@ -143,12 +150,24 @@ public class HomeActivity extends AppCompatActivity
     }
 
     private void overLayPermission() {
-        if (Build.VERSION.SDK_INT >= 23) {
-            if (!Settings.canDrawOverlays(this)) {
-                Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                        Uri.parse("package:" + getPackageName()));
-                startActivityForResult(intent, 1234);
-            }
+//        if (Build.VERSION.SDK_INT >= 23) {
+//            if (!Settings.canDrawOverlays(this)) {
+//                Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+//                        Uri.parse("package:" + getPackageName()));
+//                startActivityForResult(intent, 1234);
+//            }
+//        } else {
+//
+//        }
+
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this)) {
+
+            //If the draw over permission is not available open the settings screen
+            //to grant the permission.
+            Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                    Uri.parse("package:" + getPackageName()));
+            startActivityForResult(intent, 1234);
         } else {
             Intent intent = new Intent(this, Service.class);
             startService(intent);
@@ -222,7 +241,8 @@ public class HomeActivity extends AppCompatActivity
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                setFragment(AllDrugsFragment.newFragment(query));
+              //  setFragment(AllDrugsFragment.newFragment(query));
+                mQueryListener.onQuery(query);
                 mSearchView.onActionViewCollapsed();
                 mSearchView.setQuery("", false);
                 return true;
@@ -279,7 +299,7 @@ public class HomeActivity extends AppCompatActivity
             }
         } else if (id == R.id.nav_home) {
             search.setVisible(true);
-            setFragment(AllDrugsFragment.newFragment(null));
+            setFragment(AllDrugsFragment.newFragment());
         }
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -339,10 +359,8 @@ public class HomeActivity extends AppCompatActivity
         switch (view.getId()) {
             case R.id.pharmacy_location:
                 try {
-                    if (!dataManager.getIsBubbleShow()) {
-                        makeRequest.initializeBubblesManager();
-                        makeRequest.addNewBubble();
-                    }
+                    startService(new Intent(this, FloatingViewService.class));
+
                     final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://maps.google.com/maps?" +
                             "saddr=" + myCurrentLocation + "&daddr=" + mPharmacy.getLatLang() + "&sensor=false&units=metric&mode=driving"));
                     intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");

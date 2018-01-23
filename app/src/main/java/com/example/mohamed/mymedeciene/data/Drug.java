@@ -19,6 +19,7 @@ public class Drug implements Parcelable {
     private String phKey;
 
 
+
     public Drug() {
     }
 
@@ -30,6 +31,8 @@ public class Drug implements Parcelable {
         this.img = img;
         this.phKey = phKey;
     }
+
+
 
     public String getPhKey() {
         return phKey;
