@@ -32,9 +32,11 @@ import android.widget.Toast;
 import com.example.mohamed.mymedeciene.Holder.DrugHolder;
 import com.example.mohamed.mymedeciene.R;
 import com.example.mohamed.mymedeciene.activity.HomeActivity;
+import com.example.mohamed.mymedeciene.activity.SearchDrugActivity;
 import com.example.mohamed.mymedeciene.adapter.SearchDrugAdapter;
 import com.example.mohamed.mymedeciene.appliction.DataManager;
 import com.example.mohamed.mymedeciene.appliction.MyApp;
+import com.example.mohamed.mymedeciene.data.AllFullDrug;
 import com.example.mohamed.mymedeciene.data.Drug;
 import com.example.mohamed.mymedeciene.data.FullDrug;
 import com.example.mohamed.mymedeciene.data.Pharmacy;
@@ -102,6 +104,7 @@ public class AllDrugsFragment extends Fragment implements AllDrugsView, NetworkC
 
 
     public static AllDrugsFragment newFragment() {
+        AllFullDrug.getAllFullDrug().clear();
         Bundle bundle = new Bundle();
         AllDrugsFragment fragment = new AllDrugsFragment();
         fragment.setArguments(bundle);
@@ -139,31 +142,14 @@ public class AllDrugsFragment extends Fragment implements AllDrugsView, NetworkC
 
             //noinspection ConstantConditions
         query = mDatabaseReference.child("Drugs").child("AllDrugs").orderByChild("name").limitToFirst(10);
-        query.keepSynced(true);
         options = new FirebaseRecyclerOptions.Builder<Drug>().setQuery(query, Drug.class).build();
+        query.keepSynced(true);
 
         zoomIMG = new ZoomIMG();
-
+        getAllDrugs();
     }
 
-    private void updateUi(List<FullDrug> fullDrugs){
-        mRecyclerView.removeAllViews();
-        errorView.setVisibility(View.GONE);
-        String[] splits=dataManager.getPharmacy().getLatLang().split(",");
-        if (myCurrentLocation==null) {
-            splits = myCurrentLocation.split(",");
-        }
-        double lats=Double.parseDouble(splits[0]);
-        double langs=Double.parseDouble(splits[1]);
-        Collections.sort(fullDrugs,new SortPlaces(new LatLng(lats,langs)));
-        SearchDrugAdapter searchDrugAdapter=new SearchDrugAdapter(getActivity(),fullDrugs);
 
-        for (FullDrug fullDrug:fullDrugs) {
-            Log.d("fullDrug", fullDrug.toString() + "");
-        }
-        mRecyclerView.setAdapter(searchDrugAdapter);
-        searchDrugAdapter.notifyDataSetChanged();
-    }
 
     private void iniRecyl() {
         mRecyclerView = view.findViewById(R.id.all_drugs_recycler_view);
@@ -175,42 +161,13 @@ public class AllDrugsFragment extends Fragment implements AllDrugsView, NetworkC
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                AllFullDrug.getAllFullDrug().clear();
                 query = mDatabaseReference.child("Drugs").child("AllDrugs").orderByChild("name").limitToFirst(10);
                 options = new FirebaseRecyclerOptions.Builder<Drug>().setQuery(query, Drug.class).build();
                 Log.d("adapter", options.getSnapshots().size() + "");
 
                 showDrugs();
                 adapter.startListening();
-            }
-        });
-    }
-
-    private void getSe(Query mQuery){
-        //fullDrugs.clear();
-        mQuery.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-               for (DataSnapshot drugs:dataSnapshot.getChildren()) {
-                   final Drug drug=drugs.getValue(Drug.class);
-                   mPhmacyReference.child(drug.getPhKey()).addValueEventListener(new ValueEventListener() {
-                       @Override
-                       public void onDataChange(DataSnapshot dataSnapshot) {
-                           Pharmacy pharmacy=dataSnapshot.getValue(Pharmacy.class);
-                           fullDrugs.add(new FullDrug(drug,pharmacy));
-                       }
-
-                       @Override
-                       public void onCancelled(DatabaseError databaseError) {
-
-                       }
-                   });
-               }
-              updateUi(fullDrugs);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
             }
         });
     }
@@ -275,19 +232,10 @@ public class AllDrugsFragment extends Fragment implements AllDrugsView, NetworkC
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         final Pharmacy value = dataSnapshot.getValue(Pharmacy.class);
-                        //fullDrugs.add(new FullDrug(model,value));
-
+                       // AllFullDrug.getAllFullDrug().setAllFullDrug(new FullDrug(model,value));
                         DBoperations.getInstance(getActivity()).insertDrug(model);
                         holder.bindData(model, value);
                         Log.d("llll", value.getLatLang() + "");
-
-                        holder.itemView.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                sort();
-                            }
-                        });
-
 
                         holder.phLocation.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -333,49 +281,6 @@ public class AllDrugsFragment extends Fragment implements AllDrugsView, NetworkC
         mRecyclerView.setAdapter(adapter);
         initSwipe();
     }
-
-    private void sort(){
-        ;
-        for (FullDrug pharmacy:sortLocations(fullDrugs)) {
-            Log.d("sort", pharmacy.toString() + "");
-        }
-
-
-    }
-
-    public  List<FullDrug> sortLocations(List<FullDrug> locations) {
-        Comparator comp = new Comparator<FullDrug>() {
-            @Override
-            public int compare(FullDrug o, FullDrug o2) {
-                String[] splits =dataManager.getPharmacy().getLatLang().split(",");
-                if (myCurrentLocation!=null){
-                    splits = myCurrentLocation.split(",");
-                }
-                double myLatitude=Double.parseDouble(splits[0]);
-                double myLongitude=Double.parseDouble(splits[1]);
-                float[] result1 = new float[3];
-
-                double lat1=Double.parseDouble(o.getPharmacy().getLatLang().split(",")[0]);
-                double lat2=Double.parseDouble(o2.getPharmacy().getLatLang().split(",")[0]);
-                double lang1=Double.parseDouble(o.getPharmacy().getLatLang().split(",")[1]);
-                double lang2=Double.parseDouble(o2.getPharmacy().getLatLang().split(",")[1]);
-                android.location.Location.distanceBetween(myLatitude, myLongitude,lat1,lang1 , result1);
-                Float distance1 = result1[0];
-
-                float[] result2 = new float[3];
-                android.location.Location.distanceBetween(myLatitude, myLongitude, lat2, lang2, result2);
-                Float distance2 = result2[0];
-
-                return distance1.compareTo(distance2);
-            }
-        };
-
-
-        Collections.sort(locations, comp);
-        return locations;
-    }
-
-
     private void initSwipe() {
         Log.d("swipe", "rr" + "");
         ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT | ItemTouchHelper.LEFT) {
@@ -493,12 +398,44 @@ public class AllDrugsFragment extends Fragment implements AllDrugsView, NetworkC
     @Override
     public void onQuery(String querys) {
         Log.d("onQuery", adapter.getSnapshots().size() + "");
-        fullDrugs.clear();
-        query = mDatabaseReference.child("Drugs").child("AllDrugs").orderByChild("name").equalTo(querys);
-        options = new FirebaseRecyclerOptions.Builder<Drug>().setQuery(query, Drug.class).build();
-        showDrugs();
-        adapter.startListening();
+//        fullDrugs.clear();
+//        query = mDatabaseReference.child("Drugs").child("AllDrugs").orderByChild("name").equalTo(querys);
+//        options = new FirebaseRecyclerOptions.Builder<Drug>().setQuery(query, Drug.class).build();
+//        showDrugs();
+//        adapter.startListening();
+        SearchDrugActivity.start(getActivity(),querys);
 
         Log.d("adapter",  options.getSnapshots().size()+"sss");
     }
+
+
+    public void getAllDrugs(){
+      //TODO
+
+        mDatabaseReference.child("Drugs").child("AllDrugs").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+             final Drug drug=dataSnapshot.getValue(Drug.class);
+             Log.d("jjjj", drug.toString() + "");
+             mPhmacyReference.child(drug.getPhKey()).addValueEventListener(new ValueEventListener() {
+                 @Override
+                 public void onDataChange(DataSnapshot dataSnapshot) {
+                     Pharmacy pharmacy=dataSnapshot.getValue(Pharmacy.class);
+                     AllFullDrug.getAllFullDrug().setAllFullDrug(new FullDrug(drug,pharmacy));
+                 }
+
+                 @Override
+                 public void onCancelled(DatabaseError databaseError) {
+
+                 }
+             });
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
 }

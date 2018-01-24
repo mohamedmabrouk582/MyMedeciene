@@ -41,6 +41,8 @@ import com.bumptech.glide.Glide;
 import com.example.mohamed.mymedeciene.R;
 import com.example.mohamed.mymedeciene.appliction.DataManager;
 import com.example.mohamed.mymedeciene.appliction.MyApp;
+import com.example.mohamed.mymedeciene.data.AllFullDrug;
+import com.example.mohamed.mymedeciene.data.FullDrug;
 import com.example.mohamed.mymedeciene.data.Pharmacy;
 import com.example.mohamed.mymedeciene.data.dataBase.DBoperations;
 import com.example.mohamed.mymedeciene.fragment.AddDrugCheckFragment;
@@ -58,6 +60,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.database.DatabaseReference;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -237,7 +242,12 @@ public class HomeActivity extends AppCompatActivity
         Log.d("menus", menu.size() + "");
         search = menu.findItem(R.id.app_bar_search);
         mSearchView = (SearchView) search.getActionView();
-
+        mSearchView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //SearchDrugActivity.start(HomeActivity.this,fullDrugs);
+            }
+        });
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
