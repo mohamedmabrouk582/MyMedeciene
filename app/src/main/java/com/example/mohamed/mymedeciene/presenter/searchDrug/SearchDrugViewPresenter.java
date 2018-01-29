@@ -1,12 +1,15 @@
 package com.example.mohamed.mymedeciene.presenter.searchDrug;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.util.Log;
 
 import com.example.mohamed.mymedeciene.activity.HomeActivity;
 import com.example.mohamed.mymedeciene.adapter.SearchDrugAdapter;
 import com.example.mohamed.mymedeciene.appliction.DataManager;
 import com.example.mohamed.mymedeciene.appliction.MyApp;
+import com.example.mohamed.mymedeciene.data.AllFullDrug;
 import com.example.mohamed.mymedeciene.data.FullDrug;
 import com.example.mohamed.mymedeciene.presenter.base.BasePresenter;
 import com.example.mohamed.mymedeciene.utils.SortPlaces;
@@ -36,7 +39,7 @@ public class SearchDrugViewPresenter<v extends SearchDrugView> extends BasePrese
 
     @Override
     public void searchDrug(List<FullDrug> fullDrugs, String query) {
-        clear();
+          clear();
         for (FullDrug fullDrug:fullDrugs) {
             if (fullDrug.getDrug().getName().startsWith(query)){
                mFullDrugs.add(fullDrug);
@@ -59,10 +62,10 @@ public class SearchDrugViewPresenter<v extends SearchDrugView> extends BasePrese
     private List<FullDrug> SortDrugs(List<FullDrug> resultFullDrugs){
 
         String[] split =null;
-        if (HomeActivity.myCurrentLocation==null){
+        if (AllFullDrug.getAllFullDrug().getMyLocation()==null){
            split=dataManager==null?new String[]{"30.0886576","31.2799054"}:dataManager.getPharmacy().getLatLang().split(",");
         }else {
-            split = HomeActivity.myCurrentLocation.split(",");
+            split = AllFullDrug.getAllFullDrug().getMyLocation().split(",");
         }
         Double lat=Double.parseDouble(split[0]);
         Double lang=Double.parseDouble(split[1]);
@@ -87,6 +90,6 @@ public class SearchDrugViewPresenter<v extends SearchDrugView> extends BasePrese
 
 
     public void call(String phPhone) {
-
+        activity.startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phPhone)));
     }
 }

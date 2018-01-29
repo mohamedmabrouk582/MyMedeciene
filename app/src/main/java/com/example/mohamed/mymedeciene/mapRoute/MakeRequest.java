@@ -14,6 +14,7 @@ import com.example.mohamed.mymedeciene.activity.HomeActivity;
 import com.example.mohamed.mymedeciene.activity.MapsActivity;
 import com.example.mohamed.mymedeciene.appliction.DataManager;
 import com.example.mohamed.mymedeciene.appliction.MyApp;
+import com.example.mohamed.mymedeciene.data.AllFullDrug;
 import com.example.mohamed.mymedeciene.mapRoute.data.Location;
 import com.example.mohamed.mymedeciene.mapRoute.data.Route;
 import com.example.mohamed.mymedeciene.mapRoute.data.RouteRepons;
@@ -60,7 +61,7 @@ public class MakeRequest {
         this.to = to;
         MapRoute mapRoute = new MapRoute();
         List<String> list = new ArrayList<>();
-        list.add(HomeActivity.myCurrentLocation);
+        list.add(AllFullDrug.getAllFullDrug().getMyLocation());
         list.add(to);
         //noinspection unchecked
         mapRoute.execute(list);

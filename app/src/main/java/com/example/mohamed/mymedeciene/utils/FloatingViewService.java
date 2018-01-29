@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.WindowManager;
 
 import com.example.mohamed.mymedeciene.R;
+import com.example.mohamed.mymedeciene.activity.HomeActivity;
 import com.example.mohamed.mymedeciene.activity.SplashActivity;
 
 
@@ -121,7 +122,7 @@ public class FloatingViewService extends Service {
                         if (lastAction == MotionEvent.ACTION_DOWN) {
                             //Open the chat conversation click.
                             Intent intent = new Intent(FloatingViewService.this, SplashActivity.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
                             stopMe();
                             //close the service and remove the chat heads

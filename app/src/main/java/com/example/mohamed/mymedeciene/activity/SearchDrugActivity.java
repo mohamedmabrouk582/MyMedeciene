@@ -41,9 +41,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-import static com.example.mohamed.mymedeciene.activity.HomeActivity.myCurrentLocation;
 
 /**
  * Created by Mohamed mabrouk
@@ -59,7 +60,7 @@ public class SearchDrugActivity extends AppCompatActivity implements SearchDrugV
     private SearchDrugViewPresenter presenter;
     private MakeRequest makeRequest;
     private TextView errorView;
-    private List<FullDrug> mFullDrugs;
+    private List<FullDrug> mFullDrugs=new ArrayList<>();
     private Paint p=new Paint();
     private SearchView mSearchView;
     private  String mQuery;
@@ -75,10 +76,16 @@ public class SearchDrugActivity extends AppCompatActivity implements SearchDrugV
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.all_drugs);
-        mFullDrugs= AllFullDrug.getAllFullDrug().getFullDrugs();
+        setData();
+        Log.d("AllFullDrug", mFullDrugs.size() + "");
         iniRecyl();
         iniSwipe();
         init();
+    }
+
+    private void setData(){
+        mFullDrugs=AllFullDrug.getAllFullDrug().getFullDrugs();
+        Log.d("mFullDrugsssss", mFullDrugs.size() + "");
     }
 
     @Override
@@ -86,23 +93,22 @@ public class SearchDrugActivity extends AppCompatActivity implements SearchDrugV
         getMenuInflater().inflate(R.menu.search_menu, menu);
         MenuItem search=menu.findItem(R.id.app_bar_search_menu);
         mSearchView= (SearchView) search.getActionView();
-        mSearchView.setQuery(mQuery,true);
-        mSearchView.setIconified(false);
+//        mSearchView.setQuery(mQuery,true);
+//        mSearchView.setIconified(false);
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 presenter.searchDrug(mFullDrugs,query);
-                 mQuery=query;mSearchView.onActionViewCollapsed();
+                 mQuery=query;
+                 mSearchView.onActionViewCollapsed();
                 mSearchView.setQuery("", false);
                 return true;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                presenter.searchDrug(mFullDrugs,newText);
-                mSearchView.onActionViewCollapsed();
-                mSearchView.setQuery("", false);
-                return true;
+
+                return false;
             }
         });
         return true;
@@ -188,12 +194,13 @@ public class SearchDrugActivity extends AppCompatActivity implements SearchDrugV
                 if (direction == ItemTouchHelper.LEFT) {
 
                             //noinspection ConstantConditions
+                            showBubble();
                             presenter.call(pharmacy.getPhPhone());
                         } else {
                              showBubble();
                             try {
                                 @SuppressWarnings("ConstantConditions") final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://maps.google.com/maps?" +
-                                        "saddr=" + myCurrentLocation + "&daddr=" + pharmacy.getLatLang() + "&sensor=false&units=metric&mode=driving"));
+                                        "saddr=" + AllFullDrug.getAllFullDrug().getMyLocation() + "&daddr=" + pharmacy.getLatLang() + "&sensor=false&units=metric&mode=driving"));
                                 intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
                                 startActivity(intent);
                             } catch (Exception e) {

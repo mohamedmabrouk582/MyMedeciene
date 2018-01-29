@@ -1,7 +1,11 @@
 package com.example.mohamed.mymedeciene.data;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Mohamed mabrouk
@@ -12,6 +16,8 @@ import java.util.List;
 public class AllFullDrug {
    private static   volatile AllFullDrug allFullDrug;
    public List<FullDrug> fullDrugs=new ArrayList<>();
+   public LatLng myLatLang;
+   public String MyLocation;
 
    public static AllFullDrug getAllFullDrug(){
        if (allFullDrug==null){
@@ -24,11 +30,30 @@ public class AllFullDrug {
 
    private AllFullDrug(){}
 
+   public void setLatLang(LatLng myLatLang){
+       this.myLatLang=myLatLang;
+   }
+
+   public void setMyLocation(String myLocation){
+       this.MyLocation=myLocation;
+   }
+
+   public String getMyLocation(){
+       return this.MyLocation;
+   }
+
+   public LatLng getMyLatLang(){
+       return this.myLatLang;
+   }
    public void setAllFullDrug(FullDrug fullDrug){
        this.fullDrugs.add(fullDrug);
    }
 
    public List<FullDrug> getFullDrugs(){
+       Set<FullDrug> set=new HashSet<>();
+       set.addAll(this.fullDrugs);
+       clear();
+       this.fullDrugs.addAll(set);
        return this.fullDrugs;
    }
 

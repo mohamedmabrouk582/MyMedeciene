@@ -70,7 +70,6 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, HomeView, View.OnClickListener, LocationListener {
     private static final String PHARMACY = "pharmacy";
-    private static final int PERMISSION = 100;
     private CircleImageView phIMG;
     private ImageView edt_img, img_preview;
     private TextView phName, phPhone, phLocation, login, register;
@@ -84,16 +83,41 @@ public class HomeActivity extends AppCompatActivity
     private ZoomIMG zoomIMG;
     private Menu menu;
     private SearchView mSearchView;
-    public static volatile String myCurrentLocation = null;
     private MenuItem editProfile, myDrugs, addDrugs, logout, search;
+    private DatabaseReference mDatabaseReference;
+    private MakeRequest makeRequest;
+    private DataManager dataManager;
+    private static final int PERMISSION = 100;
     private final String[] permissions = {Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_NETWORK_STATE
             , Manifest.permission.CALL_PHONE,
             Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_LOCATION_EXTRA_COMMANDS};
-    private DatabaseReference mDatabaseReference;
-    private MakeRequest makeRequest;
-    private DataManager dataManager;
     private static SearchQueryListener mQueryListener;
+
+    @Override
+    public void onLocationChanged(Location location) {
+        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+        String replace = latLng.toString().replace("(", "").replace(")", "").replace("lat/lng:", "");
+        AllFullDrug.getAllFullDrug().setLatLang(latLng);
+        AllFullDrug.getAllFullDrug().setMyLocation(replace);
+        Toast.makeText(this, replace, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
+    }
+
     public interface SearchQueryListener{
         void onQuery(String s);
     }
@@ -107,6 +131,12 @@ public class HomeActivity extends AppCompatActivity
         context.startActivity(intent);
     }
 
+    public static Intent newIntent(Context context, Pharmacy pharmacy){
+        Intent intent = new Intent(context, HomeActivity.class);
+        intent.putExtra(PHARMACY, pharmacy);
+        return intent;
+    }
+
     public static void newIntentUser(Context context) {
         context.startActivity(new Intent(context, HomeActivity.class));
     }
@@ -116,7 +146,7 @@ public class HomeActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        overLayPermission();
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         makeRequest = new MakeRequest(this);
         setSupportActionBar(toolbar);
@@ -126,10 +156,9 @@ public class HomeActivity extends AppCompatActivity
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            checkPermissions();
-        }
-        location();
+        overLayPermission();
+             checkPermissions();
+             location(this);
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         menu = navigationView.getMenu();
@@ -139,45 +168,11 @@ public class HomeActivity extends AppCompatActivity
         presenter = new HomeViewPresenter(this, navigationView.getHeaderView(0));
         presenter.attachView(this);
         setFragment(AllDrugsFragment.newFragment());
-    }
-
-    private void location() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, 100);
-            }
-        }else {
-            LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-            //noinspection ConstantConditions
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 50, this);
-        }
+        Log.d("mohamedvv", AllFullDrug.getAllFullDrug().getFullDrugs().size() + "");
 
     }
 
-    private void overLayPermission() {
-//        if (Build.VERSION.SDK_INT >= 23) {
-//            if (!Settings.canDrawOverlays(this)) {
-//                Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-//                        Uri.parse("package:" + getPackageName()));
-//                startActivityForResult(intent, 1234);
-//            }
-//        } else {
-//
-//        }
 
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this)) {
-
-            //If the draw over permission is not available open the settings screen
-            //to grant the permission.
-            Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                    Uri.parse("package:" + getPackageName()));
-            startActivityForResult(intent, 1234);
-        } else {
-            Intent intent = new Intent(this, Service.class);
-            startService(intent);
-        }
-    }
 
     @SuppressLint("WrongViewCast")
     private void initView(View view) {
@@ -372,7 +367,7 @@ public class HomeActivity extends AppCompatActivity
                     startService(new Intent(this, FloatingViewService.class));
 
                     final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://maps.google.com/maps?" +
-                            "saddr=" + myCurrentLocation + "&daddr=" + mPharmacy.getLatLang() + "&sensor=false&units=metric&mode=driving"));
+                            "saddr=" + AllFullDrug.getAllFullDrug().getMyLocation() + "&daddr=" + mPharmacy.getLatLang() + "&sensor=false&units=metric&mode=driving"));
                     intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
                     startActivity(intent);
                 } catch (Exception e) {
@@ -408,21 +403,6 @@ public class HomeActivity extends AppCompatActivity
         }
     }
 
-    private boolean hasPermission(String permission) {
-        return ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED;
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    private void checkPermissions() {
-        try {
-            for (int i = 0; i < permissions.length; i++) {
-                if (hasPermission(permissions[i])) {
-                    requestPermissions(permissions, PERMISSION);
-                }
-            }
-        } catch (Exception ignored) {
-        }
-    }
 
 
     @Override
@@ -454,33 +434,58 @@ public class HomeActivity extends AppCompatActivity
         }
     }
 
-
-
-
-
-
-
-
-
-    @Override
-    public void onLocationChanged(Location location) {
-        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-        myCurrentLocation = latLng.toString().replace("(", "").replace(")", "").replace("lat/lng:", "");
-        Toast.makeText(this, myCurrentLocation, Toast.LENGTH_SHORT).show();
+    private boolean hasPermission(String permission) {
+        return ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED;
     }
 
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
+    public void checkPermissions() {
+        try {
+            for (int i = 0; i < permissions.length; i++) {
+                if (hasPermission(permissions[i])) {
+                    requestPermissions(permissions, PERMISSION);
+                }
+            }
+        } catch (Exception ignored) {
+        }
 
     }
 
-    @Override
-    public void onProviderEnabled(String provider) {
+    public void location(LocationListener listener) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, 100);
+            }
+        }else {
+            LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+            //noinspection ConstantConditions
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 50, listener);
+        }
 
     }
 
-    @Override
-    public void onProviderDisabled(String provider) {
+    public void overLayPermission() {
+//        if (Build.VERSION.SDK_INT >= 23) {
+//            if (!Settings.canDrawOverlays(this)) {
+//                Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+//                        Uri.parse("package:" + getPackageName()));
+//                startActivityForResult(intent, 1234);
+//            }
+//        } else {
+//
+//        }
 
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this)) {
+
+            //If the draw over permission is not available open the settings screen
+            //to grant the permission.
+            Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                    Uri.parse("package:" + getPackageName()));
+            startActivityForResult(intent, 1234);
+        } else {
+            Intent intent = new Intent(this, Service.class);
+            startService(intent);
+        }
     }
+
 }

@@ -18,7 +18,17 @@ public class Drug implements Parcelable {
     private String img;
     private String phKey;
 
-
+    @Override
+    public String toString() {
+        return "Drug{" +
+                "name='" + name + '\'' +
+                ", type='" + type + '\'' +
+                ", price='" + price + '\'' +
+                ", quantity='" + quantity + '\'' +
+                ", img='" + img + '\'' +
+                ", phKey='" + phKey + '\'' +
+                '}';
+    }
 
     public Drug() {
     }

@@ -68,7 +68,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static com.example.mohamed.mymedeciene.activity.HomeActivity.myCurrentLocation;
 
 /**
  * Created by mohamed mabrouk
@@ -104,7 +103,6 @@ public class AllDrugsFragment extends Fragment implements AllDrugsView, NetworkC
 
 
     public static AllDrugsFragment newFragment() {
-        AllFullDrug.getAllFullDrug().clear();
         Bundle bundle = new Bundle();
         AllDrugsFragment fragment = new AllDrugsFragment();
         fragment.setArguments(bundle);
@@ -146,7 +144,7 @@ public class AllDrugsFragment extends Fragment implements AllDrugsView, NetworkC
         query.keepSynced(true);
 
         zoomIMG = new ZoomIMG();
-        getAllDrugs();
+        //getAllDrugs();
     }
 
 
@@ -161,7 +159,6 @@ public class AllDrugsFragment extends Fragment implements AllDrugsView, NetworkC
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                AllFullDrug.getAllFullDrug().clear();
                 query = mDatabaseReference.child("Drugs").child("AllDrugs").orderByChild("name").limitToFirst(10);
                 options = new FirebaseRecyclerOptions.Builder<Drug>().setQuery(query, Drug.class).build();
                 Log.d("adapter", options.getSnapshots().size() + "");
@@ -232,7 +229,6 @@ public class AllDrugsFragment extends Fragment implements AllDrugsView, NetworkC
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         final Pharmacy value = dataSnapshot.getValue(Pharmacy.class);
-                       // AllFullDrug.getAllFullDrug().setAllFullDrug(new FullDrug(model,value));
                         DBoperations.getInstance(getActivity()).insertDrug(model);
                         holder.bindData(model, value);
                         Log.d("llll", value.getLatLang() + "");
@@ -246,7 +242,7 @@ public class AllDrugsFragment extends Fragment implements AllDrugsView, NetworkC
 
                                 try {
                                     @SuppressWarnings("ConstantConditions") final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://maps.google.com/maps?" +
-                                            "saddr=" + myCurrentLocation + "&daddr=" + value.getLatLang() + "&sensor=false&units=metric&mode=driving"));
+                                            "saddr=" + AllFullDrug.getAllFullDrug().getMyLocation() + "&daddr=" + value.getLatLang() + "&sensor=false&units=metric&mode=driving"));
                                     intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
                                     startActivity(intent);
                                 } catch (Exception e) {
@@ -301,16 +297,15 @@ public class AllDrugsFragment extends Fragment implements AllDrugsView, NetworkC
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         Pharmacy pharmacy = dataSnapshot.getValue(Pharmacy.class);
                         if (direction == ItemTouchHelper.LEFT) {
-
+                              showBubble();
                             //noinspection ConstantConditions
                             presenter.call(pharmacy.getPhPhone());
                         } else {
 
-                            getActivity().startService(new Intent(getActivity(), FloatingViewService.class));
-
+                                showBubble();
                             try {
                                 @SuppressWarnings("ConstantConditions") final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://maps.google.com/maps?" +
-                                        "saddr=" + myCurrentLocation + "&daddr=" + pharmacy.getLatLang() + "&sensor=false&units=metric&mode=driving"));
+                                        "saddr=" + AllFullDrug.getAllFullDrug().getMyLocation() + "&daddr=" + pharmacy.getLatLang() + "&sensor=false&units=metric&mode=driving"));
                                 intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
                                 startActivity(intent);
                             } catch (Exception e) {
@@ -366,6 +361,11 @@ public class AllDrugsFragment extends Fragment implements AllDrugsView, NetworkC
 
     }
 
+    private void showBubble(){
+        getActivity().startService(new Intent(getActivity(), FloatingViewService.class));
+
+    }
+
     @Override
     public void onPause() {
         super.onPause();
@@ -407,35 +407,4 @@ public class AllDrugsFragment extends Fragment implements AllDrugsView, NetworkC
 
         Log.d("adapter",  options.getSnapshots().size()+"sss");
     }
-
-
-    public void getAllDrugs(){
-      //TODO
-
-        mDatabaseReference.child("Drugs").child("AllDrugs").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-             final Drug drug=dataSnapshot.getValue(Drug.class);
-             Log.d("jjjj", drug.toString() + "");
-             mPhmacyReference.child(drug.getPhKey()).addValueEventListener(new ValueEventListener() {
-                 @Override
-                 public void onDataChange(DataSnapshot dataSnapshot) {
-                     Pharmacy pharmacy=dataSnapshot.getValue(Pharmacy.class);
-                     AllFullDrug.getAllFullDrug().setAllFullDrug(new FullDrug(drug,pharmacy));
-                 }
-
-                 @Override
-                 public void onCancelled(DatabaseError databaseError) {
-
-                 }
-             });
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }
-
 }

@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.example.mohamed.mymedeciene.R;
 import com.example.mohamed.mymedeciene.appliction.DataManager;
 import com.example.mohamed.mymedeciene.appliction.MyApp;
+import com.example.mohamed.mymedeciene.data.AllFullDrug;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -29,7 +30,6 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import java.util.List;
 import java.util.Locale;
 
-import static com.example.mohamed.mymedeciene.activity.HomeActivity.myCurrentLocation;
 
 
 @SuppressWarnings("ALL")
@@ -80,9 +80,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private void drawRout(List<LatLng> latLngs) {
         String[] dest = myAddress.split(",");
-        String[] source = myCurrentLocation.split(",");
         LatLng to = new LatLng(Double.parseDouble(dest[0]), Double.parseDouble(dest[1]));
-        LatLng from = new LatLng(Double.parseDouble(source[0]), Double.parseDouble(source[1]));
+        LatLng from = AllFullDrug.getAllFullDrug().getMyLatLang();
         if (latLngs.size() > 0) {
             PolylineOptions rectLine = new PolylineOptions().width(7).color(
                     Color.RED);

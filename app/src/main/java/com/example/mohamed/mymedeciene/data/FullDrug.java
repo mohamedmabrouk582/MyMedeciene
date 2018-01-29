@@ -2,6 +2,7 @@ package com.example.mohamed.mymedeciene.data;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
 /**
  * Created by Mohamed mabrouk
@@ -72,4 +73,22 @@ public class FullDrug implements Parcelable {
             return new FullDrug[size];
         }
     };
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof FullDrug){
+            FullDrug fullDrug= (FullDrug) obj;
+             Drug drug1=fullDrug.getDrug();
+            if (this.drug.getPhKey() ==drug1.getPhKey() && this.drug.getName() == drug1.getName() && this.drug.getType() == drug1.getType() ){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return (this.drug.getPhKey().hashCode()+this.drug.getName().hashCode()+this.drug.getType().hashCode());
+    }
+
 }
