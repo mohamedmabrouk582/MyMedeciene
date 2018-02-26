@@ -62,7 +62,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".activity.SearchDrugActivity"
-            android:parentActivityName=".activity.HomeActivity"
             android:theme="@style/app"
             />
         <activity android:name=".activity.LoginActivity" />

@@ -8,4 +8,5 @@ package com.example.mohamed.mymedeciene.utils;
 
 public interface CheckListener {
     void onSuccess();
+    void onError();
 }

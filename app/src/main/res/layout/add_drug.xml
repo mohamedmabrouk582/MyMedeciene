@@ -75,41 +75,7 @@
                         android:spinnerMode="dropdown"/>
 
                 </LinearLayout>
-
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/_120sdp"
-                    android:layout_marginTop="@dimen/_10sdp"
-                    android:layout_marginStart="@dimen/_20sdp"
-                    android:layout_marginEnd="@dimen/_20sdp">
-
-                    <ImageButton
-                        android:scaleType="centerCrop"
-                        android:id="@+id/ib_drug_img"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/_120sdp"
-                        android:background="@drawable/download"
-                        android:contentDescription="@string/drug_img"
-                        />
-
-                    <ProgressBar
-                        android:visibility="gone"
-                        android:id="@+id/img_load_drug"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center" />
-
-                    <TextView
-                        android:visibility="gone"
-                        android:id="@+id/txt_progress_drug"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        />
-                </FrameLayout>
-
-
+            <include layout="@layout/load_img" />
                 <Button
                     android:id="@+id/add"
                     android:textSize="@dimen/_17sdp"

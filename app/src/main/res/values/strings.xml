@@ -69,6 +69,10 @@
     <string name="log_out_">Log Out</string>
     <string name="search_">Search</string>
     <string name="to_edit_pharmacy_img">to edit pharmacy img</string>
+    <string name="regist">To allow to add post must be Register</string>
+    <string name="post">Post</string>
+    <string name="write_your_post">write your post</string>
+    <string name="add_post">Add Post</string>
     <string-array name="drug_type">
         <item>Injections</item>
         <item>Capsules</item>

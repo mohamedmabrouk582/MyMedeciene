@@ -14,8 +14,8 @@
             android:title="@string/edit_profile" />
         <item
             android:id="@+id/nav_drugs"
-            android:icon="@drawable/ic_menu_list"
-            android:title="@string/my_drugs" />
+            android:icon="@drawable/ic_menu_add"
+            android:title="@string/add_post" />
         <item
             android:id="@+id/nav_addDrug"
             android:icon="@drawable/ic_menu_add"

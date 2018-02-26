@@ -129,7 +129,6 @@ public class AddDrugViewPresenter<v extends AddDrugView> extends BasePresenter<v
             map.put("img", url);
         }
 
-        DatabaseReference push = FirebaseDatabase.getInstance().getReference().push();
         updateChildren(mAuth.getUid() + name + type, map, listener);
     }
 
@@ -170,10 +169,14 @@ public class AddDrugViewPresenter<v extends AddDrugView> extends BasePresenter<v
         drugs.put("AllDrugs/" + key, map);
         if (mSet.contains(key)) {
             FragmentManager fragmentManager = activity.getFragmentManager();
-            AddDrugCheckFragment fragment = AddDrugCheckFragment.newFragment(new CheckListener() {
+            AddDrugCheckFragment fragment = AddDrugCheckFragment.newFragment("update",new CheckListener() {
                 @Override
                 public void onSuccess() {
                     updateChildren(listener, drugs);
+                }
+
+                @Override
+                public void onError() {
                 }
             });
             fragment.show(fragmentManager, "check");
@@ -197,6 +200,8 @@ public class AddDrugViewPresenter<v extends AddDrugView> extends BasePresenter<v
             }
         });
     }
+
+
 
     @Override
     public void editDrug(String drugId, String img, String name, String price, String type, String Quantity, AddListener listener) {

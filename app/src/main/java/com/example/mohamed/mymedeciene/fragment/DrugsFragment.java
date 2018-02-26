@@ -109,7 +109,13 @@ public class DrugsFragment extends Fragment implements View.OnClickListener, Dru
         mAuth = MyApp.getmAuth();
         mDatabaseReference = MyApp.getmDatabaseReference();
         //noinspection ConstantConditions
-        query = mDatabaseReference.child("Drugs").child(mAuth.getUid()).limitToFirst(10);
+      if (mAuth.getUid()==null){
+          query = mDatabaseReference.child("Drugs");
+
+      }else {
+          query = mDatabaseReference.child("Drugs").child(mAuth.getUid()).limitToFirst(10);
+
+      }
         options = new FirebaseRecyclerOptions.Builder<Drug>().setQuery(query, Drug.class).build();
         FloatingActionButton add = new FloatingActionButton(getActivity());
         add.setTitle("Add new Drug");

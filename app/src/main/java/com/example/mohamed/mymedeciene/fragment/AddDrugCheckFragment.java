@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.mohamed.mymedeciene.R;
+import com.example.mohamed.mymedeciene.activity.RegisterActivity;
 import com.example.mohamed.mymedeciene.presenter.addDrugCheck.AddDrugCheckViewPresenter;
 import com.example.mohamed.mymedeciene.utils.CheckListener;
 import com.example.mohamed.mymedeciene.view.AddDrugCheckView;
@@ -34,13 +35,26 @@ public class AddDrugCheckFragment extends DialogFragment implements AddDrugCheck
     private AlertDialog dialog;
     private View view;
     private static CheckListener listener;
-    public static AddDrugCheckFragment newFragment(CheckListener mListener) {
+    private String type;
+    private TextView massage;
+    Button update,decline;
+    public static AddDrugCheckFragment newFragment(String type,CheckListener mListener) {
         listener = mListener;
         Bundle bundle=new Bundle();
+        bundle.putString(TYPE,type);
         AddDrugCheckFragment fragment=new AddDrugCheckFragment();
         fragment.setArguments(bundle);
         return fragment;
     }
+
+    public static AddDrugCheckFragment newFragment(String type) {
+        Bundle bundle=new Bundle();
+        bundle.putString(TYPE,type);
+        AddDrugCheckFragment fragment=new AddDrugCheckFragment();
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
 
     @NonNull
     @Override
@@ -72,25 +86,43 @@ public class AddDrugCheckFragment extends DialogFragment implements AddDrugCheck
 
     @SuppressWarnings("unchecked")
     private void init() {
+        type=getArguments().getString(TYPE);
         presenter = new AddDrugCheckViewPresenter();
         //noinspection unchecked
         presenter.attachView(this);
-        Button decline = view.findViewById(R.id.decline);
-        Button update = view.findViewById(R.id.drug_update);
-
-
-        update.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                presenter.update(listener);
-            }
-        });
+         decline = view.findViewById(R.id.decline);
+        update = view.findViewById(R.id.drug_update);
+        massage=view.findViewById(R.id.textCheck);
+         check();
         decline.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 decline();
             }
         });
+    }
+
+    private void check(){
+        if (type.equals("register")){
+            massage.setText(getString(R.string.regist));
+            update.setText(getString(R.string.register));
+            update.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    RegisterActivity.start(getActivity());
+                    getActivity().finish();
+                }
+            });
+        }else {
+            massage.setText(getString(R.string.checkDrug));
+            update.setText(getString(R.string.update));
+            update.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    presenter.update(listener);
+                }
+            });
+        }
     }
 
     @Override

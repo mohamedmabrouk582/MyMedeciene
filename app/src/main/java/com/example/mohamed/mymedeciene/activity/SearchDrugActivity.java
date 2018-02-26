@@ -52,6 +52,8 @@ import java.util.Set;
  * on 24/01/2018.  time :22:38
  */
 
+//Todo  fix search errors 
+
 public class SearchDrugActivity extends AppCompatActivity implements SearchDrugView{
     private static final String FULLDRUG = "fullDrug";
     private static final String QUERY = "myQuery";

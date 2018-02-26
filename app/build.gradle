@@ -71,6 +71,9 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
     implementation 'com.txusballesteros:bubbles:1.2.1'
+
+    implementation 'com.github.jd-alexander:LikeButton:0.2.3'
+
 }
 
 

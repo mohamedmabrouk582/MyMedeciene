@@ -16,10 +16,13 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.View;
@@ -31,6 +34,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -39,6 +43,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.mohamed.mymedeciene.R;
+import com.example.mohamed.mymedeciene.adapter.MainAdapter;
 import com.example.mohamed.mymedeciene.appliction.DataManager;
 import com.example.mohamed.mymedeciene.appliction.MyApp;
 import com.example.mohamed.mymedeciene.data.AllFullDrug;
@@ -46,6 +51,7 @@ import com.example.mohamed.mymedeciene.data.FullDrug;
 import com.example.mohamed.mymedeciene.data.Pharmacy;
 import com.example.mohamed.mymedeciene.data.dataBase.DBoperations;
 import com.example.mohamed.mymedeciene.fragment.AddDrugCheckFragment;
+import com.example.mohamed.mymedeciene.fragment.AddPostFragment;
 import com.example.mohamed.mymedeciene.fragment.AllDrugsFragment;
 import com.example.mohamed.mymedeciene.fragment.DrugsFragment;
 import com.example.mohamed.mymedeciene.mapRoute.MakeRequest;
@@ -68,7 +74,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 @SuppressWarnings("ALL")
 public class HomeActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, HomeView, View.OnClickListener, LocationListener {
+        implements NavigationView.OnNavigationItemSelectedListener, HomeView, View.OnClickListener, LocationListener, AddListener {
     private static final String PHARMACY = "pharmacy";
     private CircleImageView phIMG;
     private ImageView edt_img, img_preview;
@@ -81,6 +87,8 @@ public class HomeActivity extends AppCompatActivity
     private FrameLayout zoomContainer;
     private DrawerLayout drawer;
     private ZoomIMG zoomIMG;
+    private TabLayout mTabLayout;
+    private ViewPager mViewPager;
     private Menu menu;
     private SearchView mSearchView;
     private MenuItem editProfile, myDrugs, addDrugs, logout, search;
@@ -118,6 +126,16 @@ public class HomeActivity extends AppCompatActivity
 
     }
 
+    @Override
+    public void onSuccess(String success) {
+        presenter.showSnakBar(drawer,success);
+    }
+
+    @Override
+    public void OnError(String error) {
+    presenter.showSnakBar(drawer,error);
+    }
+
     public interface SearchQueryListener{
         void onQuery(String s);
     }
@@ -141,7 +159,6 @@ public class HomeActivity extends AppCompatActivity
         context.startActivity(new Intent(context, HomeActivity.class));
     }
 
-    @SuppressLint("ResourceType")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -167,14 +184,13 @@ public class HomeActivity extends AppCompatActivity
         dataManager=((MyApp) getApplication()).getData();
         presenter = new HomeViewPresenter(this, navigationView.getHeaderView(0));
         presenter.attachView(this);
-        setFragment(AllDrugsFragment.newFragment());
+      //  setFragment(AllDrugsFragment.newFragment());
         Log.d("mohamedvv", AllFullDrug.getAllFullDrug().getFullDrugs().size() + "");
 
     }
 
 
 
-    @SuppressLint("WrongViewCast")
     private void initView(View view) {
         zoomIMG = new ZoomIMG();
         mPharmacy = getIntent().getParcelableExtra(PHARMACY);
@@ -193,6 +209,14 @@ public class HomeActivity extends AppCompatActivity
         register.setOnClickListener(this);
         phIMG.setOnClickListener(this);
         phLocation.setOnClickListener(this);
+        mTabLayout=findViewById(R.id.tabs);
+        mViewPager=findViewById(R.id.tabs_pager);
+        mTabLayout.setupWithViewPager(mViewPager);
+        mViewPager.setAdapter(new MainAdapter(getSupportFragmentManager()));
+
+
+
+
 
 
         if (mPharmacy != null) {
@@ -206,6 +230,8 @@ public class HomeActivity extends AppCompatActivity
             setData(mPharmacy);
         } else {
             isPharmacy(false);
+            //Set the next  tab as selected tab
+
         }
     }
 
@@ -230,6 +256,7 @@ public class HomeActivity extends AppCompatActivity
             super.onBackPressed();
         }
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -261,7 +288,6 @@ public class HomeActivity extends AppCompatActivity
         return true;
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
@@ -293,12 +319,15 @@ public class HomeActivity extends AppCompatActivity
                 }
             });
         } else if (id == R.id.nav_drugs) {
-            search.setVisible(false);
-            setFragment(DrugsFragment.newFragment());
+            android.app.FragmentManager fragmentManager=getFragmentManager();
+            AddPostFragment fragment=AddPostFragment.newFragment(this);
+            fragment.show(fragmentManager,"");
         } else if (id == R.id.nav_logout) {
             Toast.makeText(this, DBoperations.getInstance(this).getDrugs().size() + "", Toast.LENGTH_SHORT).show();
             if (mPharmacy != null) {
                 presenter.logout();
+                ((ViewGroup) mTabLayout.getChildAt(0)).getChildAt(2).setVisibility(View.GONE);
+
             } else {
                 presenter.showSnakBar(drawer, getString(R.string.not_allow));
             }
@@ -323,14 +352,18 @@ public class HomeActivity extends AppCompatActivity
         addDrugs.setEnabled(b);
         myDrugs.setEnabled(b);
         logout.setEnabled(b);
+
         if (b) {
             //   show all items
+            ((ViewGroup) mTabLayout.getChildAt(0)).getChildAt(2).setVisibility(View.VISIBLE);
 
             login_register.setVisibility(View.GONE);
             phName.setVisibility(View.VISIBLE);
             phPhone.setVisibility(View.VISIBLE);
             phLocation.setVisibility(View.VISIBLE);
         } else {
+            ((ViewGroup) mTabLayout.getChildAt(0)).getChildAt(2).setVisibility(View.GONE);
+
             // not show show drugs and add drug
             login_register.setVisibility(View.VISIBLE);
             phName.setVisibility(View.GONE);
@@ -356,7 +389,7 @@ public class HomeActivity extends AppCompatActivity
     @Override
     public void setFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.Home_Container, fragment).commit();
+       // fragmentManager.beginTransaction().replace(R.id.Home_Container, fragment).commit();
     }
 
     @Override

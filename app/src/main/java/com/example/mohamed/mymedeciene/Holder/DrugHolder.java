@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.mohamed.mymedeciene.R;
 import com.example.mohamed.mymedeciene.data.Drug;
 import com.example.mohamed.mymedeciene.data.Pharmacy;
@@ -52,7 +53,9 @@ public class DrugHolder extends RecyclerView.ViewHolder {
 
     public void bindData(Drug drug, Pharmacy pharmacy) {
         if (activity != null && drug != null && pharmacy != null) {
-            Glide.with(activity).load(drug.getImg()).into(imageView);
+            try {
+                Glide.with(activity).load(drug.getImg()).into(imageView);
+            }catch (Exception e){}
             drugName.setText(drug.getName());
             drugPrice.setText(String.valueOf(drug.getPrice()));
             drugType.setText(drug.getType());

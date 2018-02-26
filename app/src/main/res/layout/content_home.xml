@@ -10,17 +10,45 @@
     tools:showIn="@layout/app_bar_home"
     tools:ignore="MergeRootFrame">
 
+    <!--<FrameLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:id="@+id/Home_Container" />-->
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/Home_Container" />
+        android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/img_preview"
-        android:scaleType="centerCrop"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:contentDescription="@string/to_show_all_drug_img"
-         />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            >
+
+            <android.support.design.widget.TabLayout
+                android:id="@+id/tabs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorPrimary"
+                app:tabIndicatorColor="@color/gray"
+                app:tabSelectedTextColor="@color/gray_xxx"
+                app:tabTextColor="@color/gray">
+
+            </android.support.design.widget.TabLayout>
+            <android.support.v4.view.ViewPager
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/tabs_pager"
+                ></android.support.v4.view.ViewPager>
+        </LinearLayout>
+        <ImageView
+            android:id="@+id/img_preview"
+            android:scaleType="centerCrop"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/to_show_all_drug_img"
+            />
+    </FrameLayout>
+
 
 </FrameLayout>
