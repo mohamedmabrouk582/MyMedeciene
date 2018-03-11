@@ -1,5 +1,8 @@
 package com.example.mohamed.mymedeciene.data;
 
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -9,13 +12,20 @@ import android.os.Parcelable;
  * on 18/12/2017.  time :18:46
  */
 
+@Entity(tableName = "drug",primaryKeys = {"name","type","phKey"})
 @SuppressWarnings("unused")
 public class Drug implements Parcelable {
+    @ColumnInfo(name = "name")
     private String name;
+    @ColumnInfo(name = "type")
     private String type;
+    @ColumnInfo(name = "price")
     private String price;
+    @ColumnInfo(name = "quantity")
     private String quantity;
+    @ColumnInfo(name = "img")
     private String img;
+    @ColumnInfo(name = "phKey")
     private String phKey;
 
     @Override

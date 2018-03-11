@@ -1,6 +1,8 @@
 package com.example.mohamed.mymedeciene.appliction;
 
 import android.app.Application;
+import android.content.Context;
+import android.support.multidex.MultiDex;
 
 import com.example.mohamed.mymedeciene.utils.NetworkChangeReceiver;
 import com.google.firebase.auth.FirebaseAuth;
@@ -28,7 +30,14 @@ public class MyApp extends Application {
         dataManager = new DataManager(new MyShared(this));
         mDatabaseReference = FirebaseDatabase.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
+
         mStorageReference = FirebaseStorage.getInstance().getReference();
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
     }
 
     public static DatabaseReference getmDatabaseReference() {

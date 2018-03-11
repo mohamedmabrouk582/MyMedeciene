@@ -14,7 +14,7 @@ import java.util.Set;
  */
 
 public class AllFullDrug {
-   private static   volatile AllFullDrug allFullDrug;
+   private static volatile AllFullDrug allFullDrug;
    public List<FullDrug> fullDrugs=new ArrayList<>();
    public LatLng myLatLang;
    public String MyLocation;
