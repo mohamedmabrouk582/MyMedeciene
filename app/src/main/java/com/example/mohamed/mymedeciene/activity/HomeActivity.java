@@ -129,6 +129,7 @@ public class HomeActivity extends AppCompatActivity
     @Override
     public void onSuccess(String success) {
         presenter.showSnakBar(drawer,success);
+
     }
 
     @Override
@@ -174,6 +175,7 @@ public class HomeActivity extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         overLayPermission();
+
              checkPermissions();
              location(this);
         NavigationView navigationView = findViewById(R.id.nav_view);
@@ -296,6 +298,8 @@ public class HomeActivity extends AppCompatActivity
                 @Override
                 public void onSuccess(String success) {
                     presenter.showSnakBar(drawer, success);
+                    SplashActivity splashActivity=new SplashActivity();
+                    splashActivity.getAllDrugs();
                 }
 
                 @Override
@@ -311,6 +315,8 @@ public class HomeActivity extends AppCompatActivity
                 public void onSuccess(Pharmacy pharmacy) {
                     setData(pharmacy);
                     mPharmacy = pharmacy;
+                    SplashActivity splashActivity=new SplashActivity();
+                    splashActivity.getAllDrugs();
                 }
 
                 @Override
@@ -473,9 +479,11 @@ public class HomeActivity extends AppCompatActivity
 
     public void checkPermissions() {
         try {
-            for (int i = 0; i < permissions.length; i++) {
-                if (hasPermission(permissions[i])) {
-                    requestPermissions(permissions, PERMISSION);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                for (int i = 0; i < permissions.length; i++) {
+                    if (hasPermission(permissions[i])) {
+                        requestPermissions(permissions, PERMISSION);
+                    }
                 }
             }
         } catch (Exception ignored) {
@@ -486,7 +494,7 @@ public class HomeActivity extends AppCompatActivity
     public void location(LocationListener listener) {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, 100);
+                requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, 1011);
             }
         }else {
             LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -494,6 +502,17 @@ public class HomeActivity extends AppCompatActivity
             locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 50, listener);
         }
 
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (grantResults.length > 0
+                && grantResults[4] == PackageManager.PERMISSION_GRANTED && grantResults[5] == PackageManager.PERMISSION_GRANTED && grantResults[6] == PackageManager.PERMISSION_GRANTED){
+            Log.d("PackageManager", "PackageManager" + "");
+            LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+            //noinspection ConstantConditions
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 50, this);
+        }
     }
 
     public void overLayPermission() {

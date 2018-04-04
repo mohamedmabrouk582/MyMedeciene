@@ -73,6 +73,9 @@
     <string name="post">Post</string>
     <string name="write_your_post">write your post</string>
     <string name="add_post">Add Post</string>
+    <string name="by_drug_name">BY Drug </string>
+    <string name="by_pharmacy_name">By Pharmacy </string>
+    <string name="by_both">By Both</string>
     <string-array name="drug_type">
         <item>Injections</item>
         <item>Capsules</item>

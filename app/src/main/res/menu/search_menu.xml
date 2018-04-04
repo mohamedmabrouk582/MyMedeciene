@@ -7,4 +7,21 @@
         android:title="@string/search_"
         app:showAsAction="ifRoom|withText"
         app:actionViewClass="android.support.v7.widget.SearchView" />
+    <group android:id="@+id/group"
+        android:checkableBehavior="single">
+    <item
+        android:id="@+id/by_drug_name"
+        android:title="@string/by_drug_name"/>
+    <item
+        android:id="@+id/by_pharmacy_name"
+        android:title="@string/by_pharmacy_name"
+        />
+        <item
+        android:id="@+id/by_both"
+        android:title="@string/by_both"
+        />
+    </group>
+
+
+
 </menu>

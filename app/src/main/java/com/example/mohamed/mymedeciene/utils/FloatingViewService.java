@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.os.Build;
 import android.os.IBinder;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -119,8 +120,11 @@ public class FloatingViewService extends Service {
                         //As we implemented on touch listener with ACTION_MOVE,
                         //we have to check if the previous action was ACTION_DOWN
                         //to identify if the user clicked the view or not.
+                        Log.d("ACTION_DOWN", "ddddd" + "");
                         if (lastAction == MotionEvent.ACTION_DOWN) {
                             //Open the chat conversation click.
+                            Log.d("ACTION_DOWN", "ddsssddd" + "");
+
                             Intent intent = new Intent(FloatingViewService.this, SplashActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);

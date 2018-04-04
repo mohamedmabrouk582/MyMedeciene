@@ -15,7 +15,7 @@ android {
     compileSdkVersion 26
     defaultConfig {
         applicationId "com.example.mohamed.mymedeciene"
-        minSdkVersion 18
+        minSdkVersion 16
         //noinspection OldTargetApi
         targetSdkVersion 26
         versionCode 1
@@ -75,13 +75,16 @@ dependencies {
     implementation 'com.github.jd-alexander:LikeButton:0.2.3'
     implementation 'com.android.support:multidex:1.0.3'
 
-    /******** room sqlit **********/
-    implementation "android.arch.persistence.room:runtime:1.0.0"
-    annotationProcessor "android.arch.persistence.room:compiler:1.0.0"
-
-    /******* viewModel and LiveData ***************/
-    implementation "android.arch.lifecycle:extensions:1.1.0"
-    annotationProcessor "android.arch.lifecycle:compiler:1.1.0"
+//    /******** room sqlit **********/
+//    implementation "android.arch.persistence.room:runtime:1.0.0"
+//    annotationProcessor "android.arch.persistence.room:compiler:1.0.0"
+//    implementation 'android.arch.persistence.room:rxjava2:1.1.0-beta1'
+//
+//
+//
+//    /******* viewModel and LiveData ***************/
+//    implementation "android.arch.lifecycle:extensions:1.1.1"
+//    annotationProcessor "android.arch.lifecycle:compiler:1.1.1"
 
 
 

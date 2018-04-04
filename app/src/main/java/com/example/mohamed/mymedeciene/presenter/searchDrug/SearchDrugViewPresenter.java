@@ -41,7 +41,7 @@ public class SearchDrugViewPresenter<v extends SearchDrugView> extends BasePrese
     public void searchDrug(List<FullDrug> fullDrugs, String query) {
           clear();
         for (FullDrug fullDrug:fullDrugs) {
-            if (fullDrug.getDrug().getName().startsWith(query)){
+            if (fullDrug.getDrug().getName().contains(query) || fullDrug.getPharmacy().getPhName().contains(query)){
                mFullDrugs.add(fullDrug);
             }
         }
@@ -49,6 +49,33 @@ public class SearchDrugViewPresenter<v extends SearchDrugView> extends BasePrese
          adapter=new SearchDrugAdapter(activity,mFullDrugs);
 
          getView().showDrugs(adapter);
+    }
+    @Override
+    public void searchByDrug(List<FullDrug> fullDrugs, String query) {
+        clear();
+        for (FullDrug fullDrug:fullDrugs) {
+            if (fullDrug.getDrug().getName().contains(query)){
+                mFullDrugs.add(fullDrug);
+            }
+        }
+        mFullDrugs=SortDrugs(mFullDrugs);
+        adapter=new SearchDrugAdapter(activity,mFullDrugs);
+
+        getView().showDrugs(adapter);
+    }
+
+    @Override
+    public void searchByPharmacy(List<FullDrug> fullDrugs,String query){
+        clear();
+        for (FullDrug fullDrug:fullDrugs) {
+            if (fullDrug.getPharmacy().getPhName().contains(query)){
+                mFullDrugs.add(fullDrug);
+            }
+        }
+        mFullDrugs=SortDrugs(mFullDrugs);
+        adapter=new SearchDrugAdapter(activity,mFullDrugs);
+
+        getView().showDrugs(adapter);
     }
 
     public SearchDrugAdapter getAdapter(){

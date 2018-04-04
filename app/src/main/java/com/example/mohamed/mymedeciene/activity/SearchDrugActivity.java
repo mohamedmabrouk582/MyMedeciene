@@ -23,6 +23,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.example.mohamed.mymedeciene.R;
@@ -65,7 +66,8 @@ public class SearchDrugActivity extends AppCompatActivity implements SearchDrugV
     private List<FullDrug> mFullDrugs=new ArrayList<>();
     private Paint p=new Paint();
     private SearchView mSearchView;
-    private  String mQuery;
+    private  String mQuery,searchBy="drug";
+    private MenuItem byDrug,byPharmacy,byBoth;
 
     public static void start(Context context,String mQuery){
         Intent intent=new Intent(context,SearchDrugActivity.class);
@@ -94,15 +96,74 @@ public class SearchDrugActivity extends AppCompatActivity implements SearchDrugV
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.search_menu, menu);
         MenuItem search=menu.findItem(R.id.app_bar_search_menu);
+         byDrug=menu.findItem(R.id.by_drug_name);
+         byPharmacy=menu.findItem(R.id.by_pharmacy_name);
+         byBoth=menu.findItem(R.id.by_both);
         mSearchView= (SearchView) search.getActionView();
+        byDrug.setChecked(true);
 //        mSearchView.setQuery(mQuery,true);
 //        mSearchView.setIconified(false);
+        searchBy="drug";
+        searchAction();
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.by_drug_name:
+                byDrug.setChecked(true);
+                searchBy="drug";
+                selectSearch();
+                break;
+            case R.id.by_pharmacy_name:
+                byPharmacy.setChecked(true);
+                searchBy="pharmacy";
+                selectSearch();
+
+                break;
+            case R.id.by_both:
+                byBoth.setChecked(true);
+                searchBy="both";
+                selectSearch();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void selectSearch(){
+        Log.d("searchBy", searchBy + "");
+        switch (searchBy){
+            case "both":
+                presenter.searchDrug(mFullDrugs,mQuery);
+                break;
+            case "drug":
+                presenter.searchByDrug(mFullDrugs,mQuery);
+                break;
+            case "pharmacy":
+                presenter.searchByPharmacy(mFullDrugs,mQuery);
+                break;
+        }
+    }
+
+    private void searchAction(){
+        Log.d("searchBy", searchBy + "");
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                presenter.searchDrug(mFullDrugs,query);
-                 mQuery=query;
-                 mSearchView.onActionViewCollapsed();
+                switch (searchBy){
+                    case "both":
+                        presenter.searchDrug(mFullDrugs,query);
+                        break;
+                    case "drug":
+                        presenter.searchByDrug(mFullDrugs,query);
+                        break;
+                    case "pharmacy":
+                        presenter.searchByPharmacy(mFullDrugs,query);
+                        break;
+                }
+                mQuery=query;
+                mSearchView.onActionViewCollapsed();
                 mSearchView.setQuery("", false);
                 return true;
             }
@@ -113,9 +174,7 @@ public class SearchDrugActivity extends AppCompatActivity implements SearchDrugV
                 return false;
             }
         });
-        return true;
     }
-
 
     private void init(){
         presenter=new SearchDrugViewPresenter(this);
@@ -123,7 +182,7 @@ public class SearchDrugActivity extends AppCompatActivity implements SearchDrugV
         mQuery=getIntent().getStringExtra(QUERY);
         errorView=findViewById(R.id.error);
         makeRequest=new MakeRequest(this);
-        presenter.searchDrug(mFullDrugs,mQuery);
+        selectSearch();
         Log.d("moahmed", mFullDrugs.size() + "");
     }
 
@@ -138,7 +197,7 @@ public class SearchDrugActivity extends AppCompatActivity implements SearchDrugV
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                presenter.searchDrug(mFullDrugs,mQuery);
+                selectSearch();
             }
         });
     }

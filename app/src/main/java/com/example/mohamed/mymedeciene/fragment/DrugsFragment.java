@@ -27,6 +27,7 @@ import android.widget.TextView;
 
 import com.example.mohamed.mymedeciene.Holder.DrugHolder;
 import com.example.mohamed.mymedeciene.R;
+import com.example.mohamed.mymedeciene.activity.SplashActivity;
 import com.example.mohamed.mymedeciene.appliction.DataManager;
 import com.example.mohamed.mymedeciene.appliction.MyApp;
 import com.example.mohamed.mymedeciene.data.Drug;
@@ -164,6 +165,8 @@ public class DrugsFragment extends Fragment implements View.OnClickListener, Dru
             @Override
             public void onSuccess(String success) {
                 presenter.showSnakBar(view, getString(R.string.drug_added));
+                SplashActivity splashActivity=new SplashActivity();
+                splashActivity.getAllDrugs();
             }
 
             @Override
@@ -302,6 +305,8 @@ public class DrugsFragment extends Fragment implements View.OnClickListener, Dru
                 drugsId.clear();
                 adapter.notifyDataSetChanged();
                 presenter.showSnakBar(view, getString(R.string.drug_update));
+                SplashActivity splashActivity=new SplashActivity();
+                splashActivity.getAllDrugs();
             }
 
             @Override
@@ -319,7 +324,8 @@ public class DrugsFragment extends Fragment implements View.OnClickListener, Dru
                 mDrugs.remove(position);
                 adapter.notifyItemRemoved(position);
                 adapter.notifyItemChanged(position, drugsId.size());
-
+                SplashActivity splashActivity=new SplashActivity();
+                splashActivity.getAllDrugs();
             }
 
             @Override

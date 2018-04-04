@@ -1,10 +1,8 @@
 package com.example.mohamed.mymedeciene.data;
 
-import android.arch.persistence.room.ColumnInfo;
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
 /**
  * Created by mohamed mabrouk
@@ -12,21 +10,21 @@ import android.os.Parcelable;
  * on 18/12/2017.  time :18:46
  */
 
-@Entity(tableName = "drug",primaryKeys = {"name","type","phKey"})
-@SuppressWarnings("unused")
+//@Entity(tableName = "drug",primaryKeys = {"name","type","phKey"})
+//@SuppressWarnings("unused")
 public class Drug implements Parcelable {
-    @ColumnInfo(name = "name")
-    private String name;
-    @ColumnInfo(name = "type")
-    private String type;
-    @ColumnInfo(name = "price")
-    private String price;
-    @ColumnInfo(name = "quantity")
-    private String quantity;
-    @ColumnInfo(name = "img")
-    private String img;
-    @ColumnInfo(name = "phKey")
-    private String phKey;
+   // @ColumnInfo(  name = "name")
+    private @NonNull String name;
+   // @ColumnInfo(name = "type")
+    private @NonNull String type;
+    //@ColumnInfo(name = "price")
+    private @NonNull String price;
+    //@ColumnInfo(name = "quantity")
+    private @NonNull String quantity;
+    //@ColumnInfo(name = "img")
+    private @NonNull String img;
+    //@ColumnInfo(name = "phKey")
+    private @NonNull String phKey;
 
     @Override
     public String toString() {
@@ -40,7 +38,7 @@ public class Drug implements Parcelable {
                 '}';
     }
 
-    public Drug() {
+    public  Drug() {
     }
 
     public Drug(String name, String type, String price, String quantity, String img, String phKey) {

@@ -1,29 +1,28 @@
 package com.example.mohamed.mymedeciene.data;
 
-import android.arch.persistence.room.ColumnInfo;
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.PrimaryKey;
+
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
 /**
  * Created by mohamed mabrouk
  * 0201152644726
  * on 18/12/2017.  time :18:04
  */
-@Entity(tableName = "Pharmacy")
-@SuppressWarnings("unused")
+//@Entity(tableName = "Pharmacy")
+//@SuppressWarnings("unused")
 public class Pharmacy implements Parcelable {
-    @ColumnInfo(name = "phName")
-    private String phName;
-    @PrimaryKey
-    private String phPhone;
-    @ColumnInfo(name = "phImgURL")
-    private String phImgURL;
-    @ColumnInfo(name = "phLocation")
-    private String phLocation;
-    @ColumnInfo(name = "latLang")
-    private String latLang;
+   // @ColumnInfo(name = "phName")
+    private @NonNull String phName;
+    //@PrimaryKey
+    private @NonNull String phPhone;
+    //@ColumnInfo(name = "phImgURL")
+    private @NonNull String phImgURL;
+    //@ColumnInfo(name = "phLocation")
+    private @NonNull String phLocation;
+    //@ColumnInfo(name = "latLang")
+    private @NonNull String latLang;
 
     @Override
     public String toString() {

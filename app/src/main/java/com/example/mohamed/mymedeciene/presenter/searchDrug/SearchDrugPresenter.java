@@ -14,6 +14,8 @@ import java.util.List;
 
 public interface SearchDrugPresenter<v extends SearchDrugView> extends MainPresnter<v> {
     void searchDrug(List<FullDrug> fullDrugs,String query);
+    void searchByDrug(List<FullDrug> fullDrugs, String query);
+    void searchByPharmacy(List<FullDrug> fullDrugs,String query);
     void clickDrug(FullDrug fullDrug);
     void clear();
 }
