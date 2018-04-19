@@ -69,13 +69,15 @@
     <string name="log_out_">Log Out</string>
     <string name="search_">Search</string>
     <string name="to_edit_pharmacy_img">to edit pharmacy img</string>
-    <string name="regist">To allow to add post must be Register</string>
+    <string name="regist">To allow to add post must be login</string>
     <string name="post">Post</string>
     <string name="write_your_post">write your post</string>
     <string name="add_post">Add Post</string>
     <string name="by_drug_name">BY Drug </string>
     <string name="by_pharmacy_name">By Pharmacy </string>
     <string name="by_both">By Both</string>
+    <string name="write_a_comment">write a comment</string>
+    <string name="update_">Update ....</string>
     <string-array name="drug_type">
         <item>Injections</item>
         <item>Capsules</item>
@@ -85,5 +87,12 @@
         <item>Inhalers</item>
         <item>Suppositories</item>
     </string-array>
+    <string-array name="tabs">
+        <item>All Drugs</item>
+        <item>Posts</item>
+        <item>My Drugs</item>
+    </string-array>
+
+
 
 </resources>

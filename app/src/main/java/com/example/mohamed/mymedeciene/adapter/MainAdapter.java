@@ -16,9 +16,10 @@ import com.example.mohamed.mymedeciene.fragment.PostsFragment;
  */
 
 public class MainAdapter  extends FragmentPagerAdapter{
-
-    public MainAdapter(FragmentManager fm) {
+    private String[] tabs;
+    public MainAdapter(FragmentManager fm,String[] tabs ) {
         super(fm);
+        this.tabs=tabs;
     }
 
     @Override
@@ -44,11 +45,11 @@ public class MainAdapter  extends FragmentPagerAdapter{
     public CharSequence getPageTitle(int position) {
         switch (position){
             case 0 :
-                return "All Drug";
+                return tabs[0];
             case 1:
-                return "Posts";
+                return tabs[1];
             case 2:
-                return "My Drug";
+                return tabs[2];
 
         }
         return null;

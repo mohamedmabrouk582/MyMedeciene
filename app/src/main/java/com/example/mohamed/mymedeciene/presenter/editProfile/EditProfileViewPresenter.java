@@ -1,10 +1,12 @@
 package com.example.mohamed.mymedeciene.presenter.editProfile;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.location.Address;
 import android.location.Geocoder;
 import android.util.Log;
 
+import com.example.mohamed.mymedeciene.R;
 import com.example.mohamed.mymedeciene.appliction.MyApp;
 import com.example.mohamed.mymedeciene.presenter.base.BasePresenter;
 import com.example.mohamed.mymedeciene.view.EditProfileView;
@@ -29,10 +31,13 @@ import java.util.Map;
 public class EditProfileViewPresenter<v extends EditProfileView> extends BasePresenter<v> implements EditProfilePresenter<v> {
     private final Activity activity;
     private final DatabaseReference mDatabaseReference;
+    private ProgressDialog mProgressDialog;
 
     public EditProfileViewPresenter(Activity activity) {
         this.activity = activity;
         FirebaseAuth mAuth = MyApp.getmAuth();
+        mProgressDialog=new ProgressDialog(activity);
+        mProgressDialog.setMessage(activity.getString(R.string.update_));
         //noinspection ConstantConditions
         mDatabaseReference = MyApp.getmDatabaseReference().child("Pharmacy").child(mAuth.getUid());
     }
@@ -42,6 +47,7 @@ public class EditProfileViewPresenter<v extends EditProfileView> extends BasePre
     @Override
     public void save(final String phName, final String phPhone, final String phLocation, final editListner listner) {
         Map map = new HashMap();
+        mProgressDialog.show();
         final String latLang = getLatLang(phLocation);
         //noinspection unchecked
         map.put("phName", phName);
@@ -53,17 +59,23 @@ public class EditProfileViewPresenter<v extends EditProfileView> extends BasePre
         map.put("latLang", latLang);
 
         //noinspection unchecked
-        mDatabaseReference.updateChildren(map, new DatabaseReference.CompletionListener() {
-            @Override
-            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                if (databaseError == null) {
-                    listner.onSuccess(latLang);
+        if (latLang!=null) {
+            mDatabaseReference.updateChildren(map, new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                    mProgressDialog.dismiss();
+                    if (databaseError == null) {
+                        listner.onSuccess(latLang);
 
-                } else {
-                    listner.onError(databaseError.getMessage());
+                    } else {
+                        listner.onError(databaseError.getMessage());
+                    }
                 }
-            }
-        });
+            });
+        }else {
+            mProgressDialog.dismiss();
+            listner.onError("your Location not Found");
+        }
     }
 
     private String getLatLang(String location) {

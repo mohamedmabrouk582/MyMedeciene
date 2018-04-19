@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.mohamed.mymedeciene.R;
+import com.example.mohamed.mymedeciene.activity.LoginActivity;
 import com.example.mohamed.mymedeciene.activity.RegisterActivity;
 import com.example.mohamed.mymedeciene.presenter.addDrugCheck.AddDrugCheckViewPresenter;
 import com.example.mohamed.mymedeciene.utils.CheckListener;
@@ -105,11 +106,11 @@ public class AddDrugCheckFragment extends DialogFragment implements AddDrugCheck
     private void check(){
         if (type.equals("register")){
             massage.setText(getString(R.string.regist));
-            update.setText(getString(R.string.register));
+            update.setText(getString(R.string.login));
             update.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    RegisterActivity.start(getActivity());
+                    LoginActivity.start(getActivity());
                     getActivity().finish();
                 }
             });

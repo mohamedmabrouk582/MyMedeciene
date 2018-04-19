@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">دوائي</string>
+    <string name="title_activity_home">الصفحة الرئيسية</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="login">تسجيل الدخول</string>
+    <string name="register">أفتح حساب الأن</string>
+    <string name="name">اسم الصيدلية</string>
+    <string name="phone">هاتف الصيدلية</string>
+    <string name="address">عنوان الصيدلية</string>
+    <string name="save">حفظ</string>
+    <string name="password_hint">كلمة السر خاصتك</string>
+    <string name="singup">سجل</string>
+    <string name="drug_name">اسم الدواء</string>
+    <string name="drug_price">سعر الدواء</string>
+    <string name="add">إضافة</string>
+    <string name="home">الصفحة الرئيسية</string>
+    <string name="noItemFound">لم يتم العثور على أي أدوية</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="checkDrug">هذا الدواء قد أضيف سابقا </string>
+    <string name="update">تحديث</string>
+    <string name="add_drug_done">تمت إضافة الدواء بنجاح</string>
+    <string name="permission_denied_location">Permission location to get your Current Location \n to draw route at Map  </string>
+    <string name="permission_denied_phone">إذن الهاتف للاتصال بالصيدلة </string>
+    <string name="call_permission">Call Permission Dialog</string>
+    <string name="drug_name_empty">اسم الدواء لا يكون فارغ</string>
+    <string name="drug_price_empty">سعر الدواء لا يكون فارغًا</string>
+    <string name="connected">متصل</string>
+    <string name="no_connected">لا اتصال بالإنترنت</string>
+    <string name="wait_dailog">انتظر  فتح الخريطة  ......</string>
+    <string name="drug_added">تم إضافة الدواء بنجاح</string>
+    <string name="drug_update">تم تعديل الدواء بنجاح</string>
+    <string name="name_empty">الاسم غير فارغ</string>
+    <string name="phone_empty">الهاتف غير صالح</string>
+    <string name="location_empty">الموقع لا يكون فارغًا</string>
+    <string name="phone_invalid">هاتفك غير صالح</string>
+    <string name="password_invalid">يجب أن تكون كلمة المرور الخاصة بك أكثر من 6 أحرف</string>
+    <string name="ph_name_invalid">اسم صيدلية لا تكون فارغة</string>
+    <string name="ph_phone_invalid">هاتف صيدلية غير صالح</string>
+    <string name="ph_pass_invalid"><![CDATA[يجب أن تكون كلمة مرور الصيدلية> 6 أحرف]]></string>
+    <string name="ph_location_invalid">لا يكون موقع الصيدلية فارغًا</string>
+    <string name="mapLoad">تحميل الخريطة .......</string>
+    <string name="type">لتحديد نوع الخريطة</string>
+    <string name="drug_img">لتحديد صورة الدواء</string>
+    <string name="to_delete_bubble">لحذف الفقاعة</string>
+    <string name="to_show_all_drug_img">لإظهار كل صورة الدواء</string>
+    <string name="to_show_drug_img">لإظهار صورة الدواء</string>
+    <string name="app_logo">APP LOGO</string>
+    <string name="map_type">نوع الخريطة</string>
+    <string name="not_allow">لا تسمح لأنك لست صيدلية .</string>
+    <string name="name_hint_">الاسم : </string>
+    <string name="price_hint_">السعر : </string>
+    <string name="quantity_">الكمية : </string>
+    <string name="type_">النوع : </string>
+    <string name="phar_name_">اسم الصيدلية : </string>
+    <string name="phone_">الهاتف : </string>
+    <string name="location_">الموقع : </string>
+    <string name="names">الاسم : </string>
+    <string name="price_">السعر :</string>
+    <string name="type__">النوع : </string>
+    <string name="all_drugs">جميع ألادوية</string>
+    <string name="zero">0</string>
+    <string name="slash">/</string>
+    <string name="edit_profile">تعديل الملف الشخصي</string>
+    <string name="my_drugs">أدويتي</string>
+    <string name="add_new_drug_">إضافة دواء جديد</string>
+    <string name="log_out_">تسجيل الخروج </string>
+    <string name="search_">بحث</string>
+    <string name="to_edit_pharmacy_img">لتعديل صورة الصيدلية</string>
+    <string name="regist">للسماح لإضافة وظيفة يجب أن تكون مسجل</string>
+    <string name="post">منشور</string>
+    <string name="write_your_post">اكتب منشورك</string>
+    <string name="add_post">أضف منشورا</string>
+    <string name="by_drug_name">بواسطة الدواء </string>
+    <string name="by_pharmacy_name">بواسطة الصيدلة</string>
+    <string name="by_both">بكلاهما معآ</string>
+    <string name="write_a_comment">أكتب تعليقا</string>
+    <string name="update_">تعديل ....</string>
+    <string-array name="drug_type">
+        <item>الحقن</item>
+        <item>كبسولات</item>
+        <item>شراب</item>
+        <item>قرص دواء</item>
+        <item>قطرات</item>
+        <item>الاستنشاق</item>
+        <item>اللبوس</item>
+    </string-array>
+    <string-array name="tabs">
+        <item>جميع ألادوية</item>
+        <item>المنشورات</item>
+        <item>أدويتي</item>
+    </string-array>
+</resources>

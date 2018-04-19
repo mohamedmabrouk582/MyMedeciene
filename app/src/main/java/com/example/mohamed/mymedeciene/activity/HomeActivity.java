@@ -214,7 +214,7 @@ public class HomeActivity extends AppCompatActivity
         mTabLayout=findViewById(R.id.tabs);
         mViewPager=findViewById(R.id.tabs_pager);
         mTabLayout.setupWithViewPager(mViewPager);
-        mViewPager.setAdapter(new MainAdapter(getSupportFragmentManager()));
+        mViewPager.setAdapter(new MainAdapter(getSupportFragmentManager(),getResources().getStringArray(R.array.tabs)));
 
 
 

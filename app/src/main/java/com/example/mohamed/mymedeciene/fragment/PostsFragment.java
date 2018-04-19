@@ -1,6 +1,7 @@
 package com.example.mohamed.mymedeciene.fragment;
 
 import android.animation.Animator;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -9,12 +10,15 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.mohamed.mymedeciene.Holder.PostHolder;
 import com.example.mohamed.mymedeciene.R;
@@ -32,8 +36,12 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+import com.like.LikeButton;
 
 /**
  * Created by Mohamed mabrouk
@@ -42,6 +50,7 @@ import com.google.firebase.database.Query;
  */
 
 public class PostsFragment extends Fragment implements PostsView,View.OnClickListener{
+    private FloatingActionButton addButton;
     private FloatingActionsMenu actionMenu;
     private RecyclerView mRecyclerView;
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -59,6 +68,7 @@ public class PostsFragment extends Fragment implements PostsView,View.OnClickLis
     private int mShortAnimationDuration;
     private ZoomIMG zoomIMG;
     private TextView errorView;
+    private PostHolder mPostHolder;
 
     public static PostsFragment newFragment(){
         return new PostsFragment();
@@ -89,18 +99,16 @@ public class PostsFragment extends Fragment implements PostsView,View.OnClickLis
         //noinspection ConstantConditions
         query = mDatabaseReference.child("Posts").child("AllPosts");
         options = new FirebaseRecyclerOptions.Builder<Post>().setQuery(query, Post.class).build();
-        FloatingActionButton add = new FloatingActionButton(getActivity());
-        add.setTitle("Add new Post");
-        add.setColorDisabled(R.color.white_pressed);
-        add.setIcon(R.drawable.ic_add);
-        add.setSize(FloatingActionButton.SIZE_MINI);
-        add.setColorDisabled(R.color.white_pressed);
-        actionMenu.addButton(add);
-        add.setOnClickListener(this);
+        addButton = new FloatingActionButton(getActivity());
+        addButton.setTitle("Add new Post");
+        addButton.setColorDisabled(R.color.white_pressed);
+        addButton.setIcon(R.drawable.ic_add);
+        addButton.setSize(FloatingActionButton.SIZE_MINI);
+        addButton.setColorDisabled(R.color.white_pressed);
+        actionMenu.addButton(addButton);
+        addButton.setOnClickListener(this);
         zoomIMG = new ZoomIMG();
-
         errorView.setText("No Posts");
-
     }
 
 
@@ -170,28 +178,36 @@ public class PostsFragment extends Fragment implements PostsView,View.OnClickLis
             @Override
             public PostHolder onCreateViewHolder(ViewGroup parent, int viewType) {
                 View view=LayoutInflater.from(getActivity()).inflate(R.layout.post_item,parent,false);
-                return new PostHolder(view,getActivity());
+                return new PostHolder(view,getActivity(),PostsFragment.this);
             }
 
             @Override
             protected void onBindViewHolder(@NonNull final PostHolder holder, int position, @NonNull final Post model) {
                 errorView.setVisibility(View.GONE);
-                holder.bind(model);
-                holder.postIMG.setOnClickListener(new View.OnClickListener() {
+                mPostHolder=holder;
+               // model.setLiked(MyApp.getmDatabaseReference().child("Likes").child(model.getId()).child(mAuth.getUid())!=null);
+                MyApp.getmDatabaseReference().child("Likes").child(model.getId()).addValueEventListener(new ValueEventListener() {
                     @Override
-                    public void onClick(View v) {
-                        mShortAnimationDuration = getResources().getInteger(
-                                android.R.integer.config_shortAnimTime);
-                        zoomIMG.zoomImageFromThumb(getActivity(), holder.postIMG, model.getImgUrl(), mCurrentAnimator, drug_preview, drugContainer
-                                , mShortAnimationDuration
-                        );
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (mAuth.getUid()!=null) {
+                            model.setLiked(dataSnapshot.hasChild(mAuth.getUid()));
+                        }
+                        holder.bind(model);
+                    }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
                     }
                 });
+             //  holder.bind(model);
+
+
             }
         };
 
         mRecyclerView.setAdapter(adapter);
     }
+
+
 
     @Override
     public void onClick(final View view) {
@@ -209,4 +225,71 @@ public class PostsFragment extends Fragment implements PostsView,View.OnClickLis
         });
         actionMenu.collapse();
     }
+
+
+    @Override
+    public void onLike(boolean isLike,Post post) {
+        if (mAuth.getUid() == null) {
+             presenter.ShowRegisterDao();
+        } else {
+            presenter.like(isLike, post.getId());
+        }
+    }
+
+
+
+    @Override
+    public void onCommentAction() {
+        Toast.makeText(getContext(), "comment", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onSendComment(String comment,Post post) {
+        if (mAuth.getUid() == null) {
+           presenter.ShowRegisterDao();
+        } else {
+            presenter.sendComment(comment, post.getId());
+        }
+    }
+
+    @Override
+    public void onIMGClick(ImageView imageView, String url) {
+        mShortAnimationDuration = getResources().getInteger(
+                android.R.integer.config_shortAnimTime);
+        zoomIMG.zoomImageFromThumb(getActivity(), imageView, url, mCurrentAnimator, drug_preview, drugContainer
+                , mShortAnimationDuration
+        );
+    }
+
+    @Override
+    public void onClickCommentWrite() {
+        checkSoftKeyBoard();
+    }
+
+    private void checkSoftKeyBoard(){
+        view.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+
+                Rect r = new Rect();
+                view.getWindowVisibleDisplayFrame(r);
+                int screenHeight = view.getRootView().getHeight();
+
+                // r.bottom is the position above soft keypad or device button.
+                // if keypad is shown, the r.bottom is smaller than that before.
+                int keypadHeight = screenHeight - r.bottom;
+
+                if (keypadHeight > screenHeight * 0.15) { // 0.15 ratio is perhaps enough to determine keypad height.
+                    // keyboard is opened
+                    actionMenu.setVisibility(View.GONE);
+                }
+                else {
+                    // keyboard is closed
+                    actionMenu.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+    }
+
+
 }

@@ -12,5 +12,7 @@ import com.example.mohamed.mymedeciene.view.PostsView;
 
 public interface PostsPresenter<v extends PostsView> extends MainPresnter<v> {
     void addPost(AddListener listener);
+    void like(boolean isLike,String postId);
+    void sendComment(String comment,String postId);
     
 }

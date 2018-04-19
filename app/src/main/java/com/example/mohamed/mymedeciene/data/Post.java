@@ -1,5 +1,7 @@
 package com.example.mohamed.mymedeciene.data;
 
+import java.util.List;
+
 /**
  * Created by Mohamed mabrouk
  * 0201152644726
@@ -11,6 +13,9 @@ public class Post {
     private String userId;
     private String content;
     private String imgUrl;
+    private boolean isLiked;
+    private List<Comment> comments;
+
 
 
     public Post(String id, String userId, String content, String imgUrl) {
@@ -21,6 +26,22 @@ public class Post {
     }
 
     public Post() {
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
+
+    public boolean isLiked() {
+        return isLiked;
+    }
+
+    public void setLiked(boolean liked) {
+        isLiked = liked;
     }
 
     public String getId() {
