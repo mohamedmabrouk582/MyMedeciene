@@ -25,6 +25,7 @@ import com.example.mohamed.mymedeciene.R;
 import com.example.mohamed.mymedeciene.appliction.DataManager;
 import com.example.mohamed.mymedeciene.appliction.MyApp;
 import com.example.mohamed.mymedeciene.data.Drug;
+import com.example.mohamed.mymedeciene.data.Pharmacy;
 import com.example.mohamed.mymedeciene.data.Post;
 import com.example.mohamed.mymedeciene.presenter.myDrugs.DrugsViewPresenter;
 import com.example.mohamed.mymedeciene.presenter.posts.PostsViewPresenter;
@@ -185,17 +186,26 @@ public class PostsFragment extends Fragment implements PostsView,View.OnClickLis
             protected void onBindViewHolder(@NonNull final PostHolder holder, int position, @NonNull final Post model) {
                 errorView.setVisibility(View.GONE);
                 mPostHolder=holder;
-               // model.setLiked(MyApp.getmDatabaseReference().child("Likes").child(model.getId()).child(mAuth.getUid())!=null);
-                MyApp.getmDatabaseReference().child("Likes").child(model.getId()).addValueEventListener(new ValueEventListener() {
+                MyApp.getmDatabaseReference().child("Pharmacy").child(model.getUserId()).addValueEventListener(new ValueEventListener() {
                     @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        if (mAuth.getUid()!=null) {
-                            model.setLiked(dataSnapshot.hasChild(mAuth.getUid()));
-                        }
-                        holder.bind(model);
+                    public void onDataChange(DataSnapshot mDataSnapshot) {
+                        MyApp.getmDatabaseReference().child("Likes").child(model.getId()).addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                if (mAuth.getUid()!=null) {
+                                    model.setLiked(dataSnapshot.hasChild(mAuth.getUid()));
+                                }
+                                holder.bind(model,mDataSnapshot.getValue(Pharmacy.class));
+                            }
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                            }
+                        });
                     }
+
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
+
                     }
                 });
              //  holder.bind(model);

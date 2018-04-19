@@ -34,6 +34,7 @@ import com.like.LikeButton;
 import com.like.OnAnimationEndListener;
 import com.like.OnLikeListener;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import io.reactivex.disposables.Disposable;
 
 /**
@@ -45,8 +46,9 @@ import io.reactivex.disposables.Disposable;
 public class PostHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
     private Activity activity;
     public ImageView postIMG;
-    public TextView postContent;
+    public TextView postContent,userName;
     private EditText comment;
+    private CircleImageView userImg;
     private Post post;
     private Disposable disposable;
     public Button send,commentButton,likeButton;
@@ -70,6 +72,8 @@ public class PostHolder extends RecyclerView.ViewHolder implements View.OnClickL
         postContent=itemView.findViewById(R.id.txt_post);
         comment=itemView.findViewById(R.id.comment_write);
         send=itemView.findViewById(R.id.send_comment);
+        userImg=itemView.findViewById(R.id.post_user_img);
+        userName=itemView.findViewById(R.id.post_user_name);
         likeButton=itemView.findViewById(R.id.like_button);
         commentButton=itemView.findViewById(R.id.comment_button);
         commentsRecyclerView=itemView.findViewById(R.id.comment_rcl_view);
@@ -96,7 +100,7 @@ public class PostHolder extends RecyclerView.ViewHolder implements View.OnClickL
         });
     }
 
-    public void bind(Post post){
+    public void bind(Post post,Pharmacy pharmacy){
         this.post=post;
         isLiked=post.isLiked();
         likeButton.setBackgroundResource(isLiked?R.drawable.ic_like:R.drawable.ic_unlike);
@@ -104,6 +108,9 @@ public class PostHolder extends RecyclerView.ViewHolder implements View.OnClickL
             postIMG.setVisibility(View.VISIBLE);
             Glide.with(activity.getApplicationContext()).load(post.getImgUrl()).into(postIMG);
         }
+        if (!TextUtils.isEmpty(pharmacy.getPhImgURL()))
+            Glide.with(activity.getApplicationContext()).load(pharmacy.getPhImgURL()).into(userImg);
+        userName.setText(pharmacy.getPhName());
         postContent.setText(post.getContent());
         query=mDatabaseReference.child(post.getId());
         options=new FirebaseRecyclerOptions.Builder<Comment>().setQuery(query,Comment.class).build();
