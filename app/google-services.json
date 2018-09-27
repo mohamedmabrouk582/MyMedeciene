@@ -8,6 +8,50 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:742328554973:android:b30938af78246eb3",
+        "android_client_info": {
+          "package_name": "com.example.mabrouk.medicene"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "742328554973-ics3qjmips1m1fhl9c4cov25t8a4sre2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.mabrouk.medicene",
+            "certificate_hash": "c012660922b5260f3a6678fe6c4dacc44e1d41d5"
+          }
+        },
+        {
+          "client_id": "742328554973-d2um06c0qmsf2ul1q57busp06dpgcsj1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAeUUp8GWngd5nxGyJXDx1mrWgrTukqApw"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "742328554973-d2um06c0qmsf2ul1q57busp06dpgcsj1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:742328554973:android:658a0b258ea47450",
         "android_client_info": {
           "package_name": "com.example.mohamed.mymedeciene"

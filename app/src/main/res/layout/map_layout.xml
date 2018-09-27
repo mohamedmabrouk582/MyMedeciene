@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:map="http://schemas.android.com/apk/res-auto"
+    >
+    <fragment
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/mapss"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="com.example.mohamed.mymedeciene.activity.MapsLocationActivity"/>
+
+    <ImageView
+        android:layout_gravity="center"
+        android:layout_width="@dimen/_40sdp"
+        android:layout_height="@dimen/_70sdp"
+        android:src="@drawable/ic_pin"
+        />
+
+    <TextView
+        android:text="Loading Current Location ...."
+        android:padding="@dimen/_4sdp"
+        android:gravity="center"
+        android:textSize="@dimen/_12sdp"
+        android:id="@+id/txt_location"
+        android:background="@drawable/location_shape"
+        android:layout_width="@dimen/_200sdp"
+        android:layout_height="wrap_content"
+        android:minLines="2"
+        android:layout_gravity="center|bottom"
+        android:layout_marginBottom="@dimen/_45sdp"
+
+        />
+
+    <Button
+        android:onClick="confirm"
+        android:textColor="#fff"
+        android:text="Confirm"
+        android:textSize="@dimen/_14sdp"
+        android:layout_gravity="bottom|center"
+        android:id="@+id/btn_confirm"
+        android:layout_marginBottom="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_20sdp"
+        android:layout_width="@dimen/_150sdp"
+        android:layout_height="@dimen/_30sdp"
+        android:background="@drawable/but_submit"
+        />
+
+</FrameLayout>

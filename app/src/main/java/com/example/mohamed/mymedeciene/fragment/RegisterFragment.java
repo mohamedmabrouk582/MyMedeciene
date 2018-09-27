@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -19,12 +20,15 @@ import com.daimajia.androidanimations.library.YoYo;
 import com.example.mohamed.mymedeciene.R;
 import com.example.mohamed.mymedeciene.activity.HomeActivity;
 import com.example.mohamed.mymedeciene.activity.LoginActivity;
+import com.example.mohamed.mymedeciene.activity.MapsLocationActivity;
+import com.example.mohamed.mymedeciene.activity.locationActivity;
 import com.example.mohamed.mymedeciene.appliction.DataManager;
 import com.example.mohamed.mymedeciene.appliction.MyApp;
 import com.example.mohamed.mymedeciene.presenter.register.RegisterViewPresenter;
 import com.example.mohamed.mymedeciene.utils.AddListener;
 import com.example.mohamed.mymedeciene.utils.utils;
 import com.example.mohamed.mymedeciene.view.RegisterView;
+import com.google.android.gms.maps.model.LatLng;
 
 /**
  * Created by mohamed mabrouk
@@ -39,6 +43,8 @@ public class RegisterFragment extends Fragment implements RegisterView, View.OnC
     private ProgressBar progressBar;
     private RegisterViewPresenter presenter;
     private DataManager dataManager;
+    private ImageView location;
+    private LatLng mLatLng;
 
     public static RegisterFragment newFragment() {
         return new RegisterFragment();
@@ -62,6 +68,7 @@ public class RegisterFragment extends Fragment implements RegisterView, View.OnC
         phLocation = view.findViewById(R.id.pharmacyLocation);
         phName = view.findViewById(R.id.pharmacyName);
         phPhone = view.findViewById(R.id.email_register);
+        location=view.findViewById(R.id.maps_location);
         phPassword = view.findViewById(R.id.password_register);
         Button register = view.findViewById(R.id.but_register);
         TextView login = view.findViewById(R.id.txt_login);
@@ -69,6 +76,13 @@ public class RegisterFragment extends Fragment implements RegisterView, View.OnC
 
         register.setOnClickListener(this);
         login.setOnClickListener(this);
+
+        location.setOnClickListener(e ->{
+            MapsLocationActivity.start(getContext(),mLatLng,r->{
+                mLatLng=new LatLng(Double.parseDouble(r.getLat()),Double.parseDouble(r.getLang()));
+                phLocation.setText(r.getAddress());
+            });
+        });
 
     }
 

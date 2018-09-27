@@ -15,10 +15,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.example.mohamed.mymedeciene.R;
+import com.example.mohamed.mymedeciene.activity.MapsLocationActivity;
 import com.example.mohamed.mymedeciene.appliction.DataManager;
 import com.example.mohamed.mymedeciene.appliction.MyApp;
 import com.example.mohamed.mymedeciene.data.Pharmacy;
@@ -27,6 +29,7 @@ import com.example.mohamed.mymedeciene.presenter.editProfile.EditProfileViewPres
 import com.example.mohamed.mymedeciene.utils.QueryListener;
 import com.example.mohamed.mymedeciene.utils.utils;
 import com.example.mohamed.mymedeciene.view.EditProfileView;
+import com.google.android.gms.maps.model.LatLng;
 
 /**
  * Created by mohamed mabrouk
@@ -43,6 +46,8 @@ public class EditProfileFragment extends DialogFragment implements EditProfileVi
     private DataManager dataManager;
     private EditProfileViewPresenter presenter;
     private static QueryListener listener;
+    private ImageView location;
+    private LatLng mLatLng;
 
 
     public static EditProfileFragment newFragment(Pharmacy pharmacy, QueryListener listeners) {
@@ -68,7 +73,6 @@ public class EditProfileFragment extends DialogFragment implements EditProfileVi
         dialog = builder.create();
         dialog.setCanceledOnTouchOutside(false);
         dialog.show();
-
         return dialog;
     }
 
@@ -85,9 +89,12 @@ public class EditProfileFragment extends DialogFragment implements EditProfileVi
 
     private void init() {
         Pharmacy mPharmacy = getArguments().getParcelable(PHARMCY);
+        mLatLng= presenter.getmLatLang(mPharmacy.getPhLocation());
+
         phName = view.findViewById(R.id.edt_pharmacy_name);
         phPhone = view.findViewById(R.id.edt_pharmacy_phone);
         phLocation = view.findViewById(R.id.edt_pharmacy_location);
+        location=view.findViewById(R.id.maps_location);
         Button save = view.findViewById(R.id.save);
         Button close = view.findViewById(R.id.close);
         if (mPharmacy != null) {
@@ -97,7 +104,16 @@ public class EditProfileFragment extends DialogFragment implements EditProfileVi
         }
         close.setOnClickListener(this);
         save.setOnClickListener(this);
+
+        location.setOnClickListener(e ->{
+            MapsLocationActivity.start(getActivity(),mLatLng,r->{
+                phLocation.setText(r.getAddress());
+            });
+        });
+
     }
+
+
 
 
     @Override

@@ -4,7 +4,15 @@
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-
+    <string name="gps_Settings">GPS</string>
+    <string name="gps_Message">GPS is not enabled. Do you want to go to settings menu?</string>
+    <string name="gps_Settings_yes">Gps setting</string>
+    <string name="gps_Setting_No">Cancel</string>
+    <string name="gps_cordinate_saved">Coordinates saved </string>
+    <string name="gps_settings">GPS</string>
+    <string name="gps_message">GPS is not enabled. Do you want to go to settings menu ?</string>
+    <string name="gps_settings_yes">Gps Setting</string>
+    <string name="gps_settings_no">Cancel</string>
     <string name="login">Login</string>
     <string name="register">Register</string>
     <string name="name">Pharmacy  Name</string>
@@ -92,7 +100,7 @@
         <item>Posts</item>
         <item>My Drugs</item>
     </string-array>
-
+    <string name="title_activity_location">Map</string>
 
 
 </resources>

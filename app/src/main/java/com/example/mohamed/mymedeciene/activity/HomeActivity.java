@@ -25,6 +25,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -59,6 +60,7 @@ import com.example.mohamed.mymedeciene.presenter.Home.HomeViewPresenter;
 import com.example.mohamed.mymedeciene.utils.AddListener;
 import com.example.mohamed.mymedeciene.utils.CheckListener;
 import com.example.mohamed.mymedeciene.utils.FloatingViewService;
+import com.example.mohamed.mymedeciene.utils.GPSTracker;
 import com.example.mohamed.mymedeciene.utils.QueryListener;
 import com.example.mohamed.mymedeciene.utils.ZoomIMG;
 import com.example.mohamed.mymedeciene.view.HomeView;
@@ -108,7 +110,7 @@ public class HomeActivity extends AppCompatActivity
         String replace = latLng.toString().replace("(", "").replace(")", "").replace("lat/lng:", "");
         AllFullDrug.getAllFullDrug().setLatLang(latLng);
         AllFullDrug.getAllFullDrug().setMyLocation(replace);
-        Toast.makeText(this, replace, Toast.LENGTH_SHORT).show();
+      //  Toast.makeText(this, replace, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -215,11 +217,12 @@ public class HomeActivity extends AppCompatActivity
         mViewPager=findViewById(R.id.tabs_pager);
         mTabLayout.setupWithViewPager(mViewPager);
         mViewPager.setAdapter(new MainAdapter(getSupportFragmentManager(),getResources().getStringArray(R.array.tabs)));
-
-
-
-
-
+        mViewPager.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                return true;
+            }
+        });
 
         if (mPharmacy != null) {
             isPharmacy(true);
@@ -473,6 +476,13 @@ public class HomeActivity extends AppCompatActivity
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        stopService(new Intent(this, FloatingViewService.class));
+
+    }
+
     private boolean hasPermission(String permission) {
         return ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED;
     }
@@ -492,16 +502,23 @@ public class HomeActivity extends AppCompatActivity
     }
 
     public void location(LocationListener listener) {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, 1011);
+        GPSTracker gps = new GPSTracker(this);
+        if (gps.canGetLocation()) {
+            LatLng latLng = new LatLng(gps.getLatitude(), gps.getLongitude());
+            String replace = latLng.toString().replace("(", "").replace(")", "").replace("lat/lng:", "");
+            AllFullDrug.getAllFullDrug().setLatLang(latLng);
+            AllFullDrug.getAllFullDrug().setMyLocation(replace);
+        } else {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, 1011);
+                }
+            } else {
+                LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+                //noinspection ConstantConditions
+                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 50, listener);
             }
-        }else {
-            LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-            //noinspection ConstantConditions
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 50, listener);
         }
-
     }
 
     @Override

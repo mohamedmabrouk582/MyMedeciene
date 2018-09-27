@@ -32,7 +32,11 @@
             android:layout_width="1px"
             android:layout_height="match_parent"
             android:background="@color/colorPrimaryDark" />
-
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="none"
+            >
         <LinearLayout
             android:layout_marginStart="@dimen/_6sdp"
             android:layout_width="match_parent"
@@ -152,6 +156,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:minHeight="@dimen/_40sdp"
                 android:layout_marginTop="@dimen/_6sdp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -170,8 +175,10 @@
                     android:id="@+id/ph_location" />
             </LinearLayout>
 
-
         </LinearLayout>
-    </LinearLayout>
+    </ScrollView>
+
+
+</LinearLayout>
 
 </android.support.v7.widget.CardView>

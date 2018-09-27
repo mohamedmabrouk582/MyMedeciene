@@ -78,7 +78,31 @@ public class EditProfileViewPresenter<v extends EditProfileView> extends BasePre
         }
     }
 
-    private String getLatLang(String location) {
+    public LatLng getmLatLang(String location) {
+
+        Geocoder geoCoder = new Geocoder(activity, Locale.getDefault());
+
+        try {
+            List<Address> addresses = geoCoder.getFromLocationName(location, 5);
+            int tentatives = 0;
+            while (addresses.size() == 0 && (tentatives < 10)) {
+                addresses = geoCoder.getFromLocationName(location, 1);
+                tentatives++;
+            }
+
+
+            if (addresses.size() > 0) {
+                return new LatLng(addresses.get(0).getLatitude(), addresses.get(0).getLongitude());
+            } else {
+                //use http api
+            }
+
+        } catch (IOException e) {
+        }
+        return null;
+    }
+
+    public String getLatLang(String location) {
 
         Geocoder geoCoder = new Geocoder(activity, Locale.getDefault());
 
