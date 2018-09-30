@@ -20,6 +20,7 @@
         tools:ignore="ExtraText">
 
         <ImageView
+            android:scaleType="centerCrop"
             android:id="@+id/drug_img"
             android:layout_width="@dimen/_100sdp"
             android:layout_height="@dimen/_140sdp"
